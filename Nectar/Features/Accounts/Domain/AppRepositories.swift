@@ -1,8 +1,8 @@
 import Foundation
 
 protocol AccountRepository {
-    func fetchAccounts() async throws -> [BankAccount]
-    func fetchAccount(id: String) async throws -> BankAccount
+    func fetchAccounts() async throws -> [AppAccount]
+    func fetchAccount(id: String) async throws -> AppAccount
 }
 
 protocol TransactionRepository {
@@ -17,6 +17,6 @@ protocol TransferRepository {
 }
 
 protocol CardRepository {
-    func fetchCards() async throws -> [BankCard]
-    func setFrozen(cardId: String, frozen: Bool) async throws -> BankCard
+    func fetchCards() async throws -> [AppCard]
+    func setFrozen(cardId: String, frozen: Bool) async throws -> AppCard
 }

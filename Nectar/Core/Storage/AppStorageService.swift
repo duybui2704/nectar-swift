@@ -56,7 +56,7 @@ final class AppStorageService {
     }
 
     var userDisplayName: String {
-        get { defaults.string(forKey: Keys.displayName) ?? MockBankAPI.customerName }
+        get { defaults.string(forKey: Keys.displayName) ?? MockNectarAPI.customerName }
         set { defaults.set(newValue, forKey: Keys.displayName) }
     }
 }

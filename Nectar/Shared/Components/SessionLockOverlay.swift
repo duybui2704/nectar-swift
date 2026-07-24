@@ -18,10 +18,10 @@ struct SessionLockOverlay: View {
                         .font(.system(size: 44))
                         .foregroundStyle(.white)
                     Text("Phiên đã khóa")
-                        .font(BankTypography.title)
+                        .font(NectarTypography.title)
                         .foregroundStyle(.white)
                     Text("Không hoạt động 5 phút. Xác thực lại để tiếp tục.")
-                        .font(BankTypography.caption)
+                        .font(NectarTypography.caption)
                         .foregroundStyle(.white.opacity(0.75))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 24)
@@ -41,13 +41,13 @@ struct SessionLockOverlay: View {
                             .padding(.vertical, 14)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(BankColors.brand)
+                    .tint(NectarColors.brand)
                     .padding(.horizontal, 32)
 
                     SecureField("PIN 6 số (demo: 000000)", text: $pin)
                         .keyboardType(.numberPad)
                         .padding()
-                        .background(BankColors.surface)
+                        .background(NectarColors.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .padding(.horizontal, 32)
                         .onChange(of: pin) { _, v in
@@ -67,8 +67,8 @@ struct SessionLockOverlay: View {
 
                     if let errorMessage {
                         Text(errorMessage)
-                            .font(BankTypography.caption)
-                            .foregroundStyle(BankColors.danger)
+                            .font(NectarTypography.caption)
+                            .foregroundStyle(NectarColors.danger)
                     }
 
                     Button("Đăng xuất", role: .destructive) {

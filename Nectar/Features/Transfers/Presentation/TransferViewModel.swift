@@ -29,7 +29,7 @@ final class TransferViewModel: ObservableObject {
     @Published var amountText = ""
     @Published var note = ""
     @Published var otpCode = ""
-    @Published private(set) var accounts: [BankAccount] = []
+    @Published private(set) var accounts: [AppAccount] = []
     @Published private(set) var beneficiaries: [Beneficiary] = []
     @Published private(set) var step: Step = .form
     @Published private(set) var status: Status = .idle
@@ -60,7 +60,7 @@ final class TransferViewModel: ObservableObject {
         return value
     }
 
-    var selectedAccount: BankAccount? {
+    var selectedAccount: AppAccount? {
         accounts.first { $0.id == fromAccountId }
     }
 

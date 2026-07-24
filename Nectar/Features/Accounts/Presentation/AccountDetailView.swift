@@ -19,26 +19,26 @@ struct AccountDetailView: View {
                 if let account = viewModel.account {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(account.name)
-                            .font(BankTypography.caption)
+                            .font(NectarTypography.caption)
                             .foregroundStyle(.white.opacity(0.8))
                         Text(MoneyFormatter.format(account.balance, currency: account.currency))
-                            .font(BankTypography.amount)
+                            .font(NectarTypography.amount)
                             .foregroundStyle(.white)
                             .accessibilityLabel("Số dư \(MoneyFormatter.format(account.balance, currency: account.currency))")
                         Text(account.numberMasked)
-                            .font(BankTypography.caption)
+                            .font(NectarTypography.caption)
                             .foregroundStyle(.white.opacity(0.7))
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(20)
-                    .background(BankColors.brand)
+                    .background(NectarColors.brand)
                     .clipShape(RoundedRectangle(cornerRadius: 18))
                 } else if viewModel.status == .loading {
                     ProgressView().frame(maxWidth: .infinity).padding()
                 }
 
                 Text("Lịch sử giao dịch")
-                    .font(BankTypography.headline)
+                    .font(NectarTypography.headline)
 
                 if viewModel.transactions.isEmpty, viewModel.status == .success {
                     EmptyStateView(title: "Trống", message: "Tài khoản chưa có giao dịch.")
@@ -55,7 +55,7 @@ struct AccountDetailView: View {
             }
             .padding(16)
         }
-        .background(BankColors.background.ignoresSafeArea())
+        .background(NectarColors.background.ignoresSafeArea())
         .navigationTitle("Chi tiết tài khoản")
         .navigationBarTitleDisplayMode(.inline)
         .task { await viewModel.load() }

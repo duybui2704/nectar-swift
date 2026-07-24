@@ -1,7 +1,7 @@
 import Foundation
 import LocalAuthentication
 
-/// Face ID / Touch ID — banking interview staple.
+/// Face ID / Touch ID unlock helper.
 @MainActor
 final class BiometricAuthService {
     static let shared = BiometricAuthService()

@@ -6,34 +6,35 @@ struct OnboardingView: View {
     @HotReloadObserver private var _hr
 
     private var pages: [(title: String, body: String, image: String)] = [
-        ("Welcome\n to our store", "Ger your groceries in as fast as one hour", "img_onboarding"),
+        ("Welcome\n to our store", "Ger your groceries in as fast as one hours", "img_onboarding"),
     ]
 
     var body: some View {
         VStack(spacing: 0) {
             TabView(selection: $page) {
                 ForEach(pages.indices, id: \.self) { index in
-                    VStack(spacing: BankMetrics.spacing.md) {
-                        Spacer(minLength: BankMetrics.spacing.xl)
+                    VStack(spacing: NectarMetrics.spacing.md) {
+                        Spacer(minLength: NectarMetrics.spacing.xl)
 
                         Image(pages[index].image)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: BankMetrics.icon.onboardingWidth)
+                            .frame(width: NectarMetrics.icon.onboardingWidth, height: NectarMetrics.icon.onboardingWidth)
+                            .padding(.horizontal, NectarMetrics.spacing.lg)
 
                         Text(pages[index].title)
-                            .font(BankTypography.onboardingTitle)
-                            .foregroundStyle(BankColors.textPrimary)
+                            .font(NectarTypography.onboardingTitle)
+                            .foregroundStyle(NectarColors.textPrimary)
                             .multilineTextAlignment(.center)
                             .screenPadding()
 
                         Text(pages[index].body)
-                            .font(BankTypography.body)
-                            .foregroundStyle(BankColors.textSecondary)
+                            .font(NectarTypography.body)
+                            .foregroundStyle(NectarColors.textSecondary)
                             .multilineTextAlignment(.center)
                             .screenPadding()
 
-                        Spacer(minLength: BankMetrics.spacing.lg)
+                        Spacer(minLength: NectarMetrics.spacing.lg)
                     }
                     .tag(index)
                 }
@@ -44,15 +45,15 @@ struct OnboardingView: View {
                 session.completeOnboarding()
             } label: {
                 Text("Get Started")
-                    .font(BankTypography.button)
+                    .font(NectarTypography.button)
                     .frame(maxWidth: .infinity)
-                    .frame(height: BankMetrics.button.onboardingHeight)
+                    .frame(height: NectarMetrics.button.onboardingHeight)
                     .foregroundStyle(.white)
-                    .background(BankColors.green)
-                    .clipShape(RoundedRectangle(cornerRadius: BankMetrics.radius.xl))
+                    .background(NectarColors.green)
+                    .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.radius.xl))
             }
             .screenPadding()
-            .padding(.bottom, BankMetrics.layout.bottomSafeExtra)
+            .padding(.bottom, NectarMetrics.layout.bottomSafeExtra)
         }
         .hotReload()
     }

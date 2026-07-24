@@ -10,12 +10,12 @@ struct OTPInputView: View {
         VStack(spacing: 20) {
             Image(systemName: "lock.shield")
                 .font(.system(size: 48))
-                .foregroundStyle(BankColors.brand)
+                .foregroundStyle(NectarColors.brand)
             Text(title)
-                .font(BankTypography.title)
+                .font(NectarTypography.title)
             Text(subtitle)
-                .font(BankTypography.caption)
-                .foregroundStyle(BankColors.textSecondary)
+                .font(NectarTypography.caption)
+                .foregroundStyle(NectarColors.textSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
@@ -24,7 +24,7 @@ struct OTPInputView: View {
                 .multilineTextAlignment(.center)
                 .font(.system(size: 28, weight: .semibold, design: .monospaced))
                 .padding()
-                .background(BankColors.inputBackground)
+                .background(NectarColors.inputBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
                 .padding(.horizontal, 32)
                 .onChange(of: code) { _, newValue in
@@ -33,8 +33,8 @@ struct OTPInputView: View {
                 }
 
             Text("Demo OTP: \(TransferConstants.mockOTPCode)")
-                .font(BankTypography.caption)
-                .foregroundStyle(BankColors.textSecondary)
+                .font(NectarTypography.caption)
+                .foregroundStyle(NectarColors.textSecondary)
         }
     }
 }

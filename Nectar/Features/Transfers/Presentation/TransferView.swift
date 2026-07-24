@@ -20,7 +20,7 @@ struct TransferView: View {
         }
         .navigationTitle("Chuyển tiền")
         .navigationBarTitleDisplayMode(.inline)
-        .background(BankColors.background.ignoresSafeArea())
+        .background(NectarColors.background.ignoresSafeArea())
         .task { await viewModel.load() }
         .hotReload()
     }
@@ -65,7 +65,7 @@ struct TransferView: View {
             }
 
             if case .error(let message) = viewModel.status {
-                Section { Text(message).foregroundStyle(BankColors.danger) }
+                Section { Text(message).foregroundStyle(NectarColors.danger) }
             }
 
             Section {
@@ -78,15 +78,15 @@ struct TransferView: View {
     private var confirmContent: some View {
         VStack(spacing: 16) {
             Spacer()
-            Text("Xác nhận chuyển khoản").font(BankTypography.title)
+            Text("Xác nhận chuyển khoản").font(NectarTypography.title)
             if let amount = viewModel.amount {
                 Text(MoneyFormatter.format(amount))
-                    .font(BankTypography.amount)
-                    .foregroundStyle(BankColors.brand)
+                    .font(NectarTypography.amount)
+                    .foregroundStyle(NectarColors.brand)
             }
             summaryCard
             if case .error(let message) = viewModel.status {
-                Text(message).foregroundStyle(BankColors.danger)
+                Text(message).foregroundStyle(NectarColors.danger)
             }
             Button { viewModel.proceedToOTP() } label: {
                 Text("Tiếp tục xác thực OTP")
@@ -94,11 +94,11 @@ struct TransferView: View {
                     .padding(.vertical, 14)
             }
             .foregroundStyle(.white)
-            .background(BankColors.brand)
+            .background(NectarColors.brand)
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .padding(.horizontal)
             Button("Quay lại") { viewModel.goBackToForm() }
-                .foregroundStyle(BankColors.brand)
+                .foregroundStyle(NectarColors.brand)
             Spacer()
         }
     }
@@ -113,7 +113,7 @@ struct TransferView: View {
                 subtitle: "Mã xác thực đã gửi đến số điện thoại đăng ký (demo)."
             )
             if case .error(let message) = viewModel.status {
-                Text(message).foregroundStyle(BankColors.danger)
+                Text(message).foregroundStyle(NectarColors.danger)
             }
             Button {
                 Task { await viewModel.verifyOTPAndSubmit() }
@@ -129,12 +129,12 @@ struct TransferView: View {
                 .padding(.vertical, 14)
             }
             .foregroundStyle(.white)
-            .background(BankColors.brand)
+            .background(NectarColors.brand)
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .padding(.horizontal)
             .disabled(viewModel.isSubmitting)
             Button("Quay lại") { viewModel.goBackToConfirm() }
-                .foregroundStyle(BankColors.brand)
+                .foregroundStyle(NectarColors.brand)
             Spacer()
         }
     }
@@ -149,7 +149,7 @@ struct TransferView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(BankColors.surface)
+        .background(NectarColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .padding(.horizontal)
     }
@@ -159,29 +159,29 @@ struct TransferView: View {
             Spacer()
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 64))
-                .foregroundStyle(BankColors.success)
-            Text("Chuyển thành công").font(BankTypography.title)
+                .foregroundStyle(NectarColors.success)
+            Text("Chuyển thành công").font(NectarTypography.title)
             Text("Mã tham chiếu: \(result.referenceId)")
-                .font(BankTypography.caption)
-                .foregroundStyle(BankColors.textSecondary)
+                .font(NectarTypography.caption)
+                .foregroundStyle(NectarColors.textSecondary)
             if let amount = viewModel.amount {
-                Text(MoneyFormatter.format(amount)).font(BankTypography.amountSmall)
+                Text(MoneyFormatter.format(amount)).font(NectarTypography.amountSmall)
             }
             Button("Hoàn tất") {
                 viewModel.reset()
                 dismiss()
             }
             .buttonStyle(.borderedProminent)
-            .tint(BankColors.brand)
+            .tint(NectarColors.brand)
             Spacer()
         }
     }
 
     private func labeled(_ title: String, _ value: String) -> some View {
         HStack {
-            Text(title).foregroundStyle(BankColors.textSecondary)
+            Text(title).foregroundStyle(NectarColors.textSecondary)
             Spacer()
-            Text(value).font(BankTypography.headline)
+            Text(value).font(NectarTypography.headline)
         }
     }
 }

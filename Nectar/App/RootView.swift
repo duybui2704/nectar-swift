@@ -14,7 +14,7 @@ struct RootView: View {
             case .login:
                 LoginView()
             case .main:
-                OnboardingView()
+                MainShellView()
             }
         }
         .animation(.easeInOut(duration: 0.28), value: session.route)

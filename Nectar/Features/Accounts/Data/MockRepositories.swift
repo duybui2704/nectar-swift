@@ -1,14 +1,14 @@
 import Foundation
 
 final class MockAccountRepository: AccountRepository {
-    func fetchAccounts() async throws -> [BankAccount] {
-        await MockBankAPI.delay()
-        return await MockBankStore.shared.accounts
+    func fetchAccounts() async throws -> [AppAccount] {
+        await MockNectarAPI.delay()
+        return await MockNectarStore.shared.accounts
     }
 
-    func fetchAccount(id: String) async throws -> BankAccount {
-        await MockBankAPI.delay(300)
-        guard let account = await MockBankStore.shared.account(id: id) else {
+    func fetchAccount(id: String) async throws -> AppAccount {
+        await MockNectarAPI.delay(300)
+        guard let account = await MockNectarStore.shared.account(id: id) else {
             throw AppError.notFound
         }
         return account
@@ -17,38 +17,38 @@ final class MockAccountRepository: AccountRepository {
 
 final class MockTransactionRepository: TransactionRepository {
     func fetchRecent(accountId: String, limit: Int) async throws -> [Transaction] {
-        await MockBankAPI.delay()
-        let txs = await MockBankStore.shared.transactions(accountId: accountId)
+        await MockNectarAPI.delay()
+        let txs = await MockNectarStore.shared.transactions(accountId: accountId)
         return Array(txs.prefix(limit))
     }
 
     func fetchAll(accountId: String) async throws -> [Transaction] {
-        await MockBankAPI.delay()
-        return await MockBankStore.shared.transactions(accountId: accountId)
+        await MockNectarAPI.delay()
+        return await MockNectarStore.shared.transactions(accountId: accountId)
     }
 
     func fetchGlobalRecent(limit: Int) async throws -> [Transaction] {
-        await MockBankAPI.delay()
-        let txs = await MockBankStore.shared.allTransactionsSorted()
+        await MockNectarAPI.delay()
+        let txs = await MockNectarStore.shared.allTransactionsSorted()
         return Array(txs.prefix(limit))
     }
 }
 
 final class MockTransferRepository: TransferRepository {
     func fetchBeneficiaries() async throws -> [Beneficiary] {
-        await MockBankAPI.delay(250)
-        return await MockBankStore.shared.beneficiaries
+        await MockNectarAPI.delay(250)
+        return await MockNectarStore.shared.beneficiaries
     }
 
     func submit(_ request: TransferRequest) async throws -> TransferResult {
-        await MockBankAPI.delay(800)
+        await MockNectarAPI.delay(800)
         let beneficiary = try await resolveBeneficiary(for: request)
-        return try await MockBankStore.shared.applyTransfer(request, beneficiary: beneficiary)
+        return try await MockNectarStore.shared.applyTransfer(request, beneficiary: beneficiary)
     }
 
     private func resolveBeneficiary(for request: TransferRequest) async throws -> Beneficiary {
         if let id = request.beneficiaryId,
-           let existing = await MockBankStore.shared.beneficiaries.first(where: { $0.id == id }) {
+           let existing = await MockNectarStore.shared.beneficiaries.first(where: { $0.id == id }) {
             return existing
         }
 
@@ -73,13 +73,13 @@ final class MockTransferRepository: TransferRepository {
 }
 
 final class MockCardRepository: CardRepository {
-    func fetchCards() async throws -> [BankCard] {
-        await MockBankAPI.delay()
-        return await MockBankStore.shared.cards
+    func fetchCards() async throws -> [AppCard] {
+        await MockNectarAPI.delay()
+        return await MockNectarStore.shared.cards
     }
 
-    func setFrozen(cardId: String, frozen: Bool) async throws -> BankCard {
-        await MockBankAPI.delay(400)
-        return try await MockBankStore.shared.setCardFrozen(cardId: cardId, frozen: frozen)
+    func setFrozen(cardId: String, frozen: Bool) async throws -> AppCard {
+        await MockNectarAPI.delay(400)
+        return try await MockNectarStore.shared.setCardFrozen(cardId: cardId, frozen: frozen)
     }
 }

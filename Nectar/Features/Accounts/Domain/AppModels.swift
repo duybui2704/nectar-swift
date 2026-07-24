@@ -1,6 +1,6 @@
 import Foundation
 
-struct BankAccount: Identifiable, Equatable, Hashable {
+struct AppAccount: Identifiable, Equatable, Hashable {
     enum AccountType: String {
         case checking
         case savings
@@ -38,7 +38,7 @@ struct Transaction: Identifiable, Equatable, Hashable {
     var isCredit: Bool { amount > 0 }
 }
 
-struct BankCard: Identifiable, Equatable, Hashable {
+struct AppCard: Identifiable, Equatable, Hashable {
     let id: String
     let brand: String
     let last4: String

@@ -4,7 +4,7 @@ struct SplashView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [BankColors.brand, BankColors.navySoft],
+                colors: [NectarColors.brand, NectarColors.navySoft],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -14,7 +14,7 @@ struct SplashView: View {
                     .font(.system(size: 56))
                     .foregroundStyle(.white)
                 Text("Nectar")
-                    .font(BankTypography.largeTitle)
+                    .font(NectarTypography.largeTitle)
                     .foregroundStyle(.white)
                 ProgressView()
                     .tint(.white)

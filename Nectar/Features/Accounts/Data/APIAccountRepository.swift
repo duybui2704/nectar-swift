@@ -13,14 +13,14 @@ final class APIAccountRepository: AccountRepository {
         self.client = client
     }
 
-    func fetchAccounts() async throws -> [BankAccount] {
+    func fetchAccounts() async throws -> [AppAccount] {
         let user = try await client.get("/users/1", as: RemoteUserDTO.self, authenticated: false)
-        await MockBankAPI.delay(200)
+        await MockNectarAPI.delay(200)
         // Map remote response into local domain; balance still from mock store for demo consistency
-        let mockAccounts = await MockBankStore.shared.accounts
+        let mockAccounts = await MockNectarStore.shared.accounts
         guard let primary = mockAccounts.first else { return [] }
         return [
-            BankAccount(
+            AppAccount(
                 id: primary.id,
                 name: "Ví \(user.name)",
                 numberMasked: primary.numberMasked,
@@ -32,9 +32,9 @@ final class APIAccountRepository: AccountRepository {
         ] + Array(mockAccounts.dropFirst())
     }
 
-    func fetchAccount(id: String) async throws -> BankAccount {
+    func fetchAccount(id: String) async throws -> AppAccount {
         _ = try await client.get("/users/1", as: RemoteUserDTO.self, authenticated: false)
-        guard let account = await MockBankStore.shared.account(id: id) else {
+        guard let account = await MockNectarStore.shared.account(id: id) else {
             throw AppError.notFound
         }
         return account

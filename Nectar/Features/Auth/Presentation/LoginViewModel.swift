@@ -32,7 +32,7 @@ final class LoginViewModel: ObservableObject {
 
     func loginWithPassword() async -> Bool {
         status = .loading
-        await MockBankAPI.delay(500)
+        await MockNectarAPI.delay(500)
         guard username.lowercased() == "demo", password == "123456" else {
             status = .error("Sai tên đăng nhập hoặc mật khẩu. Demo: demo / 123456")
             return false

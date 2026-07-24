@@ -26,7 +26,7 @@ struct CardsView: View {
                             .padding(.vertical, 12)
                         }
                         .buttonStyle(.bordered)
-                        .tint(card.isFrozen ? BankColors.success : BankColors.danger)
+                        .tint(card.isFrozen ? NectarColors.success : NectarColors.danger)
                     }
 
                     if viewModel.cards.isEmpty, viewModel.status == .success {
@@ -35,7 +35,7 @@ struct CardsView: View {
                 }
                 .padding(16)
             }
-            .background(BankColors.background.ignoresSafeArea())
+            .background(NectarColors.background.ignoresSafeArea())
             .navigationTitle("Thẻ")
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
@@ -44,18 +44,18 @@ struct CardsView: View {
 }
 
 struct CardVisual: View {
-    let card: BankCard
+    let card: AppCard
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
                 Text(card.brand)
-                    .font(BankTypography.headline)
+                    .font(NectarTypography.headline)
                     .foregroundStyle(.white)
                 Spacer()
                 if card.isFrozen {
                     Text("FROZEN")
-                        .font(BankTypography.caption)
+                        .font(NectarTypography.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(.white.opacity(0.2))
@@ -68,12 +68,12 @@ struct CardVisual: View {
                 .foregroundStyle(.white)
             HStack {
                 VStack(alignment: .leading) {
-                    Text("CHỦ THẺ").font(BankTypography.caption).foregroundStyle(.white.opacity(0.7))
+                    Text("CHỦ THẺ").font(NectarTypography.caption).foregroundStyle(.white.opacity(0.7))
                     Text(card.holderName).foregroundStyle(.white)
                 }
                 Spacer()
                 VStack(alignment: .trailing) {
-                    Text("HẾT HẠN").font(BankTypography.caption).foregroundStyle(.white.opacity(0.7))
+                    Text("HẾT HẠN").font(NectarTypography.caption).foregroundStyle(.white.opacity(0.7))
                     Text(card.expiry).foregroundStyle(.white)
                 }
             }
@@ -83,7 +83,7 @@ struct CardVisual: View {
         .background(
             LinearGradient(
                 colors: card.brand.lowercased().contains("visa")
-                    ? [BankColors.navy, BankColors.navySoft]
+                    ? [NectarColors.navy, NectarColors.navySoft]
                     : [Color(hex: 0x1E293B), Color(hex: 0x334155)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing

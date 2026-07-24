@@ -26,7 +26,7 @@ struct OffersView: View {
             }
             .padding(16)
         }
-        .background(BankColors.background.ignoresSafeArea())
+        .background(NectarColors.background.ignoresSafeArea())
         .navigationTitle("Ưu đãi")
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
@@ -40,30 +40,30 @@ struct OfferCard: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(offer.title)
-                    .font(BankTypography.headline)
+                    .font(NectarTypography.headline)
                 Spacer()
                 Text(offer.badge)
-                    .font(BankTypography.caption)
-                    .foregroundStyle(BankColors.brand)
+                    .font(NectarTypography.caption)
+                    .foregroundStyle(NectarColors.brand)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(BankColors.brandSoft)
+                    .background(NectarColors.brandSoft)
                     .clipShape(Capsule())
             }
             Text(offer.subtitle)
-                .font(BankTypography.caption)
-                .foregroundStyle(BankColors.textSecondary)
+                .font(NectarTypography.caption)
+                .foregroundStyle(NectarColors.textSecondary)
             Text("HSD: \(offer.expiryText)")
                 .font(.system(size: 11))
-                .foregroundStyle(BankColors.textSecondary)
+                .foregroundStyle(NectarColors.textSecondary)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(BankColors.surface)
+        .background(NectarColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(BankColors.border, lineWidth: 1)
+                .stroke(NectarColors.border, lineWidth: 1)
         )
     }
 }

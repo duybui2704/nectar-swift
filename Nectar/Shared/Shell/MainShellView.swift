@@ -3,9 +3,9 @@ import SwiftUI
 
 enum DeepLinkRouter {
     enum Destination: Equatable {
-        case transfer
-        case history
-        case offers
+        case cart
+        case explore
+        case favourite
     }
 
     @MainActor
@@ -13,80 +13,89 @@ enum DeepLinkRouter {
         guard url.scheme == "nectar" else { return nil }
         guard session.route == .main else { return nil }
         switch url.host {
-        case "transfer": return .transfer
-        case "history": return .history
-        case "offers": return .offers
+        case "cart": return .cart
+        case "explore": return .explore
+        case "favourite", "favorite": return .favourite
         default: return nil
         }
     }
+}
+
+enum MainTab: Int, Hashable {
+    case shop = 0
+    case explore = 1
+    case cart = 2
+    case favourite = 3
+    case account = 4
 }
 
 /// Tab shell with deep-link routing support.
 struct MainShellView: View {
     @EnvironmentObject private var session: AppSession
     @StateObject private var lockService = SessionLockService.shared
-    @State private var selectedTab = 0
-    @State private var showTransfer = false
+    @State private var selectedTab: MainTab = .shop
     @HotReloadObserver private var _hr
 
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                DashboardView()
-                    .tag(0)
-                    .tabItem { Label("Trang chủ", systemImage: "house.fill") }
+                ShopView()
+                    .tag(MainTab.shop)
+                    .tabItem { Label("Shop", systemImage: "storefront") }
 
-                NavigationStack { HistoryView() }
-                    .tag(1)
-                    .tabItem { Label("Lịch sử", systemImage: "clock.arrow.circlepath") }
+                ExploreView()
+                    .tag(MainTab.explore)
+                    .tabItem { Label("Explore", systemImage: "line.3.horizontal.decrease.circle") }
 
-                NavigationStack { OffersView() }
-                    .tag(2)
-                    .tabItem { Label("Ưu đãi", systemImage: "gift.fill") }
+                CartView()
+                    .tag(MainTab.cart)
+                    .tabItem { Label("Cart", systemImage: "cart") }
 
-                CardsView()
-                    .tag(3)
-                    .tabItem { Label("Thẻ", systemImage: "creditcard.fill") }
+                FavouriteView()
+                    .tag(MainTab.favourite)
+                    .tabItem { Label("Favourite", systemImage: "heart") }
 
                 ProfileView()
-                    .tag(4)
-                    .tabItem { Label("Tài khoản", systemImage: "person.crop.circle") }
+                    .tag(MainTab.account)
+                    .tabItem { Label("Account", systemImage: "person") }
             }
-            .tint(BankColors.brand)
+            .tint(NectarColors.green)
+            .onAppear(perform: configureTabBarAppearance)
             .onOpenURL { url in
                 applyDeepLink(DeepLinkRouter.handle(url: url, session: session))
-            }
-            // .onAppear {
-            //     lockService.startMonitoring()
-            // }
-            // .onDisappear {
-            //     lockService.stopMonitoring()
-            // }
-            // .simultaneousGesture(TapGesture().onEnded { lockService.recordActivity() })
-
-            // SessionLockOverlay(
-            //     lockService: lockService,
-            //     onUnlockBiometric: {
-            //         await BiometricAuthService.shared.authenticate(reason: "Mở khóa phiên Nectar")
-            //     },
-            //     onUnlockPIN: { PINService.verify($0) },
-            //     onForceLogout: { session.logout() }
-            // )
-        }
-        .sheet(isPresented: $showTransfer) {
-            NavigationStack {
-                TransferView()
             }
         }
         .hotReload()
     }
 
+    private func configureTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = UIColor.black.withAlphaComponent(0.08)
+
+        let normal = appearance.stackedLayoutAppearance.normal
+        normal.iconColor = UIColor(NectarColors.textPrimary)
+        normal.titleTextAttributes = [
+            .foregroundColor: UIColor(NectarColors.textPrimary),
+        ]
+
+        let selected = appearance.stackedLayoutAppearance.selected
+        selected.iconColor = UIColor(NectarColors.green)
+        selected.titleTextAttributes = [
+            .foregroundColor: UIColor(NectarColors.green),
+        ]
+
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+
     private func applyDeepLink(_ destination: DeepLinkRouter.Destination?) {
         guard let destination else { return }
         switch destination {
-        case .transfer: showTransfer = true
-        case .history: selectedTab = 1
-        case .offers: selectedTab = 2
+        case .cart: selectedTab = .cart
+        case .explore: selectedTab = .explore
+        case .favourite: selectedTab = .favourite
         }
     }
 }

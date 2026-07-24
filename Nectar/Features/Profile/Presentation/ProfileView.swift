@@ -11,44 +11,44 @@ struct ProfileView: View {
                 Section {
                     HStack(spacing: 12) {
                         Circle()
-                            .fill(BankColors.brandSoft)
+                            .fill(NectarColors.brandSoft)
                             .frame(width: 52, height: 52)
                             .overlay(
                                 Text(String(session.userDisplayName.prefix(1)))
-                                    .font(BankTypography.title)
-                                    .foregroundStyle(BankColors.brand)
+                                    .font(NectarTypography.title)
+                                    .foregroundStyle(NectarColors.brand)
                             )
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(session.userDisplayName).font(BankTypography.headline)
-                            Text(MockBankAPI.phoneMasked)
-                                .font(BankTypography.caption)
-                                .foregroundStyle(BankColors.textSecondary)
+                            Text(session.userDisplayName).font(NectarTypography.headline)
+                            Text(MockNectarAPI.phoneMasked)
+                                .font(NectarTypography.caption)
+                                .foregroundStyle(NectarColors.textSecondary)
                             if let token = session.sessionToken {
                                 Text("Session · \(token.prefix(12))…")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .foregroundStyle(BankColors.textSecondary)
+                                    .foregroundStyle(NectarColors.textSecondary)
                             }
                         }
                     }
                     .padding(.vertical, 4)
                 }
 
-                Section("Ví & ngân hàng") {
+                Section("Orders & delivery") {
                     NavigationLink {
                         PlaceholderFeatureView(
-                            title: "Quản lý ví",
-                            message: "Danh sách ví / số dư — map từ getAccountList PostPay."
+                            title: "My Orders",
+                            message: "Track past and current grocery orders."
                         )
                     } label: {
-                        Label("Quản lý ví", systemImage: "wallet.pass")
+                        Label("My Orders", systemImage: "bag")
                     }
                     NavigationLink {
                         PlaceholderFeatureView(
-                            title: "Ngân hàng liên kết",
-                            message: "Link bank Napas — map từ getBankLinkList PostPay."
+                            title: "Delivery Address",
+                            message: "Manage where your orders are delivered."
                         )
                     } label: {
-                        Label("Ngân hàng liên kết", systemImage: "building.columns")
+                        Label("Delivery Address", systemImage: "mappin.and.ellipse")
                     }
                 }
 
@@ -83,7 +83,7 @@ struct ProfileView: View {
                     }
                 }
             }
-            .navigationTitle("Tài khoản")
+            .navigationTitle("Account")
         }
     }
 }

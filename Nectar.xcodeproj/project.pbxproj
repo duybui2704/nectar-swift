@@ -10,18 +10,18 @@
 		93C4349183940815DA2BDD2C /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F13A87913047C760245BF5 /* AppSession.swift */; };
 		B51D8EB80229BFA0D5B7AC78 /* NectarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038EEF73E77CC12C49E15DDD /* NectarApp.swift */; };
 		83C031E3F0E7C3894F9E1AEB /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D85C474ED072C451CC3385 /* RootView.swift */; };
-		285970D430A36C729EA21FEF /* BankColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365D8E3809DD02A741ADA7E3 /* BankColors.swift */; };
-		70D88EE89400426DB2D5D7E2 /* BankTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C645493D98F1DC2606E7068 /* BankTypography.swift */; };
-		A7B8C9D0E1F2031425364758 /* BankMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* BankMetrics.swift */; };
+		285970D430A36C729EA21FEF /* NectarColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365D8E3809DD02A741ADA7E3 /* NectarColors.swift */; };
+		70D88EE89400426DB2D5D7E2 /* NectarTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C645493D98F1DC2606E7068 /* NectarTypography.swift */; };
+		A7B8C9D0E1F2031425364758 /* NectarMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* NectarMetrics.swift */; };
 		8FA953C40670CEC1C0A12ED7 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184482D482541AC95E780442 /* AppError.swift */; };
 		BB1672FC2F95A5B5AF1804DB /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2283F85A6936F8AA1CF3896 /* APIClient.swift */; };
-		4539DDE14355A3DCD4315F37 /* MockBankAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280683F80872D17F5B3D3558 /* MockBankAPI.swift */; };
+		4539DDE14355A3DCD4315F37 /* MockNectarAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280683F80872D17F5B3D3558 /* MockNectarAPI.swift */; };
 		C4CDFF78D891EADD42E0A3E1 /* BiometricAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069C9D030422D824902A0941 /* BiometricAuthService.swift */; };
 		2E0C067270149C9842591B83 /* AppStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00498DE51FCA100C16272CD1 /* AppStorageService.swift */; };
 		B66CA91FE84A14412C32BC76 /* MoneyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3145218E5322CA7EC2E860F6 /* MoneyFormatter.swift */; };
 		A21F5EEE702C24E758331AFA /* MockRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820F1412AACF4A6D991D8643 /* MockRepositories.swift */; };
-		9669501F4D85248F4347036C /* BankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309D1027E023D6282F26B10D /* BankModels.swift */; };
-		106DFA660A084F13CA1208EA /* BankRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2E630BA4E0472DECB3E73D /* BankRepositories.swift */; };
+		9669501F4D85248F4347036C /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309D1027E023D6282F26B10D /* AppModels.swift */; };
+		106DFA660A084F13CA1208EA /* AppRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2E630BA4E0472DECB3E73D /* AppRepositories.swift */; };
 		8D5C65891718147A24056B68 /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6172A1F7E7436DB306F038F1 /* AccountDetailView.swift */; };
 		3DBC238457FE1A466061A2BC /* AccountDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BD51CC67C10306D2B157FC /* AccountDetailViewModel.swift */; };
 		DA7CA4C9159F53879EE675D2 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D565931BC016DFB5BDC3291D /* LoginView.swift */; };
@@ -35,10 +35,14 @@
 		F8C75A756E6DB92361D1C78E /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42AB2FAA0AA359264B27462 /* SplashView.swift */; };
 		5B75E1E9F04FC0B90307A9F1 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1DA0782B4F346A6865C0CBC /* TransferView.swift */; };
 		3710EAE3648487BB859A1B47 /* TransferViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C5DFD6ADB5216F80C8AD89 /* TransferViewModel.swift */; };
-		4A0C8060FC124569E5115831 /* BankRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C8ACB279922265E1DD942F /* BankRows.swift */; };
+		4A0C8060FC124569E5115831 /* AppRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C8ACB279922265E1DD942F /* AppRows.swift */; };
 		69FFE664864E425712318798 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817817D6F3D39E9BF80A6DA9 /* MainTabView.swift */; };
+		A11111111111111111111101 /* ShopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111101 /* ShopView.swift */; };
+		A11111111111111111111102 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111102 /* ExploreView.swift */; };
+		A11111111111111111111103 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111103 /* CartView.swift */; };
+		A11111111111111111111104 /* FavouriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111104 /* FavouriteView.swift */; };
 		95F893ABF8DE2704294E63B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5417BC6652ACDD9848361A86 /* Assets.xcassets */; };
-		A1B2C3D4E5F60718293A4B5C /* MockBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6C /* MockBankStore.swift */; };
+		A1B2C3D4E5F60718293A4B5C /* MockNectarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6C /* MockNectarStore.swift */; };
 		C2D3E4F5061728394A5B6C7D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E4F5061728394A5B6C7D8E /* KeychainService.swift */; };
 		E4F5061728394A5B6C7D8E9F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5061728394A5B6C7D8E9F0A /* HistoryView.swift */; };
 		061728394A5B6C7D8E9F0A1B /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1728394A5B6C7D8E9F0A1B2C /* HistoryViewModel.swift */; };
@@ -64,18 +68,18 @@
 		23F13A87913047C760245BF5 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/AppSession.swift"; sourceTree = "<group>"; };
 		038EEF73E77CC12C49E15DDD /* NectarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/NectarApp.swift"; sourceTree = "<group>"; };
 		E6D85C474ED072C451CC3385 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/RootView.swift"; sourceTree = "<group>"; };
-		365D8E3809DD02A741ADA7E3 /* BankColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/BankColors.swift"; sourceTree = "<group>"; };
-		3C645493D98F1DC2606E7068 /* BankTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/BankTypography.swift"; sourceTree = "<group>"; };
-		B8C9D0E1F203142536475869 /* BankMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/BankMetrics.swift"; sourceTree = "<group>"; };
+		365D8E3809DD02A741ADA7E3 /* NectarColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/NectarColors.swift"; sourceTree = "<group>"; };
+		3C645493D98F1DC2606E7068 /* NectarTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/NectarTypography.swift"; sourceTree = "<group>"; };
+		B8C9D0E1F203142536475869 /* NectarMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/NectarMetrics.swift"; sourceTree = "<group>"; };
 		184482D482541AC95E780442 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Errors/AppError.swift"; sourceTree = "<group>"; };
 		E2283F85A6936F8AA1CF3896 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/APIClient.swift"; sourceTree = "<group>"; };
-		280683F80872D17F5B3D3558 /* MockBankAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/MockBankAPI.swift"; sourceTree = "<group>"; };
+		280683F80872D17F5B3D3558 /* MockNectarAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/MockNectarAPI.swift"; sourceTree = "<group>"; };
 		069C9D030422D824902A0941 /* BiometricAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Security/BiometricAuthService.swift"; sourceTree = "<group>"; };
 		00498DE51FCA100C16272CD1 /* AppStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Storage/AppStorageService.swift"; sourceTree = "<group>"; };
 		3145218E5322CA7EC2E860F6 /* MoneyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Utils/MoneyFormatter.swift"; sourceTree = "<group>"; };
 		820F1412AACF4A6D991D8643 /* MockRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Data/MockRepositories.swift"; sourceTree = "<group>"; };
-		309D1027E023D6282F26B10D /* BankModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Domain/BankModels.swift"; sourceTree = "<group>"; };
-		BE2E630BA4E0472DECB3E73D /* BankRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Domain/BankRepositories.swift"; sourceTree = "<group>"; };
+		309D1027E023D6282F26B10D /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Domain/AppModels.swift"; sourceTree = "<group>"; };
+		BE2E630BA4E0472DECB3E73D /* AppRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Domain/AppRepositories.swift"; sourceTree = "<group>"; };
 		6172A1F7E7436DB306F038F1 /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Presentation/AccountDetailView.swift"; sourceTree = "<group>"; };
 		D0BD51CC67C10306D2B157FC /* AccountDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Presentation/AccountDetailViewModel.swift"; sourceTree = "<group>"; };
 		D565931BC016DFB5BDC3291D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Auth/Presentation/LoginView.swift"; sourceTree = "<group>"; };
@@ -89,11 +93,15 @@
 		E42AB2FAA0AA359264B27462 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Splash/Presentation/SplashView.swift"; sourceTree = "<group>"; };
 		B1DA0782B4F346A6865C0CBC /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Transfers/Presentation/TransferView.swift"; sourceTree = "<group>"; };
 		29C5DFD6ADB5216F80C8AD89 /* TransferViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Transfers/Presentation/TransferViewModel.swift"; sourceTree = "<group>"; };
-		C9C8ACB279922265E1DD942F /* BankRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Components/BankRows.swift"; sourceTree = "<group>"; };
+		C9C8ACB279922265E1DD942F /* AppRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Components/AppRows.swift"; sourceTree = "<group>"; };
 		817817D6F3D39E9BF80A6DA9 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Shell/MainTabView.swift"; sourceTree = "<group>"; };
+		B11111111111111111111101 /* ShopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Shop/Presentation/ShopView.swift"; sourceTree = "<group>"; };
+		B11111111111111111111102 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Explore/Presentation/ExploreView.swift"; sourceTree = "<group>"; };
+		B11111111111111111111103 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Cart/Presentation/CartView.swift"; sourceTree = "<group>"; };
+		B11111111111111111111104 /* FavouriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Favourite/Presentation/FavouriteView.swift"; sourceTree = "<group>"; };
 		73AD16181FDDB7427288C6BD /* Nectar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nectar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5417BC6652ACDD9848361A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
-		B1C2D3E4F5061728394A5B6C /* MockBankStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/MockBankStore.swift"; sourceTree = "<group>"; };
+		B1C2D3E4F5061728394A5B6C /* MockNectarStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/MockNectarStore.swift"; sourceTree = "<group>"; };
 		D3E4F5061728394A5B6C7D8E /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Storage/KeychainService.swift"; sourceTree = "<group>"; };
 		F5061728394A5B6C7D8E9F0A /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/History/Presentation/HistoryView.swift"; sourceTree = "<group>"; };
 		1728394A5B6C7D8E9F0A1B2C /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/History/Presentation/HistoryViewModel.swift"; sourceTree = "<group>"; };
@@ -177,18 +185,18 @@
 				23F13A87913047C760245BF5 /* AppSession.swift */,
 				038EEF73E77CC12C49E15DDD /* NectarApp.swift */,
 				E6D85C474ED072C451CC3385 /* RootView.swift */,
-				365D8E3809DD02A741ADA7E3 /* BankColors.swift */,
-				3C645493D98F1DC2606E7068 /* BankTypography.swift */,
-				B8C9D0E1F203142536475869 /* BankMetrics.swift */,
+				365D8E3809DD02A741ADA7E3 /* NectarColors.swift */,
+				3C645493D98F1DC2606E7068 /* NectarTypography.swift */,
+				B8C9D0E1F203142536475869 /* NectarMetrics.swift */,
 				184482D482541AC95E780442 /* AppError.swift */,
 				E2283F85A6936F8AA1CF3896 /* APIClient.swift */,
-				280683F80872D17F5B3D3558 /* MockBankAPI.swift */,
+				280683F80872D17F5B3D3558 /* MockNectarAPI.swift */,
 				069C9D030422D824902A0941 /* BiometricAuthService.swift */,
 				00498DE51FCA100C16272CD1 /* AppStorageService.swift */,
 				3145218E5322CA7EC2E860F6 /* MoneyFormatter.swift */,
 				820F1412AACF4A6D991D8643 /* MockRepositories.swift */,
-				309D1027E023D6282F26B10D /* BankModels.swift */,
-				BE2E630BA4E0472DECB3E73D /* BankRepositories.swift */,
+				309D1027E023D6282F26B10D /* AppModels.swift */,
+				BE2E630BA4E0472DECB3E73D /* AppRepositories.swift */,
 				6172A1F7E7436DB306F038F1 /* AccountDetailView.swift */,
 				D0BD51CC67C10306D2B157FC /* AccountDetailViewModel.swift */,
 				D565931BC016DFB5BDC3291D /* LoginView.swift */,
@@ -202,9 +210,13 @@
 				E42AB2FAA0AA359264B27462 /* SplashView.swift */,
 				B1DA0782B4F346A6865C0CBC /* TransferView.swift */,
 				29C5DFD6ADB5216F80C8AD89 /* TransferViewModel.swift */,
-				C9C8ACB279922265E1DD942F /* BankRows.swift */,
+				C9C8ACB279922265E1DD942F /* AppRows.swift */,
 				817817D6F3D39E9BF80A6DA9 /* MainTabView.swift */,
-				B1C2D3E4F5061728394A5B6C /* MockBankStore.swift */,
+				B11111111111111111111101 /* ShopView.swift */,
+				B11111111111111111111102 /* ExploreView.swift */,
+				B11111111111111111111103 /* CartView.swift */,
+				B11111111111111111111104 /* FavouriteView.swift */,
+				B1C2D3E4F5061728394A5B6C /* MockNectarStore.swift */,
 				D3E4F5061728394A5B6C7D8E /* KeychainService.swift */,
 				F5061728394A5B6C7D8E9F0A /* HistoryView.swift */,
 				1728394A5B6C7D8E9F0A1B2C /* HistoryViewModel.swift */,
@@ -329,18 +341,18 @@
 				93C4349183940815DA2BDD2C /* AppSession.swift in Sources */,
 				B51D8EB80229BFA0D5B7AC78 /* NectarApp.swift in Sources */,
 				83C031E3F0E7C3894F9E1AEB /* RootView.swift in Sources */,
-				285970D430A36C729EA21FEF /* BankColors.swift in Sources */,
-				70D88EE89400426DB2D5D7E2 /* BankTypography.swift in Sources */,
-				A7B8C9D0E1F2031425364758 /* BankMetrics.swift in Sources */,
+				285970D430A36C729EA21FEF /* NectarColors.swift in Sources */,
+				70D88EE89400426DB2D5D7E2 /* NectarTypography.swift in Sources */,
+				A7B8C9D0E1F2031425364758 /* NectarMetrics.swift in Sources */,
 				8FA953C40670CEC1C0A12ED7 /* AppError.swift in Sources */,
 				BB1672FC2F95A5B5AF1804DB /* APIClient.swift in Sources */,
-				4539DDE14355A3DCD4315F37 /* MockBankAPI.swift in Sources */,
+				4539DDE14355A3DCD4315F37 /* MockNectarAPI.swift in Sources */,
 				C4CDFF78D891EADD42E0A3E1 /* BiometricAuthService.swift in Sources */,
 				2E0C067270149C9842591B83 /* AppStorageService.swift in Sources */,
 				B66CA91FE84A14412C32BC76 /* MoneyFormatter.swift in Sources */,
 				A21F5EEE702C24E758331AFA /* MockRepositories.swift in Sources */,
-				9669501F4D85248F4347036C /* BankModels.swift in Sources */,
-				106DFA660A084F13CA1208EA /* BankRepositories.swift in Sources */,
+				9669501F4D85248F4347036C /* AppModels.swift in Sources */,
+				106DFA660A084F13CA1208EA /* AppRepositories.swift in Sources */,
 				8D5C65891718147A24056B68 /* AccountDetailView.swift in Sources */,
 				3DBC238457FE1A466061A2BC /* AccountDetailViewModel.swift in Sources */,
 				DA7CA4C9159F53879EE675D2 /* LoginView.swift in Sources */,
@@ -354,8 +366,8 @@
 				F8C75A756E6DB92361D1C78E /* SplashView.swift in Sources */,
 				5B75E1E9F04FC0B90307A9F1 /* TransferView.swift in Sources */,
 				3710EAE3648487BB859A1B47 /* TransferViewModel.swift in Sources */,
-				4A0C8060FC124569E5115831 /* BankRows.swift in Sources */,
-				A1B2C3D4E5F60718293A4B5C /* MockBankStore.swift in Sources */,
+				4A0C8060FC124569E5115831 /* AppRows.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* MockNectarStore.swift in Sources */,
 				C2D3E4F5061728394A5B6C7D /* KeychainService.swift in Sources */,
 				E4F5061728394A5B6C7D8E9F /* HistoryView.swift in Sources */,
 				061728394A5B6C7D8E9F0A1B /* HistoryViewModel.swift in Sources */,
@@ -373,6 +385,10 @@
 				3A5DA9061AEB4685BAF19EF9 /* HistoryViewModelObservable.swift in Sources */,
 				DF0BDFFABFB642448A627E81 /* WidgetDataStore.swift in Sources */,
 				69FFE664864E425712318798 /* MainTabView.swift in Sources */,
+				A11111111111111111111101 /* ShopView.swift in Sources */,
+				A11111111111111111111102 /* ExploreView.swift in Sources */,
+				A11111111111111111111103 /* CartView.swift in Sources */,
+				A11111111111111111111104 /* FavouriteView.swift in Sources */,
 				4FE1A2B3C4D5E6F7890A1B2C /* HotReload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

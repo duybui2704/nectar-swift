@@ -9,7 +9,7 @@ struct HistoryView: View {
             filterBar
             content
         }
-        .background(BankColors.background.ignoresSafeArea())
+        .background(NectarColors.background.ignoresSafeArea())
         .navigationTitle("Lịch sử")
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
@@ -24,16 +24,16 @@ struct HistoryView: View {
                         viewModel.selectedFilter = filter
                     } label: {
                         Text(filter.rawValue)
-                            .font(BankTypography.caption)
+                            .font(NectarTypography.caption)
                             .fontWeight(viewModel.selectedFilter == filter ? .semibold : .regular)
-                            .foregroundStyle(viewModel.selectedFilter == filter ? .white : BankColors.textPrimary)
+                            .foregroundStyle(viewModel.selectedFilter == filter ? .white : NectarColors.textPrimary)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
-                            .background(viewModel.selectedFilter == filter ? BankColors.brand : BankColors.surface)
+                            .background(viewModel.selectedFilter == filter ? NectarColors.brand : NectarColors.surface)
                             .clipShape(Capsule())
                             .overlay(
                                 Capsule()
-                                    .stroke(BankColors.border, lineWidth: viewModel.selectedFilter == filter ? 0 : 1)
+                                    .stroke(NectarColors.border, lineWidth: viewModel.selectedFilter == filter ? 0 : 1)
                             )
                     }
                     .buttonStyle(.plain)
@@ -54,7 +54,7 @@ struct HistoryView: View {
             VStack(spacing: 12) {
                 StatusBanner(message: message, style: .error)
                 Button("Thử lại") { Task { await viewModel.load() } }
-                    .foregroundStyle(BankColors.brand)
+                    .foregroundStyle(NectarColors.brand)
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -70,7 +70,7 @@ struct HistoryView: View {
                 List(viewModel.filteredTransactions) { tx in
                     TransactionRow(transaction: tx)
                         .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                        .listRowBackground(BankColors.surface)
+                        .listRowBackground(NectarColors.surface)
                 }
                 .listStyle(.plain)
             }

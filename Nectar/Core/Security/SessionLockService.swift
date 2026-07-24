@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-/// Idle session lock — banking standard (PostPay-style ~5 min).
+/// Idle session lock — ~5 min inactivity.
 @MainActor
 final class SessionLockService: ObservableObject {
     static let shared = SessionLockService()

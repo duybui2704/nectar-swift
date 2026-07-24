@@ -21,7 +21,7 @@ struct DashboardView: View {
                 }
                 .padding(16)
             }
-            .background(BankColors.background.ignoresSafeArea())
+            .background(NectarColors.background.ignoresSafeArea())
             .navigationBarHidden(true)
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
@@ -36,17 +36,17 @@ struct DashboardView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Xin chào,")
-                    .font(BankTypography.caption)
-                    .foregroundStyle(BankColors.textSecondary)
+                    .font(NectarTypography.caption)
+                    .foregroundStyle(NectarColors.textSecondary)
                 Text(session.userDisplayName)
-                    .font(BankTypography.title)
+                    .font(NectarTypography.title)
             }
             Spacer()
             Image(systemName: "bell")
                 .font(.title3)
-                .foregroundStyle(BankColors.brand)
+                .foregroundStyle(NectarColors.brand)
                 .frame(width: 40, height: 40)
-                .background(BankColors.surface)
+                .background(NectarColors.surface)
                 .clipShape(Circle())
         }
     }
@@ -72,12 +72,12 @@ struct DashboardView: View {
                 Image(systemName: icon).font(.body.weight(.semibold))
                 Text(title).font(.system(size: 11, weight: .medium))
             }
-            .foregroundStyle(BankColors.brand)
+            .foregroundStyle(NectarColors.brand)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)
-            .background(BankColors.surface)
+            .background(NectarColors.surface)
             .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(BankColors.border, lineWidth: 1))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(NectarColors.border, lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
@@ -98,7 +98,7 @@ struct DashboardView: View {
 
     private var accountsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Tài khoản / Ví").font(BankTypography.headline)
+            Text("Tài khoản / Ví").font(NectarTypography.headline)
             if viewModel.accounts.isEmpty, viewModel.status == .loading {
                 ProgressView()
             } else {
@@ -115,11 +115,11 @@ struct DashboardView: View {
     private var recentSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("Giao dịch gần đây").font(BankTypography.headline)
+                Text("Giao dịch gần đây").font(NectarTypography.headline)
                 Spacer()
                 NavigationLink("Xem tất cả") { HistoryView() }
-                    .font(BankTypography.caption)
-                    .foregroundStyle(BankColors.brand)
+                    .font(NectarTypography.caption)
+                    .foregroundStyle(NectarColors.brand)
             }
             if viewModel.recentTransactions.isEmpty && viewModel.status == .loading {
                 ProgressView()
@@ -129,7 +129,7 @@ struct DashboardView: View {
                 ForEach(viewModel.recentTransactions) { tx in
                     TransactionRow(transaction: tx)
                         .padding(12)
-                        .background(BankColors.surface)
+                        .background(NectarColors.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             }
@@ -145,19 +145,19 @@ struct QuickActionChip: View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundStyle(BankColors.brand)
+                .foregroundStyle(NectarColors.brand)
                 .frame(width: 44, height: 44)
-                .background(BankColors.brandSoft)
+                .background(NectarColors.brandSoft)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             Text(title)
-                .font(BankTypography.caption)
-                .foregroundStyle(BankColors.textPrimary)
+                .font(NectarTypography.caption)
+                .foregroundStyle(NectarColors.textPrimary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .background(BankColors.surface)
+        .background(NectarColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(BankColors.border, lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(NectarColors.border, lineWidth: 1))
     }
 }
 
@@ -169,16 +169,16 @@ struct PlaceholderFeatureView: View {
         VStack(spacing: 12) {
             Image(systemName: "hammer.fill")
                 .font(.largeTitle)
-                .foregroundStyle(BankColors.brand)
-            Text(title).font(BankTypography.title)
+                .foregroundStyle(NectarColors.brand)
+            Text(title).font(NectarTypography.title)
             Text(message)
-                .font(BankTypography.body)
-                .foregroundStyle(BankColors.textSecondary)
+                .font(NectarTypography.body)
+                .foregroundStyle(NectarColors.textSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(BankColors.background.ignoresSafeArea())
+        .background(NectarColors.background.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -1,13 +1,13 @@
 import SwiftUI
 
-/// Design tokens inspired by PostPay brand blue, kept banking-safe.
-enum BankColors {
-    static let brand = Color(hex: 0x0A4BB3)
-    static let brandSoft = Color(hex: 0xE8F0FA)
-    static let navy = Color(hex: 0x0A4BB3)
-    static let navySoft = Color(hex: 0x1D5FC4)
-    static let teal = Color(hex: 0x0A4BB3)
-    static let tealSoft = Color(hex: 0xE8F0FA)
+/// Nectar grocery design tokens — primary green from the product UI.
+enum NectarColors {
+    static let brand = Color(hex: 0x53B175)
+    static let brandSoft = Color(hex: 0xEBF8F0)
+    static let navy = Color(hex: 0x181725)
+    static let navySoft = Color(hex: 0x2E2C3A)
+    static let teal = Color(hex: 0x53B175)
+    static let tealSoft = Color(hex: 0xEBF8F0)
     static let background = Color(hex: 0xF2F2F2)
     static let surface = Color.white
     static let textPrimary = Color(hex: 0x292D32)

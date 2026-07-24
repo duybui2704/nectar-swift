@@ -8,7 +8,7 @@ final class AccountDetailViewModel: ObservableObject {
     }
 
     @Published private(set) var status: Status = .idle
-    @Published private(set) var account: BankAccount?
+    @Published private(set) var account: AppAccount?
     @Published private(set) var transactions: [Transaction] = []
 
     private let accountId: String

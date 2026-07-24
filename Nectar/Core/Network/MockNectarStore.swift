@@ -1,18 +1,18 @@
 import Foundation
 
-/// Mutable in-memory bank data so transfers update balances & history (PostPay-like demo loop).
+/// Mutable in-memory store so transfers update balances & history (demo loop).
 @MainActor
-final class MockBankStore {
-    static let shared = MockBankStore()
+final class MockNectarStore {
+    static let shared = MockNectarStore()
 
-    private(set) var accounts: [BankAccount]
-    private(set) var cards: [BankCard]
+    private(set) var accounts: [AppAccount]
+    private(set) var cards: [AppCard]
     private(set) var beneficiaries: [Beneficiary]
     private var transactionsByAccount: [String: [Transaction]]
 
     private init() {
         accounts = [
-            BankAccount(
+            AppAccount(
                 id: "acc-checking",
                 name: "Ví thanh toán",
                 numberMasked: "**** 4821",
@@ -21,7 +21,7 @@ final class MockBankStore {
                 balance: 48_250_000,
                 availableBalance: 48_250_000
             ),
-            BankAccount(
+            AppAccount(
                 id: "acc-saving",
                 name: "Tiết kiệm",
                 numberMasked: "**** 0193",
@@ -30,7 +30,7 @@ final class MockBankStore {
                 balance: 120_000_000,
                 availableBalance: 120_000_000
             ),
-            BankAccount(
+            AppAccount(
                 id: "acc-usd",
                 name: "Ngoại tệ USD",
                 numberMasked: "**** 7710",
@@ -41,7 +41,7 @@ final class MockBankStore {
             ),
         ]
         cards = [
-            BankCard(
+            AppCard(
                 id: "card-visa",
                 brand: "Visa",
                 last4: "4242",
@@ -50,7 +50,7 @@ final class MockBankStore {
                 isFrozen: false,
                 limit: 50_000_000
             ),
-            BankCard(
+            AppCard(
                 id: "card-debit",
                 brand: "Napas Debit",
                 last4: "1188",
@@ -70,7 +70,7 @@ final class MockBankStore {
         )
     }
 
-    func account(id: String) -> BankAccount? {
+    func account(id: String) -> AppAccount? {
         accounts.first { $0.id == id }
     }
 
@@ -85,7 +85,7 @@ final class MockBankStore {
     }
 
     @discardableResult
-    func setCardFrozen(cardId: String, frozen: Bool) throws -> BankCard {
+    func setCardFrozen(cardId: String, frozen: Bool) throws -> AppCard {
         guard let index = cards.firstIndex(where: { $0.id == cardId }) else {
             throw AppError.notFound
         }
@@ -115,7 +115,7 @@ final class MockBankStore {
         }
 
         let newBalance = source.balance - request.amount
-        accounts[index] = BankAccount(
+        accounts[index] = AppAccount(
             id: source.id,
             name: source.name,
             numberMasked: source.numberMasked,

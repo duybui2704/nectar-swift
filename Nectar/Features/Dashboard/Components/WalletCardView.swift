@@ -10,7 +10,7 @@ struct WalletCardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Số dư khả dụng")
-                    .font(BankTypography.caption)
+                    .font(NectarTypography.caption)
                     .foregroundStyle(.white.opacity(0.85))
                 Spacer()
                 Button {
@@ -28,31 +28,31 @@ struct WalletCardView: View {
                     ProgressView().tint(.white)
                 } else if balanceHidden {
                     Text("••••••••")
-                        .font(BankTypography.amount)
+                        .font(NectarTypography.amount)
                         .foregroundStyle(.white)
                         .accessibilityLabel("Số dư đã ẩn")
                 } else {
                     Text(MoneyFormatter.format(totalBalanceVND))
-                        .font(BankTypography.amount)
+                        .font(NectarTypography.amount)
                         .foregroundStyle(.white)
                         .accessibilityLabel("Số dư \(MoneyFormatter.format(totalBalanceVND))")
                 }
             }
 
             Text(maskedNumber)
-                .font(BankTypography.caption)
+                .font(NectarTypography.caption)
                 .foregroundStyle(.white.opacity(0.75))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(20)
         .background(
             LinearGradient(
-                colors: [BankColors.brand, BankColors.navySoft],
+                colors: [NectarColors.brand, NectarColors.navySoft],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: BankColors.brand.opacity(0.25), radius: 12, y: 6)
+        .shadow(color: NectarColors.brand.opacity(0.25), radius: 12, y: 6)
     }
 }

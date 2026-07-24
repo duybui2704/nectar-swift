@@ -3,20 +3,21 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            DashboardView()
-                .tabItem { Label("Trang chủ", systemImage: "house.fill") }
+            ShopView()
+                .tabItem { Label("Shop", systemImage: "storefront") }
 
-            NavigationStack {
-                HistoryView()
-            }
-            .tabItem { Label("Lịch sử", systemImage: "clock.arrow.circlepath") }
+            ExploreView()
+                .tabItem { Label("Explore", systemImage: "line.3.horizontal.decrease.circle") }
 
-            CardsView()
-                .tabItem { Label("Thẻ", systemImage: "creditcard.fill") }
+            CartView()
+                .tabItem { Label("Cart", systemImage: "cart") }
+
+            FavouriteView()
+                .tabItem { Label("Favourite", systemImage: "heart") }
 
             ProfileView()
-                .tabItem { Label("Tài khoản", systemImage: "person.crop.circle") }
+                .tabItem { Label("Account", systemImage: "person") }
         }
-        .tint(BankColors.brand)
+        .tint(NectarColors.green)
     }
 }

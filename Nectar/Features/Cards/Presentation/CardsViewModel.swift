@@ -8,7 +8,7 @@ final class CardsViewModel: ObservableObject {
     }
 
     @Published private(set) var status: Status = .idle
-    @Published private(set) var cards: [BankCard] = []
+    @Published private(set) var cards: [AppCard] = []
 
     private let repo: CardRepository
 
@@ -26,7 +26,7 @@ final class CardsViewModel: ObservableObject {
         }
     }
 
-    func toggleFreeze(_ card: BankCard) async {
+    func toggleFreeze(_ card: AppCard) async {
         do {
             let updated = try await repo.setFrozen(cardId: card.id, frozen: !card.isFrozen)
             if let index = cards.firstIndex(where: { $0.id == card.id }) {

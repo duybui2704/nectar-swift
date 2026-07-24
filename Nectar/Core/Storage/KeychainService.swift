@@ -1,7 +1,7 @@
 import Foundation
 import Security
 
-/// Minimal Keychain wrapper for session token (banking interview staple vs UserDefaults).
+/// Minimal Keychain wrapper for session token (prefer over UserDefaults).
 enum KeychainService {
     private static let service = "com.example.Nectar"
 

@@ -20,7 +20,7 @@ final class OffersViewModel: ObservableObject {
 
     func load() async {
         status = .loading
-        await MockBankAPI.delay(350)
+        await MockNectarAPI.delay(350)
         offers = [
             Offer(id: "o1", title: "Hoàn 50% Grab", subtitle: "Tối đa 30.000₫ / giao dịch", badge: "HOT", expiryText: "31/07/2026"),
             Offer(id: "o2", title: "Miễn phí chuyển tiền", subtitle: "3 lần/ngày nội bộ", badge: "MỚI", expiryText: "15/08/2026"),

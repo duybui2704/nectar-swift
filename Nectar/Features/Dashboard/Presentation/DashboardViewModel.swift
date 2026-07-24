@@ -8,7 +8,7 @@ final class DashboardViewModel: ObservableObject {
     }
 
     @Published private(set) var status: Status = .idle
-    @Published private(set) var accounts: [BankAccount] = []
+    @Published private(set) var accounts: [AppAccount] = []
     @Published private(set) var recentTransactions: [Transaction] = []
     @Published private(set) var totalBalanceVND: Decimal = 0
 
