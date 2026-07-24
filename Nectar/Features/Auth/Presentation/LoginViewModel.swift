@@ -9,46 +9,34 @@ final class LoginViewModel: ObservableObject {
         case error(String)
     }
 
-    @Published var username = "demo"
+    @Published var phoneNumber = ""
     @Published var password = ""
+    @Published var countryCode = "+84"
     @Published var status: Status = .idle
-    @Published var biometricLabel = "Face ID"
 
-    private let biometric: BiometricAuthService
-    private let storage: AppStorageService
-
-    init(
-        biometric: BiometricAuthService? = nil,
-        storage: AppStorageService = .shared
-    ) {
-        self.biometric = biometric ?? .shared
-        self.storage = storage
-        biometricLabel = self.biometric.biometryTypeName
-    }
-
-    var canUseBiometrics: Bool {
-        storage.biometricEnabled && biometric.canUseBiometrics
-    }
-
-    func loginWithPassword() async -> Bool {
+    /// Demo credentials: any phone ≥ 8 digits + password `123456`
+    func login() async -> Bool {
         status = .loading
         await MockNectarAPI.delay(500)
-        guard username.lowercased() == "demo", password == "123456" else {
-            status = .error("Sai tên đăng nhập hoặc mật khẩu. Demo: demo / 123456")
+
+        let digits = phoneNumber.filter(\.isNumber)
+        guard digits.count >= 8 else {
+            status = .error("Enter a valid phone number.")
             return false
         }
+        guard password == "123456" else {
+            status = .error("Wrong password. Demo: 123456")
+            return false
+        }
+
         status = .idle
         return true
     }
 
-    func loginWithBiometrics() async -> Bool {
+    func continueWithSocial(provider: String) async -> Bool {
         status = .loading
-        let ok = await biometric.authenticate(reason: "Đăng nhập vào Nectar Starter")
-        if ok {
-            status = .idle
-            return true
-        }
-        status = .error("Xác thực \(biometricLabel) thất bại.")
-        return false
+        await MockNectarAPI.delay(500)
+        status = .idle
+        return true
     }
 }

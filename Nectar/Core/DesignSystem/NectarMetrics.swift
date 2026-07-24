@@ -71,6 +71,9 @@ enum NectarMetrics {
         var lg: CGFloat { NectarMetrics.s(32) }
         var xl: CGFloat { NectarMetrics.s(48) }
         var hero: CGFloat { NectarMetrics.s(64) }
+        var splashWidth: CGFloat { NectarMetrics.s(267) }
+        var splashHeight: CGFloat { NectarMetrics.s(69) }
+        var width: CGFloat { NectarMetrics.s(UIScreen.main.bounds.width) }
         /// Chiều rộng illustration onboarding (~70% màn hình, cap hợp lý).
         var onboardingWidth: CGFloat {
             min(UIScreen.main.bounds.width, NectarMetrics.s(UIScreen.main.bounds.height * 0.72))
@@ -82,7 +85,9 @@ enum NectarMetrics {
     // MARK: - Button
 
     struct Button {
-        var primaryHeight: CGFloat { NectarMetrics.s(56) }
+        /// Chiều cao nút mặc định trên app.
+        var primaryHeight: CGFloat { NectarMetrics.s(45) }
+        var cornerRadius: CGFloat { NectarMetrics.s(12) }
         /// Design Onboarding dùng 67 — giữ đúng tỷ lệ.
         var onboardingHeight: CGFloat { NectarMetrics.s(67) }
         var secondaryHeight: CGFloat { NectarMetrics.s(48) }
@@ -142,7 +147,7 @@ extension View {
         padding(.horizontal, NectarMetrics.layout.screenHorizontal)
     }
 
-    /// Chiều cao nút primary + corner radius chuẩn.
+    /// Chiều cao nút primary + corner radius chuẩn (45 / 12).
     func primaryButtonStyle(background: Color = NectarColors.green) -> some View {
         self
             .font(NectarTypography.button)
@@ -150,6 +155,6 @@ extension View {
             .frame(height: NectarMetrics.button.primaryHeight)
             .foregroundStyle(.white)
             .background(background)
-            .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.radius.xl))
+            .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.button.cornerRadius))
     }
 }

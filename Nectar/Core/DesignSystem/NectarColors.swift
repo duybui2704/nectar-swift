@@ -19,6 +19,8 @@ enum NectarColors {
     static let cardGold = Color(hex: 0xC9A227)
     static let inputBackground = Color(hex: 0xF7F8FA)
     static let green = Color(hex: 0x53B175)
+    static let googleBlue = Color(hex: 0x5383EC)
+    static let facebookBlue = Color(hex: 0x4A66AC)
 }
 
 extension Color {

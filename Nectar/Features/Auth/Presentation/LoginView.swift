@@ -1,105 +1,252 @@
 import SwiftUI
 
 struct LoginView: View {
+    private enum Field: Hashable, CaseIterable {
+        case phone, password
+    }
+
     @EnvironmentObject private var session: AppSession
     @StateObject private var viewModel = LoginViewModel()
     @HotReloadObserver private var _hr
+    @FocusState private var focusedField: Field?
 
     var body: some View {
-        ZStack {
-            LinearGradient(
-                colors: [NectarColors.brand, NectarColors.navySoft],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 0) {
+                Image("login")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+                    .accessibilityHidden(true)
 
-            VStack(spacing: 24) {
-                Spacer()
-                VStack(spacing: 8) {
-                    Image(systemName: "building.columns.fill")
-                        .font(.system(size: 44))
-                        .foregroundStyle(.white)
-                    Text("Nectar")
-                        .font(NectarTypography.largeTitle)
-                        .foregroundStyle(.white)
-                    Text("Ví & chuyển tiền an toàn")
-                        .font(NectarTypography.caption)
-                        .foregroundStyle(.white.opacity(0.8))
-                }
+                VStack(alignment: .leading, spacing: NectarMetrics.spacing.xs) {
+                    Text("Get your groceries\nwith nectar")
+                        .font(.system(size: NectarMetrics.s(26), weight: .semibold))
+                        .foregroundStyle(NectarColors.navy)
+                        .fixedSize(horizontal: false, vertical: true)
 
-                VStack(spacing: 14) {
-                    TextField("Tên đăng nhập", text: $viewModel.username)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .padding()
-                        .background(NectarColors.inputBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 14))
-
-                    SecureField("Mật khẩu", text: $viewModel.password)
-                        .padding()
-                        .background(NectarColors.inputBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                    phoneField
+                    passwordField
 
                     if case .error(let message) = viewModel.status {
                         Text(message)
                             .font(NectarTypography.caption)
                             .foregroundStyle(NectarColors.danger)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
-                    Button {
-                        Task {
-                            if await viewModel.loginWithPassword() {
-                                session.loginSucceeded(displayName: MockNectarAPI.customerName)
-                            }
-                        }
-                    } label: {
-                        Group {
-                            if viewModel.status == .loading {
-                                ProgressView().tint(.white)
-                            } else {
-                                Text("Đăng nhập")
-                                    .font(NectarTypography.headline)
-                            }
-                        }
+                    loginButton
+
+                    Text("Or connect with social media")
+                        .font(NectarTypography.body)
+                        .foregroundStyle(NectarColors.textSecondary)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.white)
-                    .background(NectarColors.brand)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                    .disabled(viewModel.status == .loading)
+                        .padding(.top, NectarMetrics.spacing.sm)
 
-                    if viewModel.canUseBiometrics {
-                        Button {
+                    VStack(spacing: NectarMetrics.spacing.sm) {
+                        socialButton(
+                            title: "Continue with Google",
+                            icon: "ic_gg",
+                            color: NectarColors.googleBlue
+                        ) {
                             Task {
-                                if await viewModel.loginWithBiometrics() {
+                                if await viewModel.continueWithSocial(provider: "google") {
                                     session.loginSucceeded(displayName: MockNectarAPI.customerName)
                                 }
                             }
-                        } label: {
-                            Label("Đăng nhập bằng \(viewModel.biometricLabel)", systemImage: "faceid")
-                                .font(NectarTypography.headline)
-                                .foregroundStyle(NectarColors.brand)
                         }
-                        .padding(.top, 4)
+                        socialButton(
+                            title: "Continue with Facebook",
+                            icon: "ic_fb",
+                            color: NectarColors.facebookBlue
+                        ) {
+                            Task {
+                                if await viewModel.continueWithSocial(provider: "facebook") {
+                                    session.loginSucceeded(displayName: MockNectarAPI.customerName)
+                                }
+                            }
+                        }
                     }
                 }
-                .padding(20)
-                .background(NectarColors.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .shadow(color: Color(hex: 0x1D4F91).opacity(0.25), radius: 16, y: 8)
-                .padding(.horizontal, 20)
+                .screenPadding()
+                .padding(.top, NectarMetrics.spacing.md)
+                .padding(.bottom, NectarMetrics.layout.bottomSafeExtra)
+            }
+        }
+        .background(Color.white.ignoresSafeArea())
+        .ignoresSafeArea(edges: .top)
+        .scrollDismissesKeyboard(.interactively)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            focusedField = nil
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button {
+                    moveFocus(delta: -1)
+                } label: {
+                    Image(systemName: "chevron.up")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .disabled(!canMoveFocus(delta: -1))
 
-                Text("Demo: demo / 123456")
-                    .font(NectarTypography.caption)
-                    .foregroundStyle(.white.opacity(0.7))
-
-                Spacer()
+                Button {
+                    moveFocus(delta: 1)
+                } label: {
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .disabled(!canMoveFocus(delta: 1))
             }
         }
         .hotReload()
+    }
+
+    // MARK: - Fields
+
+    private var phoneField: some View {
+        underlineField(isActive: focusedField == .phone) {
+            HStack(spacing: NectarMetrics.spacing.xxs) {
+                Text("🇧🇩")
+                    .font(.system(size: NectarMetrics.s(18)))
+
+                Text(viewModel.countryCode)
+                    .font(NectarTypography.caption)
+                    .foregroundStyle(NectarColors.navy)
+
+                Image(systemName: "chevron.down")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(NectarColors.textSecondary)
+
+                TextField("Phone number", text: $viewModel.phoneNumber)
+                    .keyboardType(.phonePad)
+                    .textContentType(.telephoneNumber)
+                    .font(NectarTypography.caption)
+                    .foregroundStyle(NectarColors.navy)
+                    .focused($focusedField, equals: .phone)
+            }
+        } onTap: {
+            focusedField = .phone
+        }
+    }
+
+    private var passwordField: some View {
+        underlineField(isActive: focusedField == .password) {
+            HStack(spacing: NectarMetrics.spacing.xxs) {
+                Image(systemName: "lock")
+                    .font(.system(size: NectarMetrics.s(14), weight: .medium))
+                    .foregroundStyle(NectarColors.textSecondary)
+                    .frame(width: NectarMetrics.s(22), alignment: .center)
+
+                SecureField("Password", text: $viewModel.password)
+                    .textContentType(.password)
+                    .font(NectarTypography.caption)
+                    .foregroundStyle(NectarColors.navy)
+                    .focused($focusedField, equals: .password)
+                    .submitLabel(.go)
+                    .onSubmit {
+                        Task { await submitLogin() }
+                    }
+            }
+        } onTap: {
+            focusedField = .password
+        }
+    }
+
+    private func underlineField<Content: View>(
+        isActive: Bool,
+        @ViewBuilder content: () -> Content,
+        onTap: @escaping () -> Void
+    ) -> some View {
+        VStack(spacing: 4) {
+            content()
+                .frame(height: NectarMetrics.s(36), alignment: .center)
+
+            Rectangle()
+                .fill(isActive ? NectarColors.green : NectarColors.border)
+                .frame(height: 1)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onTap)
+    }
+
+    // MARK: - Focus navigation
+
+    private func canMoveFocus(delta: Int) -> Bool {
+        guard let current = focusedField,
+              let index = Field.allCases.firstIndex(of: current) else { return false }
+        return Field.allCases.indices.contains(index + delta)
+    }
+
+    private func moveFocus(delta: Int) {
+        guard let current = focusedField,
+              let index = Field.allCases.firstIndex(of: current) else { return }
+        let next = index + delta
+        guard Field.allCases.indices.contains(next) else { return }
+        focusedField = Field.allCases[next]
+    }
+
+    // MARK: - Buttons
+
+    private var loginButton: some View {
+        Button {
+            focusedField = nil
+            Task { await submitLogin() }
+        } label: {
+            Group {
+                if viewModel.status == .loading {
+                    ProgressView().tint(.white)
+                } else {
+                    Text("Log In")
+                        .font(NectarTypography.button)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: NectarMetrics.button.primaryHeight)
+            .foregroundStyle(.white)
+            .background(NectarColors.green)
+            .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.button.cornerRadius))
+        }
+        .buttonStyle(.plain)
+        .disabled(viewModel.status == .loading)
+    }
+
+    private func socialButton(
+        title: String,
+        icon: String,
+        color: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            ZStack {
+                HStack {
+                    Image(icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: NectarMetrics.s(18), height: NectarMetrics.s(18))
+                    Spacer()
+                }
+
+                if viewModel.status == .loading {
+                    ProgressView().tint(.white)
+                } else {
+                    Text(title)
+                        .font(NectarTypography.headline)
+                        .foregroundStyle(.white)
+                }
+            }
+            .padding(.horizontal, NectarMetrics.spacing.lg)
+            .frame(maxWidth: .infinity)
+            .frame(height: NectarMetrics.button.primaryHeight)
+            .background(color)
+            .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.button.cornerRadius))
+        }
+        .buttonStyle(.plain)
+        .disabled(viewModel.status == .loading)
+    }
+
+    private func submitLogin() async {
+        if await viewModel.login() {
+            session.loginSucceeded(displayName: MockNectarAPI.customerName)
+        }
     }
 }

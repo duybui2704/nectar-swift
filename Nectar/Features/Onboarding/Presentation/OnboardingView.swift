@@ -10,51 +10,62 @@ struct OnboardingView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 0) {
-            TabView(selection: $page) {
+        ZStack {
+         
                 ForEach(pages.indices, id: \.self) { index in
-                    VStack(spacing: NectarMetrics.spacing.md) {
-                        Spacer(minLength: NectarMetrics.spacing.xl)
-
+                    ZStack {
                         Image(pages[index].image)
                             .resizable()
-                            .scaledToFit()
-                            .frame(width: NectarMetrics.icon.onboardingWidth, height: NectarMetrics.icon.onboardingWidth)
-                            .padding(.horizontal, NectarMetrics.spacing.lg)
+                            .scaledToFill()
+                            .ignoresSafeArea()
 
-                        Text(pages[index].title)
-                            .font(NectarTypography.onboardingTitle)
-                            .foregroundStyle(NectarColors.textPrimary)
-                            .multilineTextAlignment(.center)
+                        // Soft fade so title/body stay readable over the photo
+                        LinearGradient(
+                            colors: [
+                                .black.opacity(0.05),
+                                .black.opacity(0.45),
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .ignoresSafeArea()
+
+                        VStack(spacing: NectarMetrics.spacing.md) {
+                            Spacer()
+
+                            Text(pages[index].title)
+                                .font(NectarTypography.onboardingTitle)
+                                .foregroundStyle(.white)
+                                .multilineTextAlignment(.center)
+                                .screenPadding()
+
+                            Text(pages[index].body)
+                                .font(NectarTypography.body)
+                                .foregroundStyle(.white.opacity(0.9))
+                                .multilineTextAlignment(.center)
+                                .screenPadding()
+
+                            Button {
+                                session.completeOnboarding()
+                            } label: {
+                                Text("Get Started")
+                                    .font(NectarTypography.button)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: NectarMetrics.button.onboardingHeight)
+                                    .foregroundStyle(.white)
+                                    .background(NectarColors.green)
+                                    .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.radius.xl))
+                            }
                             .screenPadding()
-
-                        Text(pages[index].body)
-                            .font(NectarTypography.body)
-                            .foregroundStyle(NectarColors.textSecondary)
-                            .multilineTextAlignment(.center)
-                            .screenPadding()
-
-                        Spacer(minLength: NectarMetrics.spacing.lg)
+                            .padding(.bottom, NectarMetrics.layout.bottomSafeExtra +  NectarMetrics.spacing.md)
+                            
+                        }
                     }
                     .tag(index)
                 }
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-
-            Button {
-                session.completeOnboarding()
-            } label: {
-                Text("Get Started")
-                    .font(NectarTypography.button)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: NectarMetrics.button.onboardingHeight)
-                    .foregroundStyle(.white)
-                    .background(NectarColors.green)
-                    .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.radius.xl))
-            }
-            .screenPadding()
-            .padding(.bottom, NectarMetrics.layout.bottomSafeExtra)
-        }
+         
+            .ignoresSafeArea()
         .hotReload()
     }
 }

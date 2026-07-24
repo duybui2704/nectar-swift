@@ -3,23 +3,12 @@ import SwiftUI
 struct SplashView: View {
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [NectarColors.brand, NectarColors.navySoft],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-            VStack(spacing: 12) {
-                Image(systemName: "building.columns.fill")
-                    .font(.system(size: 56))
-                    .foregroundStyle(.white)
-                Text("Nectar")
-                    .font(NectarTypography.largeTitle)
-                    .foregroundStyle(.white)
-                ProgressView()
-                    .tint(.white)
-                    .padding(.top, 16)
-            }
+            NectarColors.green
+                .ignoresSafeArea()
+            Image("splash")
+                .frame(width: NectarMetrics.icon.splashWidth, height: NectarMetrics.icon.splashHeight)
         }
+        .preferredColorScheme(.dark)
+        .hotReload()
     }
 }
