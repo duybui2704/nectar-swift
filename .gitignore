@@ -1,0 +1,10 @@
+.derivedData/
+.derived-data/
+.spm-cache/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+compile_commands.json
+buildServer.json
+.sourcekit-lsp/
+.vscode/
