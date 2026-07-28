@@ -3,145 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 71;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		93C4349183940815DA2BDD2C /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F13A87913047C760245BF5 /* AppSession.swift */; };
-		B51D8EB80229BFA0D5B7AC78 /* NectarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038EEF73E77CC12C49E15DDD /* NectarApp.swift */; };
-		83C031E3F0E7C3894F9E1AEB /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D85C474ED072C451CC3385 /* RootView.swift */; };
-		285970D430A36C729EA21FEF /* NectarColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365D8E3809DD02A741ADA7E3 /* NectarColors.swift */; };
-		70D88EE89400426DB2D5D7E2 /* NectarTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C645493D98F1DC2606E7068 /* NectarTypography.swift */; };
-		A7B8C9D0E1F2031425364758 /* NectarMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* NectarMetrics.swift */; };
-		8FA953C40670CEC1C0A12ED7 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184482D482541AC95E780442 /* AppError.swift */; };
-		BB1672FC2F95A5B5AF1804DB /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2283F85A6936F8AA1CF3896 /* APIClient.swift */; };
-		4539DDE14355A3DCD4315F37 /* MockNectarAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280683F80872D17F5B3D3558 /* MockNectarAPI.swift */; };
-		C4CDFF78D891EADD42E0A3E1 /* BiometricAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069C9D030422D824902A0941 /* BiometricAuthService.swift */; };
-		2E0C067270149C9842591B83 /* AppStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00498DE51FCA100C16272CD1 /* AppStorageService.swift */; };
-		B66CA91FE84A14412C32BC76 /* MoneyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3145218E5322CA7EC2E860F6 /* MoneyFormatter.swift */; };
-		A21F5EEE702C24E758331AFA /* MockRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820F1412AACF4A6D991D8643 /* MockRepositories.swift */; };
-		9669501F4D85248F4347036C /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309D1027E023D6282F26B10D /* AppModels.swift */; };
-		106DFA660A084F13CA1208EA /* AppRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2E630BA4E0472DECB3E73D /* AppRepositories.swift */; };
-		8D5C65891718147A24056B68 /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6172A1F7E7436DB306F038F1 /* AccountDetailView.swift */; };
-		3DBC238457FE1A466061A2BC /* AccountDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BD51CC67C10306D2B157FC /* AccountDetailViewModel.swift */; };
-		DA7CA4C9159F53879EE675D2 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D565931BC016DFB5BDC3291D /* LoginView.swift */; };
-		48F296525C805AFF26FB6BBE /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B92960C15CAC296C1C34C2A /* LoginViewModel.swift */; };
-		FD00E5FBD3E27777D3F138C7 /* CardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A590E7EDA54A75766B4AE5 /* CardsView.swift */; };
-		8C237FA504D498C170351344 /* CardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5293A65D4827CCF64ED951 /* CardsViewModel.swift */; };
-		07966B6A3A2EEDF509A6B039 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB225FCB43E95F953001E7E1 /* DashboardView.swift */; };
-		AD70C696F542FBC3D534B571 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2361C914F6D90928668FF0D5 /* DashboardViewModel.swift */; };
-		9E4DE0BE6D6D2E8D5EEE1298 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D6223A9872853DA5444144 /* OnboardingView.swift */; };
-		B70F9832EB1185690E48BC0B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACD0C324952F90B8A482C5 /* ProfileView.swift */; };
-		F8C75A756E6DB92361D1C78E /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42AB2FAA0AA359264B27462 /* SplashView.swift */; };
-		5B75E1E9F04FC0B90307A9F1 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1DA0782B4F346A6865C0CBC /* TransferView.swift */; };
-		3710EAE3648487BB859A1B47 /* TransferViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C5DFD6ADB5216F80C8AD89 /* TransferViewModel.swift */; };
-		4A0C8060FC124569E5115831 /* AppRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C8ACB279922265E1DD942F /* AppRows.swift */; };
-		69FFE664864E425712318798 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817817D6F3D39E9BF80A6DA9 /* MainTabView.swift */; };
-		A11111111111111111111101 /* ShopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111101 /* ShopView.swift */; };
-		A11111111111111111111102 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111102 /* ExploreView.swift */; };
-		A11111111111111111111103 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111103 /* CartView.swift */; };
-		A11111111111111111111104 /* FavouriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11111111111111111111104 /* FavouriteView.swift */; };
-		95F893ABF8DE2704294E63B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5417BC6652ACDD9848361A86 /* Assets.xcassets */; };
-		A1B2C3D4E5F60718293A4B5C /* MockNectarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6C /* MockNectarStore.swift */; };
-		C2D3E4F5061728394A5B6C7D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E4F5061728394A5B6C7D8E /* KeychainService.swift */; };
-		E4F5061728394A5B6C7D8E9F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5061728394A5B6C7D8E9F0A /* HistoryView.swift */; };
-		061728394A5B6C7D8E9F0A1B /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1728394A5B6C7D8E9F0A1B2C /* HistoryViewModel.swift */; };
-		ECABE4028DD64620977473F6 /* OffersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3BB6363DC04F4BA1241919 /* OffersView.swift */; };
-		4940ACE62BD247E19E9B412E /* OffersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F35D289B8F94AB6837C4FF9 /* OffersViewModel.swift */; };
-		C300B778DDAE4D719ACEBAB6 /* TransferConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5836A0D1F14C4099CAF49E /* TransferConstants.swift */; };
-		29C8B7A813F641799FA2B8C7 /* OTPInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC3DCDBDAB4F92A42801BF /* OTPInputView.swift */; };
-		9309DC3A9B5447D49C7B17A0 /* SessionLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F847A4537C4E29A505CE4D /* SessionLockService.swift */; };
-		FDD446479E724374AD91D4BA /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B929CCBA104450297C3E4F6 /* PINService.swift */; };
-		3359F4B0243B478DAF1D1276 /* SessionLockOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283BD5E6F1ED4F62B4E9B404 /* SessionLockOverlay.swift */; };
-		054E5539149E43D18EDC7E37 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D66C2D3E85C49018708BBDF /* APIConfig.swift */; };
-		A394A6E1420E4236B1AC4391 /* APIAccountRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5814BCD5FD43738C7DA0E8 /* APIAccountRepository.swift */; };
-		26DC8EF0CFE04036B12B652D /* MainShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08D17F9637043FEA8D500ED /* MainShellView.swift */; };
-		F9BE1A146CBD42BF915117A1 /* WalletCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54ABE4DD4CA14AD0B289A99E /* WalletCardView.swift */; };
-		3A5DA9061AEB4685BAF19EF9 /* HistoryViewModelObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF28DEEFFDA44BE97AC2998 /* HistoryViewModelObservable.swift */; };
-		DF0BDFFABFB642448A627E81 /* WidgetDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FBC478D9C24BC98D038B0F /* WidgetDataStore.swift */; };
-		DBEB2E091391442E988B0E8A /* TransferViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933CDBC18FD54AACAF75A4BC /* TransferViewModelTests.swift */; };
-		4FE1A2B3C4D5E6F7890A1B2C /* HotReload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE23A4B5C6D7E8F90A1B2C3 /* HotReload.swift */; };
 		AA11BB22CC33DD44EE55FF66 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = AA11BB22CC33DD44EE55FF77 /* Inject */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXFileReference section */
-		23F13A87913047C760245BF5 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/AppSession.swift"; sourceTree = "<group>"; };
-		038EEF73E77CC12C49E15DDD /* NectarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/NectarApp.swift"; sourceTree = "<group>"; };
-		E6D85C474ED072C451CC3385 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/RootView.swift"; sourceTree = "<group>"; };
-		365D8E3809DD02A741ADA7E3 /* NectarColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/NectarColors.swift"; sourceTree = "<group>"; };
-		3C645493D98F1DC2606E7068 /* NectarTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/NectarTypography.swift"; sourceTree = "<group>"; };
-		B8C9D0E1F203142536475869 /* NectarMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DesignSystem/NectarMetrics.swift"; sourceTree = "<group>"; };
-		184482D482541AC95E780442 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Errors/AppError.swift"; sourceTree = "<group>"; };
-		E2283F85A6936F8AA1CF3896 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/APIClient.swift"; sourceTree = "<group>"; };
-		280683F80872D17F5B3D3558 /* MockNectarAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/MockNectarAPI.swift"; sourceTree = "<group>"; };
-		069C9D030422D824902A0941 /* BiometricAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Security/BiometricAuthService.swift"; sourceTree = "<group>"; };
-		00498DE51FCA100C16272CD1 /* AppStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Storage/AppStorageService.swift"; sourceTree = "<group>"; };
-		3145218E5322CA7EC2E860F6 /* MoneyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Utils/MoneyFormatter.swift"; sourceTree = "<group>"; };
-		820F1412AACF4A6D991D8643 /* MockRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Data/MockRepositories.swift"; sourceTree = "<group>"; };
-		309D1027E023D6282F26B10D /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Domain/AppModels.swift"; sourceTree = "<group>"; };
-		BE2E630BA4E0472DECB3E73D /* AppRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Domain/AppRepositories.swift"; sourceTree = "<group>"; };
-		6172A1F7E7436DB306F038F1 /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Presentation/AccountDetailView.swift"; sourceTree = "<group>"; };
-		D0BD51CC67C10306D2B157FC /* AccountDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Presentation/AccountDetailViewModel.swift"; sourceTree = "<group>"; };
-		D565931BC016DFB5BDC3291D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Auth/Presentation/LoginView.swift"; sourceTree = "<group>"; };
-		0B92960C15CAC296C1C34C2A /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Auth/Presentation/LoginViewModel.swift"; sourceTree = "<group>"; };
-		30A590E7EDA54A75766B4AE5 /* CardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Cards/Presentation/CardsView.swift"; sourceTree = "<group>"; };
-		AB5293A65D4827CCF64ED951 /* CardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Cards/Presentation/CardsViewModel.swift"; sourceTree = "<group>"; };
-		FB225FCB43E95F953001E7E1 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Dashboard/Presentation/DashboardView.swift"; sourceTree = "<group>"; };
-		2361C914F6D90928668FF0D5 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Dashboard/Presentation/DashboardViewModel.swift"; sourceTree = "<group>"; };
-		F5D6223A9872853DA5444144 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Onboarding/Presentation/OnboardingView.swift"; sourceTree = "<group>"; };
-		C1ACD0C324952F90B8A482C5 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Profile/Presentation/ProfileView.swift"; sourceTree = "<group>"; };
-		E42AB2FAA0AA359264B27462 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Splash/Presentation/SplashView.swift"; sourceTree = "<group>"; };
-		B1DA0782B4F346A6865C0CBC /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Transfers/Presentation/TransferView.swift"; sourceTree = "<group>"; };
-		29C5DFD6ADB5216F80C8AD89 /* TransferViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Transfers/Presentation/TransferViewModel.swift"; sourceTree = "<group>"; };
-		C9C8ACB279922265E1DD942F /* AppRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Components/AppRows.swift"; sourceTree = "<group>"; };
-		817817D6F3D39E9BF80A6DA9 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Shell/MainTabView.swift"; sourceTree = "<group>"; };
-		B11111111111111111111101 /* ShopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Shop/Presentation/ShopView.swift"; sourceTree = "<group>"; };
-		B11111111111111111111102 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Explore/Presentation/ExploreView.swift"; sourceTree = "<group>"; };
-		B11111111111111111111103 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Cart/Presentation/CartView.swift"; sourceTree = "<group>"; };
-		B11111111111111111111104 /* FavouriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Favourite/Presentation/FavouriteView.swift"; sourceTree = "<group>"; };
-		73AD16181FDDB7427288C6BD /* Nectar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nectar.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5417BC6652ACDD9848361A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
-		B1C2D3E4F5061728394A5B6C /* MockNectarStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/MockNectarStore.swift"; sourceTree = "<group>"; };
-		D3E4F5061728394A5B6C7D8E /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Storage/KeychainService.swift"; sourceTree = "<group>"; };
-		F5061728394A5B6C7D8E9F0A /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/History/Presentation/HistoryView.swift"; sourceTree = "<group>"; };
-		1728394A5B6C7D8E9F0A1B2C /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/History/Presentation/HistoryViewModel.swift"; sourceTree = "<group>"; };
-		3F3BB6363DC04F4BA1241919 /* OffersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Offers/Presentation/OffersView.swift"; sourceTree = "<group>"; };
-		8F35D289B8F94AB6837C4FF9 /* OffersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Offers/Presentation/OffersViewModel.swift"; sourceTree = "<group>"; };
-		FB5836A0D1F14C4099CAF49E /* TransferConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Utils/TransferConstants.swift"; sourceTree = "<group>"; };
-		7FAC3DCDBDAB4F92A42801BF /* OTPInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Components/OTPInputView.swift"; sourceTree = "<group>"; };
-		E0F847A4537C4E29A505CE4D /* SessionLockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Security/SessionLockService.swift"; sourceTree = "<group>"; };
-		1B929CCBA104450297C3E4F6 /* PINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Security/PINService.swift"; sourceTree = "<group>"; };
-		283BD5E6F1ED4F62B4E9B404 /* SessionLockOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Components/SessionLockOverlay.swift"; sourceTree = "<group>"; };
-		7D66C2D3E85C49018708BBDF /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Network/APIConfig.swift"; sourceTree = "<group>"; };
-		4C5814BCD5FD43738C7DA0E8 /* APIAccountRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Accounts/Data/APIAccountRepository.swift"; sourceTree = "<group>"; };
-		F08D17F9637043FEA8D500ED /* MainShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/Shell/MainShellView.swift"; sourceTree = "<group>"; };
-		54ABE4DD4CA14AD0B289A99E /* WalletCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/Dashboard/Components/WalletCardView.swift"; sourceTree = "<group>"; };
-		5FF28DEEFFDA44BE97AC2998 /* HistoryViewModelObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Features/History/Presentation/HistoryViewModelObservable.swift"; sourceTree = "<group>"; };
-		92FBC478D9C24BC98D038B0F /* WidgetDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/Storage/WidgetDataStore.swift"; sourceTree = "<group>"; };
-		933CDBC18FD54AACAF75A4BC /* TransferViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NectarTests/TransferViewModelTests.swift; sourceTree = "<group>"; };
-		EC30D2A946594973B2D51788 /* NectarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NectarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FE23A4B5C6D7E8F90A1B2C3 /* HotReload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Core/DevTools/HotReload.swift"; sourceTree = "<group>"; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		56D9DEB7209CC2B39E593F03 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AA11BB22CC33DD44EE55FF66 /* Inject in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-
-		9B2D564948124A25A3491D78 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 
 /* Begin PBXContainerItemProxy section */
 		24ECBBCFE9F843BCAF8F3A99 /* PBXContainerItemProxy */ = {
@@ -153,19 +20,40 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXTargetDependency section */
-		F03CB2CCC1EB4142994E3391 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 730950AD798A77AD508AA9E2 /* Nectar */;
-			targetProxy = 24ECBBCFE9F843BCAF8F3A99 /* PBXContainerItemProxy */;
+/* Begin PBXFileReference section */
+		73AD16181FDDB7427288C6BD /* Nectar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nectar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC30D2A946594973B2D51788 /* NectarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NectarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5CF611F337CB6EA449E4C05F /* Nectar */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Nectar; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4B5C /* NectarTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = NectarTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		56D9DEB7209CC2B39E593F03 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA11BB22CC33DD44EE55FF66 /* Inject in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXTargetDependency section */
+		9B2D564948124A25A3491D78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		88932FD6DD0EDC80FBF1C921 = {
 			isa = PBXGroup;
 			children = (
 				5CF611F337CB6EA449E4C05F /* Nectar */,
+				A1B2C3D4E5F60718293A4B5C /* NectarTests */,
 				D71BD8A0B6A6AA54EDBA6454 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -177,66 +65,6 @@
 				EC30D2A946594973B2D51788 /* NectarTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		5CF611F337CB6EA449E4C05F /* Nectar */ = {
-			isa = PBXGroup;
-			children = (
-				23F13A87913047C760245BF5 /* AppSession.swift */,
-				038EEF73E77CC12C49E15DDD /* NectarApp.swift */,
-				E6D85C474ED072C451CC3385 /* RootView.swift */,
-				365D8E3809DD02A741ADA7E3 /* NectarColors.swift */,
-				3C645493D98F1DC2606E7068 /* NectarTypography.swift */,
-				B8C9D0E1F203142536475869 /* NectarMetrics.swift */,
-				184482D482541AC95E780442 /* AppError.swift */,
-				E2283F85A6936F8AA1CF3896 /* APIClient.swift */,
-				280683F80872D17F5B3D3558 /* MockNectarAPI.swift */,
-				069C9D030422D824902A0941 /* BiometricAuthService.swift */,
-				00498DE51FCA100C16272CD1 /* AppStorageService.swift */,
-				3145218E5322CA7EC2E860F6 /* MoneyFormatter.swift */,
-				820F1412AACF4A6D991D8643 /* MockRepositories.swift */,
-				309D1027E023D6282F26B10D /* AppModels.swift */,
-				BE2E630BA4E0472DECB3E73D /* AppRepositories.swift */,
-				6172A1F7E7436DB306F038F1 /* AccountDetailView.swift */,
-				D0BD51CC67C10306D2B157FC /* AccountDetailViewModel.swift */,
-				D565931BC016DFB5BDC3291D /* LoginView.swift */,
-				0B92960C15CAC296C1C34C2A /* LoginViewModel.swift */,
-				30A590E7EDA54A75766B4AE5 /* CardsView.swift */,
-				AB5293A65D4827CCF64ED951 /* CardsViewModel.swift */,
-				FB225FCB43E95F953001E7E1 /* DashboardView.swift */,
-				2361C914F6D90928668FF0D5 /* DashboardViewModel.swift */,
-				F5D6223A9872853DA5444144 /* OnboardingView.swift */,
-				C1ACD0C324952F90B8A482C5 /* ProfileView.swift */,
-				E42AB2FAA0AA359264B27462 /* SplashView.swift */,
-				B1DA0782B4F346A6865C0CBC /* TransferView.swift */,
-				29C5DFD6ADB5216F80C8AD89 /* TransferViewModel.swift */,
-				C9C8ACB279922265E1DD942F /* AppRows.swift */,
-				817817D6F3D39E9BF80A6DA9 /* MainTabView.swift */,
-				B11111111111111111111101 /* ShopView.swift */,
-				B11111111111111111111102 /* ExploreView.swift */,
-				B11111111111111111111103 /* CartView.swift */,
-				B11111111111111111111104 /* FavouriteView.swift */,
-				B1C2D3E4F5061728394A5B6C /* MockNectarStore.swift */,
-				D3E4F5061728394A5B6C7D8E /* KeychainService.swift */,
-				F5061728394A5B6C7D8E9F0A /* HistoryView.swift */,
-				1728394A5B6C7D8E9F0A1B2C /* HistoryViewModel.swift */,
-				3F3BB6363DC04F4BA1241919 /* OffersView.swift */,
-				8F35D289B8F94AB6837C4FF9 /* OffersViewModel.swift */,
-				FB5836A0D1F14C4099CAF49E /* TransferConstants.swift */,
-				7FAC3DCDBDAB4F92A42801BF /* OTPInputView.swift */,
-				E0F847A4537C4E29A505CE4D /* SessionLockService.swift */,
-				1B929CCBA104450297C3E4F6 /* PINService.swift */,
-				283BD5E6F1ED4F62B4E9B404 /* SessionLockOverlay.swift */,
-				7D66C2D3E85C49018708BBDF /* APIConfig.swift */,
-				4C5814BCD5FD43738C7DA0E8 /* APIAccountRepository.swift */,
-				F08D17F9637043FEA8D500ED /* MainShellView.swift */,
-				54ABE4DD4CA14AD0B289A99E /* WalletCardView.swift */,
-				5FF28DEEFFDA44BE97AC2998 /* HistoryViewModelObservable.swift */,
-				92FBC478D9C24BC98D038B0F /* WidgetDataStore.swift */,
-				1FE23A4B5C6D7E8F90A1B2C3 /* HotReload.swift */,
-				5417BC6652ACDD9848361A86 /* Assets.xcassets */,
-			);
-			path = Nectar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +82,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				5CF611F337CB6EA449E4C05F /* Nectar */,
+			);
 			name = Nectar;
 			packageProductDependencies = (
 				AA11BB22CC33DD44EE55FF77 /* Inject */,
@@ -262,7 +93,6 @@
 			productReference = 73AD16181FDDB7427288C6BD /* Nectar.app */;
 			productType = "com.apple.product-type.application";
 		};
-
 		C5701772128F49279DCB35E7 /* NectarTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F0767821459841F293C0A1CF /* Build configuration list for PBXNativeTarget "NectarTests" */;
@@ -274,6 +104,9 @@
 			);
 			dependencies = (
 				F03CB2CCC1EB4142994E3391 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1B2C3D4E5F60718293A4B5C /* NectarTests */,
 			);
 			name = NectarTests;
 			productName = NectarTests;
@@ -300,7 +133,7 @@
 				};
 			};
 			buildConfigurationList = 26025AAD9300913C342A8980 /* Build configuration list for PBXProject "Nectar" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 16.0";
 			developmentRegion = vi;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -309,6 +142,7 @@
 				vi,
 			);
 			mainGroup = 88932FD6DD0EDC80FBF1C921;
+			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AA11BB22CC33DD44EE55FF88 /* XCRemoteSwiftPackageReference "Inject" */,
 			);
@@ -327,7 +161,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95F893ABF8DE2704294E63B9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,104 +171,68 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93C4349183940815DA2BDD2C /* AppSession.swift in Sources */,
-				B51D8EB80229BFA0D5B7AC78 /* NectarApp.swift in Sources */,
-				83C031E3F0E7C3894F9E1AEB /* RootView.swift in Sources */,
-				285970D430A36C729EA21FEF /* NectarColors.swift in Sources */,
-				70D88EE89400426DB2D5D7E2 /* NectarTypography.swift in Sources */,
-				A7B8C9D0E1F2031425364758 /* NectarMetrics.swift in Sources */,
-				8FA953C40670CEC1C0A12ED7 /* AppError.swift in Sources */,
-				BB1672FC2F95A5B5AF1804DB /* APIClient.swift in Sources */,
-				4539DDE14355A3DCD4315F37 /* MockNectarAPI.swift in Sources */,
-				C4CDFF78D891EADD42E0A3E1 /* BiometricAuthService.swift in Sources */,
-				2E0C067270149C9842591B83 /* AppStorageService.swift in Sources */,
-				B66CA91FE84A14412C32BC76 /* MoneyFormatter.swift in Sources */,
-				A21F5EEE702C24E758331AFA /* MockRepositories.swift in Sources */,
-				9669501F4D85248F4347036C /* AppModels.swift in Sources */,
-				106DFA660A084F13CA1208EA /* AppRepositories.swift in Sources */,
-				8D5C65891718147A24056B68 /* AccountDetailView.swift in Sources */,
-				3DBC238457FE1A466061A2BC /* AccountDetailViewModel.swift in Sources */,
-				DA7CA4C9159F53879EE675D2 /* LoginView.swift in Sources */,
-				48F296525C805AFF26FB6BBE /* LoginViewModel.swift in Sources */,
-				FD00E5FBD3E27777D3F138C7 /* CardsView.swift in Sources */,
-				8C237FA504D498C170351344 /* CardsViewModel.swift in Sources */,
-				07966B6A3A2EEDF509A6B039 /* DashboardView.swift in Sources */,
-				AD70C696F542FBC3D534B571 /* DashboardViewModel.swift in Sources */,
-				9E4DE0BE6D6D2E8D5EEE1298 /* OnboardingView.swift in Sources */,
-				B70F9832EB1185690E48BC0B /* ProfileView.swift in Sources */,
-				F8C75A756E6DB92361D1C78E /* SplashView.swift in Sources */,
-				5B75E1E9F04FC0B90307A9F1 /* TransferView.swift in Sources */,
-				3710EAE3648487BB859A1B47 /* TransferViewModel.swift in Sources */,
-				4A0C8060FC124569E5115831 /* AppRows.swift in Sources */,
-				A1B2C3D4E5F60718293A4B5C /* MockNectarStore.swift in Sources */,
-				C2D3E4F5061728394A5B6C7D /* KeychainService.swift in Sources */,
-				E4F5061728394A5B6C7D8E9F /* HistoryView.swift in Sources */,
-				061728394A5B6C7D8E9F0A1B /* HistoryViewModel.swift in Sources */,
-				ECABE4028DD64620977473F6 /* OffersView.swift in Sources */,
-				4940ACE62BD247E19E9B412E /* OffersViewModel.swift in Sources */,
-				C300B778DDAE4D719ACEBAB6 /* TransferConstants.swift in Sources */,
-				29C8B7A813F641799FA2B8C7 /* OTPInputView.swift in Sources */,
-				9309DC3A9B5447D49C7B17A0 /* SessionLockService.swift in Sources */,
-				FDD446479E724374AD91D4BA /* PINService.swift in Sources */,
-				3359F4B0243B478DAF1D1276 /* SessionLockOverlay.swift in Sources */,
-				054E5539149E43D18EDC7E37 /* APIConfig.swift in Sources */,
-				A394A6E1420E4236B1AC4391 /* APIAccountRepository.swift in Sources */,
-				26DC8EF0CFE04036B12B652D /* MainShellView.swift in Sources */,
-				F9BE1A146CBD42BF915117A1 /* WalletCardView.swift in Sources */,
-				3A5DA9061AEB4685BAF19EF9 /* HistoryViewModelObservable.swift in Sources */,
-				DF0BDFFABFB642448A627E81 /* WidgetDataStore.swift in Sources */,
-				69FFE664864E425712318798 /* MainTabView.swift in Sources */,
-				A11111111111111111111101 /* ShopView.swift in Sources */,
-				A11111111111111111111102 /* ExploreView.swift in Sources */,
-				A11111111111111111111103 /* CartView.swift in Sources */,
-				A11111111111111111111104 /* FavouriteView.swift in Sources */,
-				4FE1A2B3C4D5E6F7890A1B2C /* HotReload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-
 		E34AFBA80D524B55969B3AE5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBEB2E091391442E988B0E8A /* TransferViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin XCBuildConfiguration section */
-		FC618E5B81355E96BACAABEC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = Debug;
+/* Begin PBXTargetDependency section */
+		F03CB2CCC1EB4142994E3391 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 730950AD798A77AD508AA9E2 /* Nectar */;
+			targetProxy = 24ECBBCFE9F843BCAF8F3A99 /* PBXContainerItemProxy */;
 		};
-		E4E08E1214B2B987603C6DFC /* Release */ = {
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3DF54B37DD809C22D4CD2641 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nectar;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		640221721BFC4DD2B9E506E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.NectarTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Nectar.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Nectar";
 			};
 			name = Release;
 		};
@@ -449,7 +246,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Nectar/Resources/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -471,33 +268,6 @@
 			};
 			name = Debug;
 		};
-		3DF54B37DD809C22D4CD2641 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Nectar/Resources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nectar;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-
 		C7BCC56DD7F54525A3DE5682 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -516,24 +286,39 @@
 			};
 			name = Debug;
 		};
-
-		640221721BFC4DD2B9E506E1 /* Release */ = {
+		E4E08E1214B2B987603C6DFC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.NectarTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Nectar.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Nectar";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
+		};
+		FC618E5B81355E96BACAABEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -556,7 +341,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-
 		F0767821459841F293C0A1CF /* Build configuration list for PBXNativeTarget "NectarTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject private var session: AppSession
+    @EnvironmentObject private var tabBarVisibility: TabBarVisibility
     @State private var biometricEnabled = AppStorageService.shared.biometricEnabled
     private let biometric = BiometricAuthService.shared
 
@@ -31,6 +32,12 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                    .background(
+                        UIKitScrollOffsetReader { offset in
+                            tabBarVisibility.handleScroll(offset: offset)
+                        }
+                        .frame(width: 0, height: 0)
+                    )
                 }
 
                 Section("Orders & delivery") {
@@ -82,6 +89,15 @@ struct ProfileView: View {
                         Label("Đăng xuất", systemImage: "rectangle.portrait.and.arrow.right")
                     }
                 }
+
+                Section("More") {
+                    ForEach(0..<8, id: \.self) { index in
+                        Text("Setting \(index + 1)")
+                    }
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 72)
             }
             .navigationTitle("Account")
         }

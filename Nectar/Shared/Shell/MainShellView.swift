@@ -21,7 +21,7 @@ enum DeepLinkRouter {
     }
 }
 
-enum MainTab: Int, Hashable {
+enum MainTab: Int, Hashable, CaseIterable {
     case shop = 0
     case explore = 1
     case cart = 2
@@ -29,65 +29,46 @@ enum MainTab: Int, Hashable {
     case account = 4
 }
 
-/// Tab shell with deep-link routing support.
+/// Tab shell: floating bar kiểu Facebook — đổ bóng iOS, ẩn khi scroll xuống.
 struct MainShellView: View {
     @EnvironmentObject private var session: AppSession
     @StateObject private var lockService = SessionLockService.shared
+    @StateObject private var tabBarVisibility = TabBarVisibility()
     @State private var selectedTab: MainTab = .shop
     @HotReloadObserver private var _hr
 
     var body: some View {
-        ZStack {
-            TabView(selection: $selectedTab) {
-                ShopView()
-                    .tag(MainTab.shop)
-                    .tabItem { Label("Shop", systemImage: "storefront") }
+        ZStack(alignment: .bottom) {
+            tabContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                ExploreView()
-                    .tag(MainTab.explore)
-                    .tabItem { Label("Explore", systemImage: "line.3.horizontal.decrease.circle") }
-
-                CartView()
-                    .tag(MainTab.cart)
-                    .tabItem { Label("Cart", systemImage: "cart") }
-
-                FavouriteView()
-                    .tag(MainTab.favourite)
-                    .tabItem { Label("Favourite", systemImage: "heart") }
-
-                ProfileView()
-                    .tag(MainTab.account)
-                    .tabItem { Label("Account", systemImage: "person") }
-            }
-            .tint(NectarColors.green)
-            .onAppear(perform: configureTabBarAppearance)
-            .onOpenURL { url in
-                applyDeepLink(DeepLinkRouter.handle(url: url, session: session))
-            }
+            FloatingTabBar(selection: $selectedTab)
+        }
+        .environmentObject(tabBarVisibility)
+        .ignoresSafeArea(.keyboard)
+        .onChange(of: selectedTab) { _, _ in
+            tabBarVisibility.reset()
+        }
+        .onOpenURL { url in
+            applyDeepLink(DeepLinkRouter.handle(url: url, session: session))
         }
         .hotReload()
     }
 
-    private func configureTabBarAppearance() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
-        appearance.shadowColor = UIColor.black.withAlphaComponent(0.08)
-
-        let normal = appearance.stackedLayoutAppearance.normal
-        normal.iconColor = UIColor(NectarColors.textPrimary)
-        normal.titleTextAttributes = [
-            .foregroundColor: UIColor(NectarColors.textPrimary),
-        ]
-
-        let selected = appearance.stackedLayoutAppearance.selected
-        selected.iconColor = UIColor(NectarColors.green)
-        selected.titleTextAttributes = [
-            .foregroundColor: UIColor(NectarColors.green),
-        ]
-
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+    @ViewBuilder
+    private var tabContent: some View {
+        switch selectedTab {
+        case .shop:
+            ShopView()
+        case .explore:
+            ExploreView()
+        case .cart:
+            CartView()
+        case .favourite:
+            FavouriteView()
+        case .account:
+            ProfileView()
+        }
     }
 
     private func applyDeepLink(_ destination: DeepLinkRouter.Destination?) {

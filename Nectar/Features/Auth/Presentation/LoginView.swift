@@ -42,9 +42,9 @@ struct LoginView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.top, NectarMetrics.spacing.sm)
 
-                    VStack(spacing: NectarMetrics.spacing.sm) {
+                    HStack(spacing: NectarMetrics.spacing.sm) {
                         socialButton(
-                            title: "Continue with Google",
+                            title: "Google",
                             icon: "ic_gg",
                             color: NectarColors.googleBlue
                         ) {
@@ -55,7 +55,7 @@ struct LoginView: View {
                             }
                         }
                         socialButton(
-                            title: "Continue with Facebook",
+                            title: "Facebook",
                             icon: "ic_fb",
                             color: NectarColors.facebookBlue
                         ) {
@@ -80,22 +80,24 @@ struct LoginView: View {
             focusedField = nil
         }
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Button {
-                    moveFocus(delta: -1)
-                } label: {
-                    Image(systemName: "chevron.up")
-                        .font(.system(size: 14, weight: .semibold))
-                }
-                .disabled(!canMoveFocus(delta: -1))
+            ToolbarItem(placement: .keyboard) {
+                HStack(spacing: 12) {
+                    Button {
+                        moveFocus(delta: -1)
+                    } label: {
+                        Image(systemName: "chevron.up")
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .disabled(!canMoveFocus(delta: -1))
 
-                Button {
-                    moveFocus(delta: 1)
-                } label: {
-                    Image(systemName: "chevron.down")
-                        .font(.system(size: 14, weight: .semibold))
+                    Button {
+                        moveFocus(delta: 1)
+                    } label: {
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .disabled(!canMoveFocus(delta: 1))
                 }
-                .disabled(!canMoveFocus(delta: 1))
             }
         }
         .hotReload()

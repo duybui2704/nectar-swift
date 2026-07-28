@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-/// Modern @Observable ViewModel (iOS 17+) — compare with DashboardViewModel (ObservableObject).
+/// Modern @Observable ViewModel (iOS 17+) — compare with classic ObservableObject ViewModels.
 @MainActor
 @Observable
 final class HistoryViewModelObservable {
