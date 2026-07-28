@@ -33,15 +33,21 @@ final class AppSession: ObservableObject { // "final": không class nào đượ
     // Hàm bootstrap: logic khởi động giao diện lần đầu khi vào app.
     // async: chạy bất đồng bộ; cho delay mô phỏng splash screen.
     func bootstrap() async {
-        try? await Task.sleep(nanoseconds: 1_200_000_000) // Ngủ 1.2 giây (tạo hiệu ứng splash screen/loading) - Task.sleep cần await do bất đồng bộ.
-        if !storage.hasCompletedOnboarding { // Nếu user chưa hoàn thành onboarding
-            route = .onboarding // Điều hướng sang màn hình onboarding
-        } else if storage.isLoggedIn { // Nếu user đã đăng nhập (có token/session lưu trong storage)
-            sessionToken = storage.sessionToken // Lấy lại token từ storage
-            userDisplayName = storage.userDisplayName // Lấy lại tên user
-            route = .main // Điều hướng vào màn hình chính
-        } else { // Ngược lại, chưa login, đã onboarding
-            route = .login // Điều hướng sang login
+        // Prefetch không chặn splash — tránh kẹt 30s nếu 1 API timeout
+        Task {
+            await AppBootstrap.prefetchLaunchAPIs()
+        }
+
+        try? await Task.sleep(nanoseconds: 1_200_000_000)
+
+        if !storage.hasCompletedOnboarding {
+            route = .onboarding
+        } else if storage.isLoggedIn {
+            sessionToken = storage.sessionToken
+            userDisplayName = storage.userDisplayName
+            route = .main
+        } else {
+            route = .login
         }
     }
 

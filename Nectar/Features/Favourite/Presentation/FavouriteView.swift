@@ -5,8 +5,6 @@ struct FavouriteView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
-                    ScrollOffsetTracker()
-
                     EmptyStateView(
                         title: "No favourites yet",
                         message: "Tap the heart on a product to save it here."

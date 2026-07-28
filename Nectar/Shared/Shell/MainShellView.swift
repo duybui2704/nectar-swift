@@ -29,18 +29,23 @@ enum MainTab: Int, Hashable, CaseIterable {
     case account = 4
 }
 
-/// Tab shell: floating bar kiểu Facebook — đổ bóng iOS, ẩn khi scroll xuống.
+/// Tab shell: giữ sống mọi tab (không `.id(selectedTab)`) → tránh recreate ViewModel / re-download ảnh.
 struct MainShellView: View {
     @EnvironmentObject private var session: AppSession
-    @StateObject private var lockService = SessionLockService.shared
     @StateObject private var tabBarVisibility = TabBarVisibility()
     @State private var selectedTab: MainTab = .shop
     @HotReloadObserver private var _hr
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            tabContent
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ZStack {
+                tabPage(.shop) { ShopView() }
+                tabPage(.explore) { ExploreView() }
+                tabPage(.cart) { CartView() }
+                tabPage(.favourite) { FavouriteView() }
+                tabPage(.account) { ProfileView() }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             FloatingTabBar(selection: $selectedTab)
         }
@@ -56,19 +61,12 @@ struct MainShellView: View {
     }
 
     @ViewBuilder
-    private var tabContent: some View {
-        switch selectedTab {
-        case .shop:
-            ShopView()
-        case .explore:
-            ExploreView()
-        case .cart:
-            CartView()
-        case .favourite:
-            FavouriteView()
-        case .account:
-            ProfileView()
-        }
+    private func tabPage<Content: View>(_ tab: MainTab, @ViewBuilder content: () -> Content) -> some View {
+        content()
+            .opacity(selectedTab == tab ? 1 : 0)
+            .allowsHitTesting(selectedTab == tab)
+            // Giữ trong hierarchy nhưng không nhận hit khi ẩn
+            .accessibilityHidden(selectedTab != tab)
     }
 
     private func applyDeepLink(_ destination: DeepLinkRouter.Destination?) {

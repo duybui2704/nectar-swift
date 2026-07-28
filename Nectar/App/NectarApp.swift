@@ -6,6 +6,7 @@ struct NectarApp: App {
 
     init() {
         HotReloadBootstrap.configure()
+        ImageCacheBootstrap.configure()
     }
 
     var body: some Scene {

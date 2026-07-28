@@ -5,8 +5,6 @@ struct CartView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
-                    ScrollOffsetTracker()
-
                     EmptyStateView(
                         title: "Your cart is empty",
                         message: "Items you add will show up here."

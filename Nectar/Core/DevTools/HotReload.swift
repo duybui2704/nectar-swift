@@ -7,15 +7,28 @@ import SwiftUI
 //   - InjectionIII.app
 //
 // Hướng dẫn: docs/hot-reload.md
+//
+// Khi crash EXC_BAD_ACCESS + log `eval2.dylib` / `debug map object file … changed`:
+ // → đó là Inject hot-reload, không phải bug app. Tắt InjectionNext rồi ⌘R lại.
+// → hoặc thêm Launch Argument: -DISABLE_HOT_RELOAD
 
 #if DEBUG && canImport(Inject)
 import Inject
 
 enum HotReloadBootstrap {
+    /// Launch Argument `-DISABLE_HOT_RELOAD` → không load Injection bundle.
+    static var isEnabled: Bool {
+        !ProcessInfo.processInfo.arguments.contains("-DISABLE_HOT_RELOAD")
+    }
+
     /// Gọi 1 lần khi app khởi động — trỏ Inject tới InjectionNext (fallback InjectionIII).
     static func configure() {
+        guard isEnabled else {
+            print("ℹ️ HotReload: disabled (-DISABLE_HOT_RELOAD)")
+            return
+        }
+
         // Inject mặc định tìm InjectionIII; với InjectionNext cần đổi path.
-        // Inject 1.6+ cũng tự thử thay "III" → "Next", nhưng set tường minh cho rõ.
         let next = "/Applications/InjectionNext.app/Contents/Resources/"
         let iii = "/Applications/InjectionIII.app/Contents/Resources/"
         if FileManager.default.fileExists(atPath: next + "iOSInjection.bundle") {
@@ -23,7 +36,6 @@ enum HotReloadBootstrap {
         } else if FileManager.default.fileExists(atPath: iii + "iOSInjection.bundle") {
             InjectConfiguration.bundlePath = iii
         } else {
-            // Giữ default; Inject sẽ print warning nếu không tìm thấy
             InjectConfiguration.bundlePath = next
             print("""
             ⚠️ HotReload: Chưa cài InjectionNext / InjectionIII.
@@ -39,8 +51,13 @@ enum HotReloadBootstrap {
 
 extension View {
     /// Bật hot reload — save file → app cập nhật ngay (chỉ DEBUG).
+    @ViewBuilder
     func hotReload() -> some View {
-        self.enableInjection()
+        if HotReloadBootstrap.isEnabled {
+            self.enableInjection()
+        } else {
+            self
+        }
     }
 }
 
@@ -50,6 +67,7 @@ typealias HotReloadObserver = ObserveInjection
 #else
 
 enum HotReloadBootstrap {
+    static var isEnabled: Bool { false }
     static func configure() {}
 }
 

@@ -4,39 +4,38 @@ import Combine
 /// Chia sẻ trạng thái hiện/ẩn floating tab bar giữa các màn scroll.
 @MainActor
 final class TabBarVisibility: ObservableObject {
-    @Published var isVisible = true
+    @Published private(set) var isVisible = true
 
     private var lastOffset: CGFloat = 0
     private let threshold: CGFloat = 8
 
+    /// Gọi từ scroll observer (đã defer qua DispatchQueue.main.async).
     func handleScroll(offset: CGFloat) {
         let delta = offset - lastOffset
-
-        // Kéo lên nội dung (offset giảm) = scroll xuống → ẩn
-        // Kéo xuống nội dung (offset tăng) = scroll lên → hiện
-        if delta < -threshold {
-            setVisible(false)
-        } else if delta > threshold {
-            setVisible(true)
-        }
-
-        // Gần đầu list luôn hiện
-        if offset > -4 {
-            setVisible(true)
-        }
-
         lastOffset = offset
+
+        var next = isVisible
+        if delta < -threshold {
+            next = false
+        } else if delta > threshold {
+            next = true
+        }
+        if offset > -4 {
+            next = true
+        }
+
+        guard isVisible != next else { return }
+        isVisible = next
     }
 
     func setVisible(_ visible: Bool) {
         guard isVisible != visible else { return }
-        withAnimation(.spring(response: 0.32, dampingFraction: 0.86)) {
-            isVisible = visible
-        }
+        isVisible = visible
     }
 
     func reset() {
         lastOffset = 0
-        setVisible(true)
+        guard isVisible != true else { return }
+        isVisible = true
     }
 }

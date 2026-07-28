@@ -27,6 +27,7 @@ struct FloatingTabBar: View {
         .padding(.bottom, 8)
         .offset(y: tabBarVisibility.isVisible ? 0 : 110)
         .opacity(tabBarVisibility.isVisible ? 1 : 0)
+        .animation(.spring(response: 0.32, dampingFraction: 0.86), value: tabBarVisibility.isVisible)
         .allowsHitTesting(tabBarVisibility.isVisible)
         .accessibilityHidden(!tabBarVisibility.isVisible)
     }
@@ -80,7 +81,6 @@ struct FloatingTabBar: View {
                 selection = item.tab
             }
             tabBarVisibility.setVisible(true)
-            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         } label: {
             VStack(spacing: 2) {
                 Image(systemName: item.icon)
@@ -97,7 +97,6 @@ struct FloatingTabBar: View {
             .padding(.vertical, 8)
             .background {
                 if isSelected {
-                    // Active = sáng đặc (như toggle trắng trong Control Center)
                     Capsule(style: .continuous)
                         .fill(Color.white.opacity(0.95))
                         .overlay {

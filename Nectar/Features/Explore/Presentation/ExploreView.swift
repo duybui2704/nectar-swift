@@ -5,8 +5,6 @@ struct ExploreView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
-                    ScrollOffsetTracker()
-
                     Text("Discover categories & deals")
                         .font(NectarTypography.body)
                         .foregroundStyle(NectarColors.textSecondary)

@@ -1,19 +1,100 @@
 import Foundation
 
+/// Envelope chuẩn Printerval: `{ "status": "successful", "result": ..., "meta": ... }`.
 struct APIEnvelope<T: Decodable>: Decodable {
-    let code: String
-    let message: String
-    let body: T?
+    let status: String
+    let result: T?
+    let message: String?
+}
+
+/// Môi trường chạy app.
+enum AppEnvironment: String, CaseIterable {
+    case production
+    case staging
+
+    static var current: AppEnvironment {
+        #if DEBUG
+        .production
+        #else
+        .production
+        #endif
+    }
+}
+
+/// Các microservice Printerval.
+enum APIService: String, CaseIterable {
+    case customer
+    case order
+    case variant
+    case suggestion
+    /// JSONPlaceholder — demo repository cũ.
+    case demo
+
+    var host: String {
+        switch self {
+        case .demo:
+            return "https://jsonplaceholder.typicode.com"
+        case .customer:
+            return "https://customer-service.printerval.com"
+        case .order:
+            return "https://order-service.printerval.com"
+        case .variant:
+            return "https://variant-service.printerval.com"
+        case .suggestion:
+            return "https://suggestion.printerval.com"
+        }
+    }
+
+    var baseURL: URL {
+        URL(string: host)!
+    }
+}
+
+/// Endpoint paths theo từng service.
+enum APIEndpoint {
+    // Bootstrap (mở app)
+    static let wishlist = "wishlist"
+    static let localization = "localization"
+    static let homeBanners = "home/get-banners"
+    static let homeCategories = "home/get-categories"
+
+    // Home (Shop)
+    static let sellerSpotlight = "seller/spotlight"
+    static let recommendationProducts = "recommendation/products"
+    static let activeEvent = "get-active-event"
+    static let testimonial = "testimonial"
+    static let todayBigDeals = "today-big-deals"
+    static let recentlyViewed = "product/recently-viewed"
+    static let cart = "cart"
+    static let configPayment = "config-payment"
+    static let location = "location"
+
+    static func userTags(userId: String) -> String {
+        "users/\(userId)/tags"
+    }
 }
 
 enum APIConfig {
-    static let successCode = "API000"
-    static let jwtRefreshCode = "JWT-001"
-    static let jwtLogoutCode = "JWT-002"
-    static let appHeader = "postpay"
-    static let requestTimeout: TimeInterval = 30
+    static let requestTimeout: TimeInterval = 20
+    static let resourceTimeout: TimeInterval = 45
+    static let maxTimeoutRetries = 1
 
-    /// JSONPlaceholder for demo real HTTP; swap to PostPay base URL in production.
-    static let baseURL = URL(string: "https://jsonplaceholder.typicode.com")!
-    static let postPayBaseURL = URL(string: "https://vnpd-o2o-dev.postpay.vn/cake-cbd7443c61e8")!
+    /// Printerval success: `"status": "successful"`.
+    static let successStatus = "successful"
+
+    static var environment: AppEnvironment { .current }
+    static var baseURL: URL { APIService.customer.baseURL }
+
+    static let acceptHeader = "application/json"
+    static let contentTypeHeader = "application/json"
+
+    static var userAgent: String { DeviceInfo.userAgent }
+
+    static var defaultHeaders: [String: String] {
+        [
+            "Accept": acceptHeader,
+            "Content-Type": contentTypeHeader,
+            "user-agent": userAgent,
+        ]
+    }
 }

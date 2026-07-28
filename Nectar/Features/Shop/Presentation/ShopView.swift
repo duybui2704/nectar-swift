@@ -1,53 +1,61 @@
 import SwiftUI
 
 struct ShopView: View {
+    @StateObject private var viewModel = ShopViewModel()
+
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
-                    ScrollOffsetTracker()
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: NectarMetrics.spacing.lg) {
+                locationHeader
+                    .screenPadding()
 
-                    Text("Find products you love")
-                        .font(NectarTypography.body)
-                        .foregroundStyle(NectarColors.textSecondary)
+                HomeBannerCarousel(banners: viewModel.banners)
+                    .screenPadding()
 
-                    ForEach(0..<12, id: \.self) { index in
-                        demoRow(
-                            title: "Fresh pick #\(index + 1)",
-                            subtitle: "Groceries delivered to your door"
-                        )
-                    }
+                if viewModel.isLoadingHome {
+                    ProgressView()
+                        .tint(NectarColors.green)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
                 }
-                .screenPadding()
-                .padding(.top, NectarMetrics.spacing.md)
-                .padding(.bottom, 100)
+
+                // today-big-deals → Exclusive Offer
+                ProductHorizontalRail(
+                    title: "Exclusive Offer",
+                    products: viewModel.exclusiveOffers,
+                    currencySymbol: viewModel.currencySymbol,
+                    onSeeAll: {},
+                    onAdd: { _ in }
+                )
+
+                // recommendation/products → Best Selling
+                ProductHorizontalRail(
+                    title: "Best Selling",
+                    products: viewModel.bestSelling,
+                    currencySymbol: viewModel.currencySymbol,
+                    onSeeAll: {},
+                    onAdd: { _ in }
+                )
             }
-            .hidesTabBarOnScroll()
-            .background(NectarColors.background.ignoresSafeArea())
-            .navigationTitle("Shop")
+            .padding(.top, NectarMetrics.spacing.md)
+            .padding(.bottom, 100)
+        }
+        .hidesTabBarOnScroll()
+        .background(NectarColors.background.ignoresSafeArea())
+        .task {
+            await viewModel.loadHome()
         }
     }
 
-    private func demoRow(title: String, subtitle: String) -> some View {
-        HStack(spacing: 12) {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(NectarColors.brandSoft)
-                .frame(width: 56, height: 56)
-                .overlay(
-                    Image(systemName: "leaf.fill")
-                        .foregroundStyle(NectarColors.green)
-                )
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title).font(NectarTypography.headline)
-                Text(subtitle)
-                    .font(NectarTypography.caption)
-                    .foregroundStyle(NectarColors.textSecondary)
-            }
-            Spacer()
+    private var locationHeader: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "location.fill")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundStyle(NectarColors.green)
+            Text(viewModel.locationText)
+                .font(.system(size: 16.scaled, weight: .semibold))
+                .foregroundStyle(NectarColors.textPrimary)
+                .lineLimit(1)
         }
-        .padding(14)
-        .background(NectarColors.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
