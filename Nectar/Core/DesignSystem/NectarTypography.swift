@@ -1,4 +1,6 @@
 import SwiftUI
+import UIKit
+import CoreText
 
 /// Typography scale theo `NectarMetrics` — tự co giãn trên mọi iPhone.
 enum NectarTypography {
@@ -36,5 +38,49 @@ enum NectarTypography {
 
     static var button: Font {
         .system(size: NectarMetrics.font.button, weight: .semibold)
+    }
+
+    /// Brand script (Great Vibes) — dùng cho chữ “Nectar”.
+    static func brandScript(size: CGFloat) -> Font {
+        NectarFonts.greatVibes(size: size)
+    }
+}
+
+// MARK: - Custom font registration
+
+/// Custom fonts trong `Resources/Fonts` + `UIAppFonts` (Info.plist).
+enum NectarFonts {
+    /// PostScript name của Great Vibes Regular.
+    static let greatVibesName = "GreatVibes-Regular"
+
+    static func greatVibes(size: CGFloat) -> Font {
+        registerIfNeeded()
+        if UIFont(name: greatVibesName, size: size) != nil {
+            return .custom(greatVibesName, size: size)
+        }
+        return .system(size: size, weight: .heavy, design: .serif).italic()
+    }
+
+    private static var didAttemptRegister = false
+
+    private static func registerIfNeeded() {
+        guard !didAttemptRegister else { return }
+        didAttemptRegister = true
+        guard UIFont(name: greatVibesName, size: 12) == nil else { return }
+        guard let url = Bundle.main.url(forResource: "GreatVibes-Regular", withExtension: "ttf") else {
+            #if DEBUG
+            print("⚠️ Font: không tìm thấy GreatVibes-Regular.ttf trong bundle")
+            #endif
+            return
+        }
+        var error: Unmanaged<CFError>?
+        CTFontManagerRegisterFontsForURL(url as CFURL, .process, &error)
+        #if DEBUG
+        if let error {
+            print("⚠️ Font register failed:", error.takeUnretainedValue())
+        } else {
+            print("✅ Font registered:", greatVibesName)
+        }
+        #endif
     }
 }

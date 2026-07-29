@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct ShopView: View {
     @StateObject private var viewModel = ShopViewModel()
@@ -6,7 +7,7 @@ struct ShopView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: NectarMetrics.spacing.lg) {
-                locationHeader
+                ShopLocationHeader(locationText: viewModel.locationText)
                     .screenPadding()
 
                 HomeBannerCarousel(banners: viewModel.banners)
@@ -19,7 +20,6 @@ struct ShopView: View {
                         .padding(.vertical, 4)
                 }
 
-                // today-big-deals → Exclusive Offer
                 ProductHorizontalRail(
                     title: "Exclusive Offer",
                     products: viewModel.exclusiveOffers,
@@ -28,7 +28,6 @@ struct ShopView: View {
                     onAdd: { _ in }
                 )
 
-                // recommendation/products → Best Selling
                 ProductHorizontalRail(
                     title: "Best Selling",
                     products: viewModel.bestSelling,
@@ -46,16 +45,71 @@ struct ShopView: View {
             await viewModel.loadHome()
         }
     }
+}
 
-    private var locationHeader: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "location.fill")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(NectarColors.green)
-            Text(viewModel.locationText)
-                .font(.system(size: 16.scaled, weight: .semibold))
-                .foregroundStyle(NectarColors.textPrimary)
-                .lineLimit(1)
+// MARK: - Location header
+
+/// Brand “Nectar” — rainbow chạy trái→phải bằng TimelineView (không dùng withAnimation trên UnitPoint).
+struct ShopLocationHeader: View {
+    let locationText: String
+
+    /// Chu kỳ 1 vòng rainbow (giây).
+    private let period: TimeInterval = 2.8
+
+    /// Dải màu lặp 2 lần để loop mượt khi offset.
+    private let rainbowBand: [Color] = [
+        .red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink,
+        .red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink,
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: NectarMetrics.spacing.xs) {
+           nectarTitle
+                .accessibilityLabel("Nectar Market")
+
+            // HStack(spacing: 8) {
+            //     Image(systemName: "location.fill")
+            //         .font(.system(size: 14.scaled, weight: .semibold))
+            //         .foregroundStyle(NectarColors.green)
+            //     Text(locationText)
+            //         .font(.system(size: 15.scaled, weight: .semibold, design: .rounded))
+            //         .foregroundStyle(NectarColors.textPrimary)
+            //         .lineLimit(1)
+            // }
+            // .accessibilityLabel("Location \(locationText)")
+        }
+    }
+
+    /// Great Vibes (script) — bắt buộc có file trong bundle + UIAppFonts.
+    private var titleFont: Font {
+        NectarTypography.brandScript(size: 50.scaled)
+    }
+
+    @ViewBuilder
+    private var nectarTitle: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: false)) { context in
+            let t = context.date.timeIntervalSinceReferenceDate
+            let phase = CGFloat(t.truncatingRemainder(dividingBy: period) / period)
+
+            Text("Nectar Market")
+                .font(titleFont)
+                .hidden()
+                .overlay {
+                    GeometryReader { geo in
+                        LinearGradient(
+                            colors: rainbowBand,
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                        .frame(width: geo.size.width * 2, height: geo.size.height)
+                        .offset(x: -phase * geo.size.width)
+                    }
+                }
+                .mask {
+                    Text("Nectar Market")
+                        .font(titleFont)
+                }
+                .shadow(color: Color.purple.opacity(0.22), radius: 8, x: 0, y: 2)
         }
     }
 }
