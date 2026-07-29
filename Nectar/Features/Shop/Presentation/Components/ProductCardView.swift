@@ -18,13 +18,13 @@ struct ProductCardView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(product.name)
-                    .font(.system(size: 15.scaled, weight: .bold))
+                    .font(NectarFonts.elmsSans(size: 15.scaled, weight: .bold))
                     .foregroundStyle(NectarColors.textPrimary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
 
                 Text(product.unitLabel)
-                    .font(.system(size: 12.scaled))
+                    .font(NectarFonts.elmsSans(size: 12.scaled, weight: .regular))
                     .foregroundStyle(NectarColors.textSecondary)
                     .lineLimit(1)
             }
@@ -35,7 +35,7 @@ struct ProductCardView: View {
 
             HStack {
                 Text(product.formattedPrice(symbol: currencySymbol))
-                    .font(.system(size: 16.scaled, weight: .bold))
+                    .font(NectarFonts.elmsSans(size: 16.scaled, weight: .bold))
                     .foregroundStyle(NectarColors.textPrimary)
 
                 Spacer(minLength: 4)

@@ -7,7 +7,7 @@ struct NectarApp: App {
     init() {
         HotReloadBootstrap.configure()
         ImageCacheBootstrap.configure()
-        _ = NectarTypography.brandScript(size: 12) // pre-register Great Vibes
+        NectarFonts.configureGlobalAppearance()
     }
 
     var body: some Scene {
@@ -15,6 +15,7 @@ struct NectarApp: App {
             RootView()
                 .environmentObject(session)
                 .preferredColorScheme(.light)
+                .nectarGlobalFont()
         }
     }
 }

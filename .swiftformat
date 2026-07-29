@@ -1,0 +1,13 @@
+--indent 4
+--indentcase false
+--trimwhitespace always
+--importgrouping alpha
+--semicolons never
+--commas always
+--stripunusedargs closure-only
+--maxwidth 120
+--wraparguments before-first
+--wrapcollections before-first
+--closingparen balanced
+--self init-only
+--swiftversion 5.9

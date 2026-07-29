@@ -1,8 +1,8 @@
 import SwiftUI
-import UIKit
 
 struct ShopView: View {
     @StateObject private var viewModel = ShopViewModel()
+    @HotReloadObserver private var _hr
 
     var body: some View {
         ScrollView {
@@ -44,72 +44,80 @@ struct ShopView: View {
         .task {
             await viewModel.loadHome()
         }
+        .hotReload()
     }
 }
 
 // MARK: - Location header
 
-/// Brand “Nectar” — rainbow chạy trái→phải bằng TimelineView (không dùng withAnimation trên UnitPoint).
+/// Brand “Nectar Market” — rainbow TimelineView + Great Vibes (không dùng Elms Sans global).
 struct ShopLocationHeader: View {
     let locationText: String
+    @HotReloadObserver private var _hr
 
-    /// Chu kỳ 1 vòng rainbow (giây).
     private let period: TimeInterval = 2.8
 
-    /// Dải màu lặp 2 lần để loop mượt khi offset.
     private let rainbowBand: [Color] = [
         .red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink,
         .red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink,
     ]
+    @State private var searchText: String = ""
+    @FocusState private var searchFieldIsFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: NectarMetrics.spacing.xs) {
-           nectarTitle
+            nectarTitle
                 .accessibilityLabel("Nectar Market")
 
-            // HStack(spacing: 8) {
-            //     Image(systemName: "location.fill")
-            //         .font(.system(size: 14.scaled, weight: .semibold))
-            //         .foregroundStyle(NectarColors.green)
-            //     Text(locationText)
-            //         .font(.system(size: 15.scaled, weight: .semibold, design: .rounded))
-            //         .foregroundStyle(NectarColors.textPrimary)
-            //         .lineLimit(1)
-            // }
-            // .accessibilityLabel("Location \(locationText)")
-        }
+            TextField("Search", text: $searchText, prompt: Text("Search products").foregroundStyle(.gray))
+                .focused($searchFieldIsFocused)
+                .padding(12)
+                .textInputAutocapitalization(.never)
+                .frame(width: UIScreen.main.bounds.width - NectarMetrics.spacing.lg * 2, height: NectarMetrics.button.inputHeight)
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(searchFieldIsFocused ? NectarColors.green : .secondary, lineWidth: 1.5)
+                )
+                .cornerRadius(8)
+        }.hotReload()
     }
 
-    /// Great Vibes (script) — bắt buộc có file trong bundle + UIAppFonts.
     private var titleFont: Font {
         NectarTypography.brandScript(size: 50.scaled)
     }
 
-    @ViewBuilder
     private var nectarTitle: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: false)) { context in
-            let t = context.date.timeIntervalSinceReferenceDate
-            let phase = CGFloat(t.truncatingRemainder(dividingBy: period) / period)
+        HStack {
+            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: false)) { context in
+                let t = context.date.timeIntervalSinceReferenceDate
+                let phase = CGFloat(t.truncatingRemainder(dividingBy: period) / period)
 
-            Text("Nectar Market")
-                .font(titleFont)
-                .hidden()
-                .overlay {
-                    GeometryReader { geo in
-                        LinearGradient(
-                            colors: rainbowBand,
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                        .frame(width: geo.size.width * 2, height: geo.size.height)
-                        .offset(x: -phase * geo.size.width)
+                Text("Nectar Market")
+                    .font(titleFont)
+                    .hidden()
+                    .overlay {
+                        GeometryReader { geo in
+                            LinearGradient(
+                                colors: rainbowBand,
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                            .frame(width: geo.size.width * 2, height: geo.size.height)
+                            .offset(x: -phase * geo.size.width)
+                        }
                     }
-                }
-                .mask {
-                    Text("Nectar Market")
-                        .font(titleFont)
-                }
-                .shadow(color: Color.purple.opacity(0.22), radius: 8, x: 0, y: 2)
+                    .mask {
+                        Text("Nectar Market")
+                            .font(titleFont)
+                    }
+                    .shadow(color: Color.purple.opacity(0.22), radius: 8, x: 0, y: 2)
+            }
+            Spacer()
+            Image(systemName: "bell.fill")
+                .font(.system(size: 24.scaled, weight: .semibold))
+                .foregroundStyle(NectarColors.green)
         }
     }
 }

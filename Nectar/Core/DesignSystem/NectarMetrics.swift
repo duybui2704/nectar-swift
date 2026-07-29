@@ -92,6 +92,7 @@ enum NectarMetrics {
         var onboardingHeight: CGFloat { NectarMetrics.s(67) }
         var secondaryHeight: CGFloat { NectarMetrics.s(48) }
         var horizontalPadding: CGFloat { NectarMetrics.spacing.lg }
+        var inputHeight: CGFloat { NectarMetrics.s(40) }
     }
 
     static let button = Button()

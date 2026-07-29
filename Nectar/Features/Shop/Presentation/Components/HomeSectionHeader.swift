@@ -7,9 +7,9 @@ struct HomeSectionHeader: View {
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(title)
-                .font(.system(size: 22.scaled, weight: .bold))
-                .foregroundStyle(NectarColors.textPrimary)
+                Text(title)
+                    .font(NectarTypography.title)
+                    .foregroundStyle(NectarColors.textPrimary)
 
             Spacer(minLength: 8)
 
@@ -17,7 +17,7 @@ struct HomeSectionHeader: View {
                 onSeeAll?()
             } label: {
                 Text("See all")
-                    .font(.system(size: 15.scaled, weight: .semibold))
+                    .font(NectarTypography.caption.weight(.semibold))
                     .foregroundStyle(NectarColors.green)
             }
             .buttonStyle(.plain)

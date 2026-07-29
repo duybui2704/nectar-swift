@@ -49,6 +49,10 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>GreatVibes-Regular.ttf</string>
+		<string>ElmsSans-Regular.ttf</string>
+		<string>ElmsSans-Medium.ttf</string>
+		<string>ElmsSans-SemiBold.ttf</string>
+		<string>ElmsSans-Bold.ttf</string>
 	</array>
 </dict>
 </plist>

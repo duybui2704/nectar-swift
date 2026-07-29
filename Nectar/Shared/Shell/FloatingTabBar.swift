@@ -8,11 +8,11 @@ struct FloatingTabBar: View {
     @Namespace private var tabNamespace
 
     private let items: [(tab: MainTab, title: String, icon: String)] = [
-        (.shop, "Shop", "storefront"),
-        (.explore, "Explore", "line.3.horizontal.decrease.circle"),
-        (.cart, "Cart", "cart"),
+        (.shop, "Home", "house.fill"),
+        (.explore, "Explore", "magnifyingglass"),
+        (.cart, "Cart", "cart.badge.plus"),
         (.favourite, "Favourite", "heart"),
-        (.account, "Account", "person"),
+        (.account, "Account", "person.crop.circle"),
     ]
 
     var body: some View {
