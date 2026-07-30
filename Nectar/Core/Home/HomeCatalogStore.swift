@@ -7,12 +7,18 @@ final class HomeCatalogStore: ObservableObject {
     static let shared = HomeCatalogStore()
 
     @Published private(set) var banners: [HomeBanner] = []
+    @Published private(set) var categories: [CategoryTree] = []
     @Published private(set) var recommendations: [ShopProduct] = []
     @Published private(set) var bigDeals: [ShopProduct] = []
 
     func setBanners(_ items: [HomeBanner]) {
         guard !items.isEmpty else { return }
         banners = items
+    }
+
+    func setCategories(_ items: [CategoryTree]) {
+        guard !items.isEmpty else { return }
+        categories = items
     }
 
     func setRecommendations(_ items: [ShopProduct]) {

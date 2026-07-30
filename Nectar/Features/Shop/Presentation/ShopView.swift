@@ -7,8 +7,11 @@ struct ShopView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: NectarMetrics.spacing.lg) {
-                ShopLocationHeader(locationText: viewModel.locationText)
-                    .screenPadding()
+                ShopLocationHeader(
+                    locationText: viewModel.locationText,
+                    categories: viewModel.categories
+                )
+                .screenPadding()
 
                 HomeBannerCarousel(banners: viewModel.banners)
                     .screenPadding()
@@ -50,9 +53,11 @@ struct ShopView: View {
 
 // MARK: - Location header
 
-/// Brand “Nectar Market” — rainbow TimelineView + Great Vibes (không dùng Elms Sans global).
+/// Brand “Nectar Market” — rainbow TimelineView + Great Vibes + Search + Categories.
 struct ShopLocationHeader: View {
     let locationText: String
+    var categories: [CategoryTree] = []
+
     @HotReloadObserver private var _hr
 
     private let period: TimeInterval = 2.8
@@ -65,7 +70,7 @@ struct ShopLocationHeader: View {
     @FocusState private var searchFieldIsFocused: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: NectarMetrics.spacing.xs) {
+        VStack(alignment: .leading, spacing: NectarMetrics.spacing.sm) {
             nectarTitle
                 .accessibilityLabel("Nectar Market")
 
@@ -73,15 +78,18 @@ struct ShopLocationHeader: View {
                 .focused($searchFieldIsFocused)
                 .padding(12)
                 .textInputAutocapitalization(.never)
-                .frame(width: UIScreen.main.bounds.width - NectarMetrics.spacing.lg * 2, height: NectarMetrics.button.inputHeight)
-                .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
+                .frame(maxWidth: .infinity)
+                .frame(height: NectarMetrics.button.inputHeight)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(searchFieldIsFocused ? NectarColors.green : .secondary, lineWidth: 1.5)
                 )
                 .cornerRadius(8)
-        }.hotReload()
+
+            CategoryList(categories: categories)
+        }
+        .hotReload()
     }
 
     private var titleFont: Font {

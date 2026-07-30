@@ -57,7 +57,7 @@ enum APIEndpoint {
     static let localization = "localization"
     static let homeBanners = "home/get-banners"
     static let homeCategories = "home/get-categories"
-
+    static let categoryTree = "category/tree"
     // Home (Shop)
     static let sellerSpotlight = "seller/spotlight"
     static let recommendationProducts = "recommendation/products"
@@ -75,9 +75,10 @@ enum APIEndpoint {
 }
 
 enum APIConfig {
-    static let requestTimeout: TimeInterval = 20
-    static let resourceTimeout: TimeInterval = 45
-    static let maxTimeoutRetries = 1
+    static let requestTimeout: TimeInterval = 15
+    static let resourceTimeout: TimeInterval = 30
+    /// Timeout đã chờ lâu — retry thêm lần nữa thường lãng phí; chỉ retry lỗi mạng ngắn.
+    static let maxTimeoutRetries = 0
 
     /// Printerval success: `"status": "successful"`.
     static let successStatus = "successful"
@@ -94,7 +95,8 @@ enum APIConfig {
         [
             "Accept": acceptHeader,
             "Content-Type": contentTypeHeader,
-            "user-agent": userAgent,
+            // Cloudflare / Printerval đọc header này — phải đúng casing + format PrintervalApp.
+            "User-Agent": userAgent,
         ]
     }
 }

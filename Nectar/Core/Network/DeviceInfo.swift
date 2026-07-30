@@ -2,10 +2,14 @@ import Foundation
 import UIKit
 
 /// Thông tin thiết bị cho User-Agent (tách khỏi APIConfig).
+///
+/// Printerval/Cloudflare thường **chặn** request có `Simulator` trong UA
+/// hoặc UA không đúng format `PrintervalApp/IOS/...`.
 enum DeviceInfo {
+    /// Format khớp app Printerval gốc — bắt buộc để API không trả 403 HTML.
     static var userAgent: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        let model = UIDevice.current.modelName
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.6.8"
+        let model = UIDevice.current.printervalModelName
         let system = UIDevice.current.systemVersion
         let scale = String(format: "%.2f", UIScreen.main.scale)
         return "PrintervalApp/IOS/\(version) (\(model); iOS \(system); scale/\(scale))"
@@ -13,7 +17,11 @@ enum DeviceInfo {
 }
 
 private extension UIDevice {
-    var modelName: String {
+    /// Tên model cho UA. Simulator **không** được gửi chữ "Simulator" (CF hay 403).
+    var printervalModelName: String {
+        #if targetEnvironment(simulator)
+        return "iPhone XS Max"
+        #else
         var systemInfo = utsname()
         uname(&systemInfo)
         let mirror = Mirror(reflecting: systemInfo.machine)
@@ -29,9 +37,9 @@ private extension UIDevice {
         case "iPhone15,2": return "iPhone 14 Pro"
         case "iPhone16,2": return "iPhone 15 Pro Max"
         case "iPhone17,2": return "iPhone 16 Pro Max"
-        case "i386", "x86_64", "arm64": return "Simulator"
         default:
-            return identifier.isEmpty ? model : identifier
+            return identifier.isEmpty ? "iPhone" : identifier
         }
+        #endif
     }
 }

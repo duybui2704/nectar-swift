@@ -24,6 +24,32 @@ enum HomeDTOMapper {
         }
     }
 
+    /// Decode `category/tree` → **root nodes only** (không parse `children` sâu).
+    static func categoryTree(from data: Data) -> [CategoryTree] {
+        guard let root = jsonObject(data) else { return [] }
+        let rows = arrayPayload(from: root, preferredKeys: ["result", "categories", "items", "data", "list"])
+        return rows.enumerated().compactMap { index, item in
+            guard let dict = item as? [String: Any] else { return nil }
+            let id = number(dict, keys: ["id", "category_id"]) .map { Int($0) }
+                ?? Int(string(dict, keys: ["id", "category_id", "slug"]) ?? "")
+                ?? index
+            let name = string(dict, keys: ["name", "title", "label"]) ?? ""
+            guard !name.isEmpty else { return nil }
+            return CategoryTree(
+                id: id,
+                name: name,
+                type: string(dict, keys: ["type"]) ?? "PRODUCT",
+                parentId: number(dict, keys: ["parent_id"]).map { Int($0) },
+                imageURL: url(dict, keys: ["image_url", "image", "icon", "thumbnail"]),
+                slug: string(dict, keys: ["slug"]) ?? "",
+                lft: number(dict, keys: ["lft"]).map { Int($0) },
+                rgt: number(dict, keys: ["rgt"]).map { Int($0) },
+                fullURL: string(dict, keys: ["full_url"]),
+                children: [] // Home chỉ cần root
+            )
+        }
+    }
+
     static func products(from data: Data) -> [ShopProduct] {
         guard let root = jsonObject(data) else { return [] }
         let rows = arrayPayload(from: root, preferredKeys: ["products", "items", "data", "list", "result"])

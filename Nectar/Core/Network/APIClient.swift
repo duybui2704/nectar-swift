@@ -19,6 +19,8 @@ actor APIClient {
             config.timeoutIntervalForResource = APIConfig.resourceTimeout
             config.waitsForConnectivity = true
             config.requestCachePolicy = .reloadIgnoringLocalCacheData
+            // Gắn UA ở session-level — tránh iOS ghi đè User-Agent mặc định.
+            config.httpAdditionalHeaders = APIConfig.defaultHeaders
             self.session = URLSession(configuration: config)
         }
         self.storage = storage

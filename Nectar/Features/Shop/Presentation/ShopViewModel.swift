@@ -7,6 +7,7 @@ final class ShopViewModel: ObservableObject {
 
     @Published private(set) var isLoadingHome = false
     @Published private(set) var locationText = LocalizationStore.shared.displayRegion
+    @Published private(set) var categories: [CategoryTree] = []
     @Published private(set) var banners: [HomeBanner] = []
     @Published private(set) var exclusiveOffers: [ShopProduct] = []
     @Published private(set) var bestSelling: [ShopProduct] = []
@@ -18,6 +19,7 @@ final class ShopViewModel: ObservableObject {
     func loadHome() async {
         locationText = LocalizationStore.shared.displayRegion
         applyDisplay(
+            categories: HomeCatalogStore.shared.categories,
             banners: HomeCatalogStore.shared.banners,
             deals: HomeCatalogStore.shared.bigDeals,
             recommendations: HomeCatalogStore.shared.recommendations
@@ -28,31 +30,33 @@ final class ShopViewModel: ObservableObject {
         isLoadingHome = true
         defer { isLoadingHome = false }
 
+        // 1) Products / location trước
         let result = await AppBootstrap.prefetchHomeAPIs()
-
+        print("🔍 result categories: \(result.categories)")
         if let geo = result.location, geo.displayText != "Unknown location" {
             locationText = geo.displayText
         } else {
             locationText = result.regionText
         }
 
-        // Chỉ ghi API thật vào store — mock chỉ cho UI, không “fake cache”
         applyDisplay(
+            categories: result.categories,
             banners: result.banners,
             deals: result.bigDeals,
             recommendations: result.recommendations
         )
-
         Self.didPrefetchHome = true
     }
 
     private func applyDisplay(
+        categories: [CategoryTree],
         banners: [HomeBanner],
         deals: [ShopProduct],
         recommendations: [ShopProduct]
     ) {
-        self.banners = banners.isEmpty ? HomeMockData.banners : banners
-        exclusiveOffers = deals.isEmpty ? HomeMockData.exclusiveOffers : deals
-        bestSelling = recommendations.isEmpty ? HomeMockData.bestSelling : recommendations
+        self.categories = categories
+        self.banners = banners
+        exclusiveOffers = deals
+        bestSelling = recommendations
     }
 }

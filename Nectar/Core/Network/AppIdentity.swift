@@ -10,5 +10,5 @@ enum AppIdentity {
     static var token: String { deviceId }
 
     static let country = "us"
-    static let defaultLimit = 30
+    static let defaultLimit = 12
 }

@@ -43,6 +43,15 @@ enum PrintervalAPI {
         )
     }
 
+    static func fetchCategoryTree() async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.categoryTree,
+            service: .variant,
+            query: ["deviceId": AppIdentity.deviceId],
+            authenticated: false
+        )
+    }
+
     // MARK: - Home / Shop
 
     static func fetchSellerSpotlight() async throws -> Data {
