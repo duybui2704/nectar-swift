@@ -20,8 +20,7 @@ enum AppBootstrap {
  
     static func prefetchLaunchAPIs() async -> LaunchPrefetchResult {
         await withTaskGroup(of: LaunchChunk.self) { group in
-            group.addTask { await chunkLaunch("localization") { try await PrintervalAPI.fetchLocalization() } }
-            group.addTask { await chunkLaunch("home/banners") { try await PrintervalAPI.fetchHomeBanners() } }
+            group.addTask { await chunkLaunch(APIEndpoint.homeBanners) { try await PrintervalAPI.fetchHomeBanners() } }
             
             var result = LaunchPrefetchResult()
             for await item in group {
