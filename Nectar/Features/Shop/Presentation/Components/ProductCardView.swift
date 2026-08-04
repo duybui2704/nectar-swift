@@ -10,7 +10,7 @@ struct ProductCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            RemoteImageView(url: product.imageURL, contentMode: .fit)
+            RemoteImageView(url: product.imageURL, contentMode: .fit, showsLoadingIndicator: false)
                 .frame(height: 100.scaled)
                 .frame(maxWidth: .infinity)
                 .padding(.top, NectarMetrics.spacing.sm)
@@ -34,9 +34,11 @@ struct ProductCardView: View {
             Spacer(minLength: 8)
 
             HStack {
-                Text(product.formattedPrice(symbol: currencySymbol))
-                    .font(NectarFonts.elmsSans(size: 16.scaled, weight: .bold))
-                    .foregroundStyle(NectarColors.textPrimary)
+                if let price = product.formattedPrice(symbol: currencySymbol) {
+                    Text(price)
+                        .font(NectarFonts.elmsSans(size: 16.scaled, weight: .bold))
+                        .foregroundStyle(NectarColors.textPrimary)
+                }
 
                 Spacer(minLength: 4)
 

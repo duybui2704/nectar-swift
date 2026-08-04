@@ -22,7 +22,8 @@ struct EventBoxView: View {
     private var cornerRadius: CGFloat { NectarMetrics.radius.md }
 
     private var products: [ShopProduct] {
-        event?.pageProducts ?? []
+        guard let pageData = event?.pageData else { return [] }
+        return HomeDTOMapper.eventPageProducts(from: pageData)
     }
 
     var body: some View {

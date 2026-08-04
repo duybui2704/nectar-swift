@@ -4,6 +4,8 @@ import SwiftUI
 struct RemoteImageView: View {
     let url: URL?
     var contentMode: ContentMode = .fill
+    /// Tắt trên card nhỏ / rail — tránh hàng chục `ProgressView` spin cùng lúc.
+    var showsLoadingIndicator: Bool = true
 
     var body: some View {
         if let url {
@@ -11,7 +13,11 @@ struct RemoteImageView: View {
                 switch phase {
                 case .empty:
                     placeholder
-                        .overlay { ProgressView().tint(NectarColors.green) }
+                        .overlay {
+                            if showsLoadingIndicator {
+                                ProgressView().tint(NectarColors.green)
+                            }
+                        }
                 case .success(let image):
                     image
                         .resizable()

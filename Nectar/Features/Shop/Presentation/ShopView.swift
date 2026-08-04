@@ -7,14 +7,13 @@ struct ShopView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: NectarMetrics.spacing.lg) {
-                ShopLocationHeader(
-                    locationText: viewModel.locationText,
-                    categories: viewModel.categories
-                )
+                ShopLocationHeader(categories: viewModel.categories)
                 .screenPadding()
 
                 HomeBannerCarousel(banners: viewModel.banners)
                     .screenPadding()
+
+                ProductReelsRail(reels: viewModel.productReels)
 
                 if viewModel.isLoadingHome {
                     ProgressView()
@@ -67,7 +66,6 @@ struct ShopView: View {
 
 /// Brand “Nectar Market” — rainbow TimelineView + Great Vibes + Search + Categories.
 struct ShopLocationHeader: View {
-    let locationText: String
     var categories: [CategoryTree] = []
 
     @HotReloadObserver private var _hr
@@ -110,7 +108,8 @@ struct ShopLocationHeader: View {
 
     private var nectarTitle: some View {
         HStack {
-            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: false)) { context in
+            // ~12fps đủ cho shimmer; 30fps tốn CPU liên tục trên Home.
+            TimelineView(.animation(minimumInterval: 1.0 / 12.0, paused: false)) { context in
                 let t = context.date.timeIntervalSinceReferenceDate
                 let phase = CGFloat(t.truncatingRemainder(dividingBy: period) / period)
 
@@ -132,7 +131,7 @@ struct ShopLocationHeader: View {
                         Text("Nectar Market")
                             .font(titleFont)
                     }
-                    .shadow(color: Color.purple.opacity(0.22), radius: 8, x: 0, y: 2)
+                    .shadow(color: Color.purple.opacity(0.18), radius: 4, x: 0, y: 1)
             }
             Spacer()
             Image(systemName: "bell.fill")

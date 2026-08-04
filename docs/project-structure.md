@@ -62,13 +62,12 @@ HTTP + identity + prefetch:
 |------|----------|
 | `APIConfig.swift` | Host từng service, path endpoint, envelope `{ status, result }` |
 | `APIClient.swift` | `actor` URLSession — GET/POST, retry, log |
-| `PrintervalAPI.swift` | Facade từng endpoint (có thể có hàm chưa bind UI) |
-| `AppBootstrap.swift` | Prefetch **song song** lúc launch / vào Shop — **chỉ gọi API đang dùng** |
+| `PrintervalAPI.swift` | Facade **chỉ endpoint đang bind UI** |
+| `AppBootstrap.swift` | Prefetch launch banners → ủy quyền `HomeRepository` |
 | `AppIdentity.swift` | `token` / `deviceId` / country |
 | `NetworkLogger.swift` | Log request/response (DEBUG) |
 | `DeviceInfo.swift` | User-Agent |
-| `LocalizationModels.swift` + `LocalizationStore.swift` | Decode + cache `/localization` |
-| `LocationResult.swift` | Decode `/location` (geo — khác localization) |
+| `LocalizationModels.swift` + `LocalizationStore.swift` | Decode + cache `/localization` (default region/currency) |
 | `MockNectarAPI.swift` | Tên/SĐT demo + `delay` cho Login |
 
 #### `Core/Storage/`
@@ -110,39 +109,47 @@ Features/<Name>/
 | `Favourite/` | Tab yêu thích (stub) |
 | `Profile/` | Account / settings |
 
-#### `Features/Shop/` chi tiết
+#### `Features/Shop/` chi tiết — MVVM
 
 ```
 Shop/
+├── Domain/
+│   ├── Models/ShopModels.swift      # HomeBanner, ShopProduct, CategoryTree, EventBox, ProductReel
+│   └── HomeCatalogProviding.swift   # protocol + HomeCatalog snapshot
+├── Data/
+│   ├── HomeDTOMapper.swift          # JSON → domain
+│   ├── HomeCatalogStore.swift       # cache
+│   └── HomeRepository.swift         # loadHome + prefetchLaunchBanners
 └── Presentation/
     ├── ShopView.swift
-    ├── ShopViewModel.swift
+    ├── ShopViewModel.swift          # inject HomeCatalogProviding
     └── Components/
         ├── HomeBannerCarousel.swift
         ├── HomeSectionHeader.swift
         ├── ProductCardView.swift
-        └── ProductHorizontalRail.swift
+        ├── ProductHorizontalRail.swift
+        ├── ProductReelsRail.swift
+        ├── ProductReelsFullscreenView.swift
+        ├── EventBoxView.swift
+        └── CategoryList.swift
 ```
 
-Model / mapper / cache Home nằm ở **`Core/Home/`** (dùng chung với `AppBootstrap`, tránh Core phụ thuộc Features):
-
-```
-Core/Home/
-├── HomeModels.swift        # HomeBanner, ShopProduct, HomeMockData
-├── HomeDTOMapper.swift     # JSON → domain
-└── HomeCatalogStore.swift  # cache banners / rails
-```
+Luồng: `ShopView` → `ShopViewModel` → `HomeCatalogProviding` → `HomeRepository` → `PrintervalAPI` / Mapper / Store.
 
 Map API → UI:
 
 | API | UI |
 |-----|-----|
 | `home/get-banners` | Carousel |
+| `product-video/find` (`printerval.com`) | **Reels** (dưới banner) |
 | `today-big-deals` | Exclusive Offer |
 | `recommendation/products` | Best Selling |
-| `localization` | Region / currency symbol |
-| `location` | Header geo (nếu có) |
+| `product/recently-viewed` | Recently Viewed |
+| `event-box` | EventBox + products tab |
+| `category/tree` | Category rail |
 
+> Chi tiết Reels: [`product-reels.md`](./product-reels.md).  
+> Perf / memory: [`performance-memory.md`](./performance-memory.md).
 ---
 
 ### `Shared/`

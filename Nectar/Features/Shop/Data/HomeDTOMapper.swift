@@ -1,5 +1,14 @@
 import Foundation
 
+/// Wire DTOs cho decode `event-box` envelope.
+struct EventResponse: Codable {
+    let result: EventResult
+}
+
+struct EventResult: Codable {
+    let events: [EventBox]
+}
+
 /// Map JSON linh hoạt từ Printerval → domain models (schema API có thể lệch key).
 enum HomeDTOMapper {
 
@@ -30,7 +39,7 @@ enum HomeDTOMapper {
         let rows = arrayPayload(from: root, preferredKeys: ["result", "categories", "items", "data", "list"])
         return rows.enumerated().compactMap { index, item in
             guard let dict = item as? [String: Any] else { return nil }
-            let id = number(dict, keys: ["id", "category_id"]) .map { Int($0) }
+            let id = number(dict, keys: ["id", "category_id"]).map { Int($0) }
                 ?? Int(string(dict, keys: ["id", "category_id", "slug"]) ?? "")
                 ?? index
             let name = string(dict, keys: ["name", "title", "label"]) ?? ""
@@ -57,7 +66,7 @@ enum HomeDTOMapper {
             product(from: item, fallbackIndex: index)
         }
     }
-    
+
     static func eventBox(from data: Data) -> [EventBox] {
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
@@ -93,6 +102,40 @@ enum HomeDTOMapper {
         return string(first, keys: ["title", "name", "label"])
     }
 
+    /// Decode `product-video/find` → reels.
+    static func productReels(from data: Data) -> [ProductReel] {
+        guard let root = jsonObject(data) else { return [] }
+        let rows = arrayPayload(from: root, preferredKeys: ["result", "videos", "items", "data", "list"])
+        return rows.compactMap { item in
+            guard let dict = item as? [String: Any] else { return nil }
+
+            let idValue = dict["id"] as? Int
+                ?? (dict["id"] as? NSNumber)?.intValue
+                ?? Int(string(dict, keys: ["id"]) ?? "")
+            guard let id = idValue else { return nil }
+
+            let product = dict["product"] as? [String: Any] ?? [:]
+            let productId = (product["id"] as? Int)
+                ?? (product["id"] as? NSNumber)?.intValue
+                ?? (dict["product_id"] as? Int)
+                ?? (dict["product_id"] as? NSNumber)?.intValue
+                ?? 0
+
+            let name = string(product, keys: ["name", "title"]) ?? ""
+            let displayPrice = string(product, keys: ["display_price", "displayPrice", "price"]) ?? ""
+
+            return ProductReel(
+                id: id,
+                thumbnailURL: url(dict, keys: ["image_url", "imageUrl", "thumbnail", "thumb"]),
+                videoURL: url(dict, keys: ["src", "video_url", "videoUrl", "url"]),
+                productId: productId,
+                productName: name.isEmpty ? "Product" : name,
+                displayPrice: displayPrice,
+                productImageURL: url(product, keys: ["image_url", "imageUrl", "image"])
+            )
+        }
+    }
+
     // MARK: - Private
 
     private static func eventPageTabsObject(from pageDataJSON: String) -> [[String: Any]]? {
@@ -101,21 +144,17 @@ enum HomeDTOMapper {
               let data = trimmed.data(using: .utf8),
               let root = jsonObject(data) else { return nil }
 
-        // `{ "tabs": [...] }`
         if let dict = root as? [String: Any] {
             if let tabs = dict["tabs"] as? [[String: Any]] { return tabs }
-            // đôi khi bọc thêm
             if let result = dict["result"] as? [String: Any],
                let tabs = result["tabs"] as? [[String: Any]] {
                 return tabs
             }
         }
-        // `[ { tab }, ... ]`
         if let tabs = root as? [[String: Any]] { return tabs }
         return nil
     }
 
-    /// Object hoặc JSON string → `[String: Any]`.
     private static func dictionaryValue(_ dict: [String: Any], keys: [String]) -> [String: Any]? {
         for key in keys {
             if let nested = dict[key] as? [String: Any] { return nested }
@@ -127,6 +166,7 @@ enum HomeDTOMapper {
         }
         return nil
     }
+
     private static func product(from item: Any, fallbackIndex: Int) -> ShopProduct? {
         guard let dict = item as? [String: Any] else { return nil }
 
@@ -169,7 +209,6 @@ enum HomeDTOMapper {
         try? JSONSerialization.jsonObject(with: data)
     }
 
-    /// Lấy mảng item từ envelope `{ status, result }` hoặc object có key list.
     private static func arrayPayload(from root: Any, preferredKeys: [String]) -> [Any] {
         if let arr = root as? [Any] { return arr }
 
@@ -183,7 +222,6 @@ enum HomeDTOMapper {
             for key in preferredKeys {
                 if let arr = resultDict[key] as? [Any] { return arr }
             }
-            // Một số API bọc thêm 1 lớp
             for nestedKey in ["data", "items"] {
                 if let nested = resultDict[nestedKey] as? [String: Any] {
                     for key in preferredKeys {
@@ -227,7 +265,6 @@ enum HomeDTOMapper {
             return URL(string: "https:" + raw)
         }
         if raw.hasPrefix("/") {
-            // Relative path trên CDN Printerval — cần absolute sau; tạm bỏ
             return URL(string: "https://printerval.com" + raw)
         }
         return URL(string: raw)

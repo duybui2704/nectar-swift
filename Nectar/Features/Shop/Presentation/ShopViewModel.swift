@@ -3,64 +3,46 @@ import Combine
 
 @MainActor
 final class ShopViewModel: ObservableObject {
-    private static var didPrefetchHome = false
-
     @Published private(set) var isLoadingHome = false
-    @Published private(set) var locationText = LocalizationStore.shared.displayRegion
     @Published private(set) var categories: [CategoryTree] = []
     @Published private(set) var banners: [HomeBanner] = []
     @Published private(set) var exclusiveOffers: [ShopProduct] = []
     @Published private(set) var bestSelling: [ShopProduct] = []
     @Published private(set) var recentlyViewed: [ShopProduct] = []
     @Published private(set) var eventBox: [EventBox] = []
+    @Published private(set) var productReels: [ProductReel] = []
+
+    private let catalog: HomeCatalogProviding
+    private var didRequestHomeLoad = false
 
     var currencySymbol: String {
         LocalizationStore.shared.currentCurrency?.symbol ?? "$"
     }
 
-    func loadHome() async {
-        locationText = LocalizationStore.shared.displayRegion
-        applyDisplay(
-            categories: HomeCatalogStore.shared.categories,
-            banners: HomeCatalogStore.shared.banners,
-            deals: HomeCatalogStore.shared.bigDeals,
-            recommendations: HomeCatalogStore.shared.recommendations,
-            recentlyViewed: HomeCatalogStore.shared.recentlyViewed,
-            eventBox: HomeCatalogStore.shared.eventBox
-        )
+    init(catalog: HomeCatalogProviding = HomeRepository.shared) {
+        self.catalog = catalog
+    }
 
-        guard !Self.didPrefetchHome else { return }
+    func loadHome() async {
+        apply(catalog.cachedCatalog())
+
+        guard !didRequestHomeLoad else { return }
+        didRequestHomeLoad = true
 
         isLoadingHome = true
         defer { isLoadingHome = false }
 
-        let result = await AppBootstrap.prefetchHomeAPIs()
-        print("result ====", result.eventBox)
-
-        applyDisplay(
-            categories: result.categories,
-            banners: result.banners,
-            deals: result.bigDeals,
-            recommendations: result.recommendations,
-            recentlyViewed: result.recentlyViewed,
-            eventBox: HomeCatalogStore.shared.eventBox
-        )
-        Self.didPrefetchHome = true
+        let loaded = await catalog.loadHomeCatalog()
+        apply(loaded)
     }
 
-    private func applyDisplay(
-        categories: [CategoryTree],
-        banners: [HomeBanner],
-        deals: [ShopProduct],
-        recommendations: [ShopProduct],
-        recentlyViewed: [ShopProduct],
-        eventBox: [EventBox]
-    ) {
-        self.categories = categories
-        self.banners = banners
-        exclusiveOffers = deals
-        bestSelling = recommendations
-        self.recentlyViewed = recentlyViewed
-        self.eventBox = eventBox
+    private func apply(_ snapshot: HomeCatalog) {
+        categories = snapshot.categories
+        banners = snapshot.banners
+        exclusiveOffers = snapshot.bigDeals
+        bestSelling = snapshot.recommendations
+        recentlyViewed = snapshot.recentlyViewed
+        eventBox = snapshot.eventBox
+        productReels = snapshot.productReels
     }
 }

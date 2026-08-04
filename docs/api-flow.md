@@ -1,6 +1,6 @@
 # Luồng xử lý API — Nectar
 
-Tài liệu mô tả cách app gọi Printerval API: từ UI → ViewModel → Bootstrap → API facade → HTTP client → decode → bind UI.
+Tài liệu mô tả cách app gọi Printerval API: từ UI → ViewModel → Repository → API facade → HTTP client → decode → bind UI.
 
 ---
 
@@ -14,17 +14,18 @@ Tài liệu mô tả cách app gọi Printerval API: từ UI → ViewModel → B
                              │
 ┌────────────────────────────▼────────────────────────────────┐
 │  ViewModel (@MainActor ObservableObject)                    │
-│  ShopViewModel.loadHome() → gán @Published → UI cập nhật    │
+│  ShopViewModel → HomeCatalogProviding                       │
 └────────────────────────────┬────────────────────────────────┘
                              │
 ┌────────────────────────────▼────────────────────────────────┐
-│  AppBootstrap                                               │
-│  Prefetch song song (TaskGroup) — launch / home             │
+│  HomeRepository (Features/Shop/Data)                        │
+│  Prefetch + map + cache HomeCatalogStore                    │
+│  AppBootstrap.launch → repository.prefetchLaunchBanners()   │
 └────────────────────────────┬────────────────────────────────┘
                              │
 ┌────────────────────────────▼────────────────────────────────┐
 │  PrintervalAPI                                              │
-│  Mỗi endpoint = 1 hàm (path, service, query)                │
+│  Mỗi endpoint đang bind UI = 1 hàm                          │
 └────────────────────────────┬────────────────────────────────┘
                              │
 ┌────────────────────────────▼────────────────────────────────┐
@@ -33,8 +34,8 @@ Tài liệu mô tả cách app gọi Printerval API: từ UI → ViewModel → B
 └────────────────────────────┬────────────────────────────────┘
                              │
 ┌────────────────────────────▼────────────────────────────────┐
-│  Decode (DTO)                                               │
-│  LocationResult.decode / JSONDecoder / APIEnvelope          │
+│  HomeDTOMapper                                              │
+│  JSONSerialization / Codable → domain models                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -43,10 +44,10 @@ Tài liệu mô tả cách app gọi Printerval API: từ UI → ViewModel → B
 | `APIConfig.swift` | Service host, endpoint path, timeout, envelope `{ status, result, message }` |
 | `AppIdentity.swift` | `token` / `deviceId` / `country` gắn vào query |
 | `APIClient.swift` | HTTP client dùng chung (GET/POST, retry, auth header) |
-| `PrintervalAPI.swift` | Facade từng API Printerval |
-| `AppBootstrap.swift` | Gọi nhiều API song song lúc mở app / vào Shop |
+| `PrintervalAPI.swift` | Facade endpoint đang bind UI |
+| `AppBootstrap.swift` | Launch → `HomeRepository.prefetchLaunchBanners()` |
+| `HomeRepository.swift` | Prefetch/map/cache catalog Shop |
 | `NetworkLogger.swift` | Log request/response (DEBUG) |
-| `LocationResult.swift` | DTO ví dụ: decode `/location` → text UI |
 | `DeviceInfo.swift` | User-Agent |
 
 ---
@@ -55,40 +56,29 @@ Tài liệu mô tả cách app gọi Printerval API: từ UI → ViewModel → B
 
 ```mermaid
 sequenceDiagram
-    participant App as NectarApp / AppSession
+    participant App as NectarApp_AppSession
     participant Boot as AppBootstrap
+    participant Repo as HomeRepository
     participant API as PrintervalAPI
-    participant Client as APIClient
     participant Shop as ShopViewModel
 
-    App->>App: bootstrap() — splash ~1.2s
-    App-->>Boot: Task { prefetchLaunchAPIs() } (không chặn splash)
+    App->>App: bootstrap splash
+    App-->>Boot: Task prefetchLaunchAPIs
+    Boot->>Repo: prefetchLaunchBanners
+    Repo->>API: home/get-banners
 
-    par Launch (song song)
-        Boot->>API: wishlist
-        Boot->>API: localization
-        Boot->>API: home/banners
-        Boot->>API: home/categories
-    end
-    API->>Client: getData(...)
-    Client-->>Boot: Data (hoặc fail → log, không crash)
+    Note over App: route onboarding login main
 
-    Note over App: route → onboarding / login / main
-
-    Shop->>Boot: prefetchHomeAPIs()
-    par Home (song song)
-        Boot->>API: spotlight, recommendations, tags…
-        Boot->>API: cart
-        Boot->>API: location
-    end
-    Boot-->>Shop: HomePrefetchResult(location)
-    Shop-->>Shop: locationText = displayText
+    Shop->>Repo: cachedCatalog then loadHomeCatalog
+    Repo->>API: today-big-deals then parallel home APIs
+    Repo-->>Shop: HomeCatalog
+    Shop-->>Shop: apply Published props
 ```
 
 **Nguyên tắc:**
 - Prefetch **không chặn** chuyển màn (splash vẫn đi tiếp nếu API chậm/timeout).
-- 1 API fail **không làm fail cả group** — chỉ log, các API khác vẫn chạy.
-- Home prefetch **1 lần / session** (`ShopViewModel.didPrefetchHome`).
+- 1 API fail **không làm fail cả group** — chỉ bỏ qua, các API khác vẫn chạy.
+- Home prefetch **1 lần / session** (`HomeRepository.didLoadHome`).
 
 ---
 
@@ -96,34 +86,30 @@ sequenceDiagram
 
 ### 3.1 Launch — `AppBootstrap.prefetchLaunchAPIs()`
 
-Gọi từ `AppSession.bootstrap()` trong `Task` nền. **Chỉ prefetch endpoint đang bind UI.**
+Gọi từ `AppSession.bootstrap()` trong `Task` nền.
 
 | API | Service | Endpoint | Bind |
 |-----|---------|----------|------|
-| Localization | `variant` | `localization` | `LocalizationStore` |
 | Home banners | `variant` | `home/get-banners` | `HomeCatalogStore` → carousel |
-
-**Localization** decode theo envelope:
-
-```json
-{ "status": "successful", "result": { "default_locale", "default_currency_unit", "locales[]", "currency_units[]", "hreflangs" } }
-```
-
-→ `LocalizationPayload` → `LocalizationStore.shared` → Shop header (`list_text`, vd. `"US and Others"`).
 
 > Chi tiết thư mục toàn app: [project-structure.md](./project-structure.md).
 
-### 3.2 Home (Shop) — `AppBootstrap.prefetchHomeAPIs()`
+### 3.2 Home (Shop) — `HomeRepository.loadHomeCatalog()`
 
-Gọi từ `ShopViewModel.loadHome()`.
+Gọi từ `ShopViewModel.loadHome()` qua protocol `HomeCatalogProviding`.
 
 | API | Service | Endpoint | Bind UI |
 |-----|---------|----------|---------|
 | Recommendations | `variant` | `recommendation/products` | **Best Selling** |
 | Today big deals | `variant` | `today-big-deals` | **Exclusive Offer** |
-| Location | `variant` | `location` | Header geo (nếu decode được) |
+| Category tree | `variant` | `category/tree` | Category rail |
+| Recently viewed | `variant` | `product/recently-viewed` | Recently Viewed |
+| Event box | `variant` | `event-box` | EventBox |
+| Product videos / Reels | `www` | `product-video/find` | **Reels** (dưới banner) |
 
-> Endpoint khác vẫn khai báo trong `PrintervalAPI` / `APIEndpoint` để dùng sau — không gọi prefetch cho đến khi có UI.
+Launch: `AppBootstrap.prefetchLaunchAPIs()` → `HomeRepository.prefetchLaunchBanners()` (`home/get-banners`).
+
+> Chi tiết Reels: [`product-reels.md`](./product-reels.md).
 
 ---
 
@@ -136,7 +122,7 @@ Mỗi microservice có base URL riêng (`APIService`):
 | `customer` | `https://customer-service.printerval.com` |
 | `order` | `https://order-service.printerval.com` |
 | `variant` | `https://variant-service.printerval.com` |
-| `suggestion` | `https://suggestion.printerval.com` |
+| `www` | `https://printerval.com` (product-video, …) |
 
 URL cuối = `host` + `path` + query (`token`, `deviceId`, … từ `AppIdentity`).
 
@@ -172,16 +158,21 @@ Envelope chuẩn (khi decode):
 
 ---
 
-## 6. TaskGroup — lấy data ra UI (ví dụ location)
+## 6. TaskGroup — lấy data ra UI (ví dụ recommendations)
 
-`prefetchHomeAPIs` dùng `withTaskGroup` trả về `HomeChunk`:
+`HomeRepository.loadHomeCatalog` dùng `withTaskGroup`:
 
 ```swift
-group.addTask { await chunk("location") { try await PrintervalAPI.fetchLocation() } }
+group.addTask {
+    await Self.chunk(APIEndpoint.recommendationProducts) {
+        try await PrintervalAPI.fetchRecommendationProducts()
+    }
+}
 
 for await item in group {
-    if case .location(let data) = item {
-        result.location = try LocationResult.decode(from: data)
+    if case .recommendations(let data) = item {
+        let products = HomeDTOMapper.products(from: data)
+        store.setRecommendations(products)
     }
 }
 ```
@@ -189,41 +180,38 @@ for await item in group {
 ViewModel:
 
 ```swift
-let result = await AppBootstrap.prefetchHomeAPIs()
-locationText = result.location?.displayText ?? "Hanoi, Vietnam"
+let loaded = await catalog.loadHomeCatalog()
+apply(loaded) // bestSelling = loaded.recommendations
 ```
 
 View:
 
 ```swift
-Text(viewModel.locationText)
+ProductHorizontalRail(title: "Best Selling", products: viewModel.bestSelling, …)
 .task { await viewModel.loadHome() }
 ```
 
-> **Lưu ý:** Không `print` ở cấp `struct View` (ngoài `body`). Log trong `.task` / ViewModel.
+> View **không** gọi API. Chỉ bind `@Published`.
 
 ---
 
 ## 7. Cách thêm 1 API mới (checklist)
 
-1. **Endpoint** — thêm path trong `APIEndpoint` (`APIConfig.swift`).
-2. **Facade** — thêm hàm trong `PrintervalAPI` gọi `APIClient.shared.getData` / `get`.
-3. **Bootstrap** (nếu prefetch) — `group.addTask` trong `prefetchLaunchAPIs` hoặc `prefetchHomeAPIs`.
-4. **DTO** — `struct …: Decodable` (+ decode từ `APIEnvelope` nếu cần).
-5. **Chunk / result** — nếu cần bind UI: thêm case trong `HomeChunk` / field trong `HomePrefetchResult`.
-6. **ViewModel** — `@Published` + gán sau prefetch.
-7. **View** — đọc `@Published`, không gọi API trực tiếp từ View.
+1. **Endpoint** — path trong `APIEndpoint` (`APIConfig.swift`).
+2. **Facade** — hàm trong `PrintervalAPI` → `APIClient.shared.getData`.
+3. **Repository** — fetch trong `HomeRepository.loadHomeCatalog` (hoặc launch banners).
+4. **Mapper** — `HomeDTOMapper` → domain model.
+5. **Store / HomeCatalog** — field + setter nếu cần cache.
+6. **ViewModel** — `@Published` + `apply(_:)`.
+7. **View** — đọc `@Published`, không gọi API từ View.
 
 ---
 
 ## 8. Log / debug
 
 - Mọi request/response: `NetworkLogger` (Xcode Console, DEBUG).
-- Bootstrap fail: `⚠️ Bootstrap[name] failed: …`
-- Location decode: `📍 location decoded: …`
-- ViewModel: `🛒 viewModel after load: …`
-
-Tắt hot-reload khi debug crash mạng: Launch Argument `-DISABLE_HOT_RELOAD` (xem `docs/hot-reload.md`).
+- Repository decode: log `🔥` / `⭐` / `🎬` … trong DEBUG.
+- Tắt hot-reload khi debug crash: Launch Argument `-DISABLE_HOT_RELOAD` (xem `docs/hot-reload.md`).
 
 ---
 
@@ -245,13 +233,15 @@ Nectar/Core/Network/
   APIConfig.swift        # hosts, endpoints, envelope
   AppIdentity.swift      # token / deviceId
   APIClient.swift        # HTTP
-  PrintervalAPI.swift    # endpoint methods
-  AppBootstrap.swift     # parallel prefetch
-  NetworkLogger.swift    # console logs
-  LocationResult.swift   # DTO location
-  DeviceInfo.swift       # User-Agent
+  PrintervalAPI.swift    # endpoint methods (bind UI)
+  AppBootstrap.swift     # launch → HomeRepository.prefetchLaunchBanners
+  NetworkLogger.swift
+  DeviceInfo.swift
 
-Nectar/App/AppSession.swift                      # gọi launch prefetch
-Nectar/Features/Shop/Presentation/ShopViewModel.swift  # gọi home prefetch
-Nectar/Features/Shop/Presentation/ShopView.swift       # bind UI
+Nectar/Features/Shop/
+  Domain/                # models + HomeCatalogProviding
+  Data/                  # Mapper, Store, HomeRepository
+  Presentation/          # ShopView + ShopViewModel + Components
+
+Nectar/App/AppSession.swift   # gọi launch prefetch
 ```

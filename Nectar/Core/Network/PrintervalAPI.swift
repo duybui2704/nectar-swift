@@ -1,42 +1,11 @@
 import Foundation
 
-/// API Printerval — bootstrap (mở app) + home (Shop).
+/// API Printerval — endpoints đang bind UI.
 enum PrintervalAPI {
-
-    // MARK: - Bootstrap (gọi khi mở app)
-
-    static func fetchWishlist(country: String = AppIdentity.country) async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.wishlist,
-            service: .customer,
-            query: [
-                "token": AppIdentity.token,
-                "country": country,
-            ],
-            authenticated: false
-        )
-    }
-
-    static func fetchLocalization() async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.localization,
-            service: .variant,
-            authenticated: false
-        )
-    }
 
     static func fetchHomeBanners() async throws -> Data {
         try await APIClient.shared.getData(
             APIEndpoint.homeBanners,
-            service: .variant,
-            query: ["deviceId": AppIdentity.deviceId],
-            authenticated: false
-        )
-    }
-
-    static func fetchHomeCategories() async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.homeCategories,
             service: .variant,
             query: ["deviceId": AppIdentity.deviceId],
             authenticated: false
@@ -48,16 +17,6 @@ enum PrintervalAPI {
             APIEndpoint.categoryTree,
             service: .variant,
             query: ["deviceId": AppIdentity.deviceId],
-            authenticated: false
-        )
-    }
-
-    // MARK: - Home / Shop
-
-    static func fetchSellerSpotlight() async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.sellerSpotlight,
-            service: .variant,
             authenticated: false
         )
     }
@@ -74,32 +33,6 @@ enum PrintervalAPI {
         )
     }
 
-    static func fetchUserTags(k: Int = 15) async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.userTags(userId: AppIdentity.token),
-            service: .suggestion,
-            query: ["k": "\(k)"],
-            authenticated: false
-        )
-    }
-
-    static func fetchActiveEvent() async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.activeEvent,
-            service: .variant,
-            authenticated: false
-        )
-    }
-
-    static func fetchTestimonial() async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.testimonial,
-            service: .variant,
-            query: ["deviceId": AppIdentity.deviceId],
-            authenticated: false
-        )
-    }
-
     static func fetchTodayBigDeals() async throws -> Data {
         try await APIClient.shared.getData(
             APIEndpoint.todayBigDeals,
@@ -109,7 +42,7 @@ enum PrintervalAPI {
         )
     }
 
-    /// `GET product/recently-viewed` — dùng `APIEndpoint.recentlyViewed`.
+    /// `GET product/recently-viewed`
     static func fetchRecentlyViewed(
         customerId: String = "",
         limit: Int = 20,
@@ -129,22 +62,32 @@ enum PrintervalAPI {
         )
     }
 
-    static func fetchCart() async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.cart,
-            service: .order,
-            query: ["token": AppIdentity.token],
-            authenticated: false
-        )
-    }
-
     static func fetchEventBox() async throws -> Data {
-        let data = try await APIClient.shared.getData(
+        try await APIClient.shared.getData(
             APIEndpoint.eventBox,
             service: .variant,
             authenticated: false
         )
-        
-        return data
+    }
+
+    /// `GET product-video/find` — reel / product video feed.
+    static func fetchProductVideos(
+        pageSize: Int = 10,
+        pageId: Int = 0,
+        fromId: Int? = nil
+    ) async throws -> Data {
+        var query: [String: String] = [
+            "page_size": "\(pageSize)",
+            "page_id": "\(pageId)",
+        ]
+        if let fromId {
+            query["from_id"] = "\(fromId)"
+        }
+        return try await APIClient.shared.getData(
+            APIEndpoint.productVideoFind,
+            service: .www,
+            query: query,
+            authenticated: false
+        )
     }
 }
