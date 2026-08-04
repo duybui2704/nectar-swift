@@ -11,6 +11,8 @@ final class ShopViewModel: ObservableObject {
     @Published private(set) var banners: [HomeBanner] = []
     @Published private(set) var exclusiveOffers: [ShopProduct] = []
     @Published private(set) var bestSelling: [ShopProduct] = []
+    @Published private(set) var recentlyViewed: [ShopProduct] = []
+    @Published private(set) var eventBox: [EventBox] = []
 
     var currencySymbol: String {
         LocalizationStore.shared.currentCurrency?.symbol ?? "$"
@@ -22,7 +24,9 @@ final class ShopViewModel: ObservableObject {
             categories: HomeCatalogStore.shared.categories,
             banners: HomeCatalogStore.shared.banners,
             deals: HomeCatalogStore.shared.bigDeals,
-            recommendations: HomeCatalogStore.shared.recommendations
+            recommendations: HomeCatalogStore.shared.recommendations,
+            recentlyViewed: HomeCatalogStore.shared.recentlyViewed,
+            eventBox: HomeCatalogStore.shared.eventBox
         )
 
         guard !Self.didPrefetchHome else { return }
@@ -30,20 +34,16 @@ final class ShopViewModel: ObservableObject {
         isLoadingHome = true
         defer { isLoadingHome = false }
 
-        // 1) Products / location trước
         let result = await AppBootstrap.prefetchHomeAPIs()
-        print("🔍 result categories: \(result.categories)")
-        if let geo = result.location, geo.displayText != "Unknown location" {
-            locationText = geo.displayText
-        } else {
-            locationText = result.regionText
-        }
+        print("result ====", result.eventBox)
 
         applyDisplay(
             categories: result.categories,
             banners: result.banners,
             deals: result.bigDeals,
-            recommendations: result.recommendations
+            recommendations: result.recommendations,
+            recentlyViewed: result.recentlyViewed,
+            eventBox: HomeCatalogStore.shared.eventBox
         )
         Self.didPrefetchHome = true
     }
@@ -52,11 +52,15 @@ final class ShopViewModel: ObservableObject {
         categories: [CategoryTree],
         banners: [HomeBanner],
         deals: [ShopProduct],
-        recommendations: [ShopProduct]
+        recommendations: [ShopProduct],
+        recentlyViewed: [ShopProduct],
+        eventBox: [EventBox]
     ) {
         self.categories = categories
         self.banners = banners
         exclusiveOffers = deals
         bestSelling = recommendations
+        self.recentlyViewed = recentlyViewed
+        self.eventBox = eventBox
     }
 }

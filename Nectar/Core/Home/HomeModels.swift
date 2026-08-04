@@ -123,7 +123,7 @@ struct CategoryTreePayload: Decodable, Sendable {
 }
 
 /// Product card trên Home (recommendation / big-deals / …).
-struct ShopProduct: Identifiable, Hashable, Sendable {
+struct ShopProduct: Identifiable, Hashable, Codable, Sendable {
     let id: String
     let name: String
     /// VD: "7pcs, Priceg", "1kg, Priceg"
@@ -136,5 +136,68 @@ struct ShopProduct: Identifiable, Hashable, Sendable {
             return "\(symbol)\(Int(price))"
         }
         return String(format: "%@%.2f", symbol, price)
+    }
+}
+
+struct EventResponse: Codable {
+    let result: EventResult
+}
+
+struct EventResult: Codable {
+    let events: [EventBox]
+}
+
+struct EventBox: Codable {
+    let id: Int
+    let name: String
+    let day: String
+    let countryId: String?
+    let categoryId: String?
+    let description: String
+    let createdAt: String
+    let updatedAt: String
+    let imageUrl: String
+    let bannerSeasonUrl: String?
+    let popupImageUrl: String?
+    let bannerUrl: String
+    let iconUrl: String?
+    let eventBtnColor: String?
+    let status: String
+    let metaData: String
+    let endAt: String
+    let slug: String
+    let isShowPopup: String?
+    /// JSON string: `{ "tabs": [ { "title", "page_data": { "products": [...] } } ] }`
+    let pageData: String
+    let type: String
+    let isAdvertising: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, day, description, status, slug, type
+        case countryId = "country_id"
+        case categoryId = "category_id"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case imageUrl = "image_url"
+        case bannerSeasonUrl = "banner_season_url"
+        case popupImageUrl = "popup_image_url"
+        case bannerUrl = "banner_url"
+        case iconUrl = "icon_url"
+        case eventBtnColor = "event_btn_color"
+        case metaData = "meta_data"
+        case endAt = "end_at"
+        case isShowPopup = "is_show_popup"
+        case pageData = "page_data"
+        case isAdvertising = "is_advertising"
+    }
+
+    /// Title tab đầu trong `page_data`.
+    var pageTabTitle: String {
+        HomeDTOMapper.eventPageTabTitle(from: pageData) ?? name
+    }
+
+    /// Products tab đầu — map linh hoạt (không dùng Codable `ShopProduct`).
+    var pageProducts: [ShopProduct] {
+        HomeDTOMapper.eventPageProducts(from: pageData)
     }
 }

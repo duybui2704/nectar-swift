@@ -38,6 +38,18 @@ struct ShopView: View {
                     onSeeAll: {},
                     onAdd: { _ in }
                 )
+
+                ProductHorizontalRail(
+                    title: "Recently Viewed",
+                    products: viewModel.recentlyViewed,
+                    currencySymbol: viewModel.currencySymbol,
+                    onSeeAll: {},
+                    onAdd: { _ in }
+                )
+                if let event = viewModel.eventBox.first {
+                    EventBoxView(event: event, currencySymbol: viewModel.currencySymbol)
+                }
+               
             }
             .padding(.top, NectarMetrics.spacing.md)
             .padding(.bottom, 100)

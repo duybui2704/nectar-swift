@@ -10,6 +10,8 @@ final class HomeCatalogStore: ObservableObject {
     @Published private(set) var categories: [CategoryTree] = []
     @Published private(set) var recommendations: [ShopProduct] = []
     @Published private(set) var bigDeals: [ShopProduct] = []
+    @Published private(set) var recentlyViewed: [ShopProduct] = []
+    @Published private(set) var eventBox: [EventBox] = []
 
     func setBanners(_ items: [HomeBanner]) {
         guard !items.isEmpty else { return }
@@ -29,5 +31,15 @@ final class HomeCatalogStore: ObservableObject {
     func setBigDeals(_ items: [ShopProduct]) {
         guard !items.isEmpty else { return }
         bigDeals = items
+    }
+
+    func setRecentlyViewed(_ items: [ShopProduct]) {
+        guard !items.isEmpty else { return }
+        recentlyViewed = items
+    }
+    
+    func setEventBox(_ items: [EventBox]) {
+        guard !items.isEmpty else { return }
+        eventBox = items
     }
 }

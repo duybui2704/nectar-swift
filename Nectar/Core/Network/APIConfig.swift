@@ -68,6 +68,7 @@ enum APIEndpoint {
     static let cart = "cart"
     static let configPayment = "config-payment"
     static let location = "location"
+    static let eventBox = "event-box"
 
     static func userTags(userId: String) -> String {
         "users/\(userId)/tags"

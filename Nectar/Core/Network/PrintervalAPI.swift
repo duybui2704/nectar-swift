@@ -109,6 +109,7 @@ enum PrintervalAPI {
         )
     }
 
+    /// `GET product/recently-viewed` — dùng `APIEndpoint.recentlyViewed`.
     static func fetchRecentlyViewed(
         customerId: String = "",
         limit: Int = 20,
@@ -137,11 +138,13 @@ enum PrintervalAPI {
         )
     }
 
-    static func fetchLocation() async throws -> Data {
-        try await APIClient.shared.getData(
-            APIEndpoint.location,
+    static func fetchEventBox() async throws -> Data {
+        let data = try await APIClient.shared.getData(
+            APIEndpoint.eventBox,
             service: .variant,
             authenticated: false
         )
+        
+        return data
     }
 }

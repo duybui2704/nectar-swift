@@ -57,9 +57,76 @@ enum HomeDTOMapper {
             product(from: item, fallbackIndex: index)
         }
     }
+    
+    static func eventBox(from data: Data) -> [EventBox] {
+        do {
+            let response = try JSONDecoder().decode(EventResponse.self, from: data)
+            return response.result.events
+        } catch {
+            #if DEBUG
+            print("Decode error eventBox:", error)
+            #endif
+            return []
+        }
+    }
+
+    /// Parse `EventBox.pageData` (JSON string) → products tab đầu.
+    static func eventPageProducts(from pageDataJSON: String) -> [ShopProduct] {
+        guard let tabs = eventPageTabsObject(from: pageDataJSON),
+              let first = tabs.first else { return [] }
+
+        let pageData = dictionaryValue(first, keys: ["page_data", "pageData"]) ?? [:]
+
+        let rows = pageData["products"] as? [Any]
+            ?? pageData["items"] as? [Any]
+            ?? first["products"] as? [Any]
+            ?? []
+
+        return rows.enumerated().compactMap { index, item in
+            product(from: item, fallbackIndex: index)
+        }
+    }
+
+    static func eventPageTabTitle(from pageDataJSON: String) -> String? {
+        guard let tabs = eventPageTabsObject(from: pageDataJSON),
+              let first = tabs.first else { return nil }
+        return string(first, keys: ["title", "name", "label"])
+    }
 
     // MARK: - Private
 
+    private static func eventPageTabsObject(from pageDataJSON: String) -> [[String: Any]]? {
+        let trimmed = pageDataJSON.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              let data = trimmed.data(using: .utf8),
+              let root = jsonObject(data) else { return nil }
+
+        // `{ "tabs": [...] }`
+        if let dict = root as? [String: Any] {
+            if let tabs = dict["tabs"] as? [[String: Any]] { return tabs }
+            // đôi khi bọc thêm
+            if let result = dict["result"] as? [String: Any],
+               let tabs = result["tabs"] as? [[String: Any]] {
+                return tabs
+            }
+        }
+        // `[ { tab }, ... ]`
+        if let tabs = root as? [[String: Any]] { return tabs }
+        return nil
+    }
+
+    /// Object hoặc JSON string → `[String: Any]`.
+    private static func dictionaryValue(_ dict: [String: Any], keys: [String]) -> [String: Any]? {
+        for key in keys {
+            if let nested = dict[key] as? [String: Any] { return nested }
+            if let s = dict[key] as? String,
+               let data = s.data(using: .utf8),
+               let nested = jsonObject(data) as? [String: Any] {
+                return nested
+            }
+        }
+        return nil
+    }
     private static func product(from item: Any, fallbackIndex: Int) -> ShopProduct? {
         guard let dict = item as? [String: Any] else { return nil }
 
