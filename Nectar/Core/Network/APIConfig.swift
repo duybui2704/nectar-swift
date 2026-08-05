@@ -55,6 +55,7 @@ enum APIEndpoint {
     static let todayBigDeals = "today-big-deals"
     static let recentlyViewed = "product/recently-viewed"
     static let eventBox = "event-box"
+    static let activeEvent = "get-active-event"
     /// `GET product-video/find` trên `printerval.com`.
     static let productVideoFind = "product-video/find"
 }

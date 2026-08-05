@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-/// Cache catalog Home (banners + rails) — launch + shop prefetch ghi vào đây.
+/// Cache catalog dùng chung Home + Explore (một source of truth).
 @MainActor
 final class HomeCatalogStore: ObservableObject {
     static let shared = HomeCatalogStore()
@@ -12,6 +12,7 @@ final class HomeCatalogStore: ObservableObject {
     @Published private(set) var bigDeals: [ShopProduct] = []
     @Published private(set) var recentlyViewed: [ShopProduct] = []
     @Published private(set) var eventBox: [EventBox] = []
+    @Published private(set) var activeEvents: [ActiveEvent] = []
     @Published private(set) var productReels: [ProductReel] = []
 
     func snapshot() -> HomeCatalog {
@@ -22,6 +23,7 @@ final class HomeCatalogStore: ObservableObject {
             recommendations: recommendations,
             recentlyViewed: recentlyViewed,
             eventBox: eventBox,
+            activeEvents: activeEvents,
             productReels: productReels
         )
     }
@@ -54,6 +56,11 @@ final class HomeCatalogStore: ObservableObject {
     func setEventBox(_ items: [EventBox]) {
         guard !items.isEmpty else { return }
         eventBox = items
+    }
+
+    func setActiveEvents(_ items: [ActiveEvent]) {
+        guard !items.isEmpty else { return }
+        activeEvents = items
     }
 
     func setProductReels(_ items: [ProductReel]) {

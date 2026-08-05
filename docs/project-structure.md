@@ -149,7 +149,8 @@ Map API → UI:
 | `category/tree` | Category rail |
 
 > Chi tiết Reels: [`product-reels.md`](./product-reels.md).  
-> Perf / memory: [`performance-memory.md`](./performance-memory.md).
+> Perf / memory: [`performance-memory.md`](./performance-memory.md).  
+> Shop + Explore shared catalog: [`shared-catalog-explore.md`](./shared-catalog-explore.md).
 ---
 
 ### `Shared/`

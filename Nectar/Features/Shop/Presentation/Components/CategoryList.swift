@@ -14,7 +14,8 @@ struct CategoryList: View {
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(alignment: .top, spacing: NectarMetrics.spacing.sm) {
-                        ForEach(categories) { category in
+                        // Model giữ `Codable` thuần — ForEach dùng `id: \.id`
+                        ForEach(categories, id: \.id) { category in
                             Button {
                                 onSelect?(category)
                             } label: {
@@ -34,7 +35,7 @@ struct CategoryList: View {
 
     private func categoryItem(_ category: CategoryTree) -> some View {
         VStack(spacing: NectarMetrics.spacing.xxs) {
-            RemoteImageView(url: category.imageURL, contentMode: .fill)
+            RemoteImageView(url: category.resolvedImageURL, contentMode: .fill)
                 .frame(width: 58.scaled, height: 58.scaled)
                 .clipShape(Circle())
                 .overlay {

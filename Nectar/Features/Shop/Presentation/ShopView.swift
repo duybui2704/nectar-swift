@@ -48,6 +48,10 @@ struct ShopView: View {
                 if let event = viewModel.eventBox.first {
                     EventBoxView(event: event, currencySymbol: viewModel.currencySymbol)
                 }
+
+                // Active event (`get-active-event`) — cuối Home
+                ActiveEventsBanner(events: viewModel.activeEvents)
+                    .screenPadding()
                
             }
             .padding(.top, NectarMetrics.spacing.md)

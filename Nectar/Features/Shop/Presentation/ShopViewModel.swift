@@ -10,6 +10,7 @@ final class ShopViewModel: ObservableObject {
     @Published private(set) var bestSelling: [ShopProduct] = []
     @Published private(set) var recentlyViewed: [ShopProduct] = []
     @Published private(set) var eventBox: [EventBox] = []
+    @Published private(set) var activeEvents: [ActiveEvent] = []
     @Published private(set) var productReels: [ProductReel] = []
 
     private let catalog: HomeCatalogProviding
@@ -34,6 +35,11 @@ final class ShopViewModel: ObservableObject {
 
         let loaded = await catalog.loadHomeCatalog()
         apply(loaded)
+
+        // Bảo đảm banner get-active-event (kể cả khi didLoadHome từ phiên cũ).
+        if activeEvents.isEmpty {
+            activeEvents = await catalog.ensureActiveEvents()
+        }
     }
 
     private func apply(_ snapshot: HomeCatalog) {
@@ -43,6 +49,7 @@ final class ShopViewModel: ObservableObject {
         bestSelling = snapshot.recommendations
         recentlyViewed = snapshot.recentlyViewed
         eventBox = snapshot.eventBox
+        activeEvents = snapshot.activeEvents
         productReels = snapshot.productReels
     }
 }

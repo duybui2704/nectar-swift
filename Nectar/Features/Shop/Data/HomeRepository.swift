@@ -28,9 +28,13 @@ final class HomeRepository: HomeCatalogProviding {
         }
     }
 
-    /// Prefetch home 1 lần / session — cùng thứ tự cũ (big-deals trước, rồi song song).
+    /// Prefetch home 1 lần / session — big-deals trước, rồi song song.
     func loadHomeCatalog() async -> HomeCatalog {
         if didLoadHome {
+            // Hot-reload / phiên cũ có thể đã load trước khi có get-active-event.
+            if store.activeEvents.isEmpty {
+                _ = await ensureActiveEvents()
+            }
             return store.snapshot()
         }
 
@@ -50,6 +54,7 @@ final class HomeRepository: HomeCatalogProviding {
             group.addTask { await Self.chunk(APIEndpoint.categoryTree) { try await PrintervalAPI.fetchCategoryTree() } }
             group.addTask { await Self.chunk(APIEndpoint.recentlyViewed) { try await PrintervalAPI.fetchRecentlyViewed() } }
             group.addTask { await Self.chunk(APIEndpoint.eventBox) { try await PrintervalAPI.fetchEventBox() } }
+            group.addTask { await Self.chunk(APIEndpoint.activeEvent) { try await PrintervalAPI.fetchActiveEvent() } }
             group.addTask { await Self.chunk(APIEndpoint.productVideoFind) { try await PrintervalAPI.fetchProductVideos() } }
 
             for await item in group {
@@ -82,6 +87,13 @@ final class HomeRepository: HomeCatalogProviding {
                     #if DEBUG
                     print("📢 event box:", eventBox.count)
                     #endif
+                case .activeEvent(let data):
+                    let events = HomeDTOMapper.activeEvents(from: data)
+                    store.setActiveEvents(events)
+                    catalog.activeEvents = events
+                    #if DEBUG
+                    print("🎯 active events:", events.count)
+                    #endif
                 case .productReels(let data):
                     let reels = HomeDTOMapper.productReels(from: data)
                     store.setProductReels(reels)
@@ -99,12 +111,35 @@ final class HomeRepository: HomeCatalogProviding {
         catalog.categories = store.categories
         catalog.recentlyViewed = store.recentlyViewed
         catalog.eventBox = store.eventBox
+        catalog.activeEvents = store.activeEvents
         catalog.productReels = store.productReels
         catalog.bigDeals = store.bigDeals
         catalog.recommendations = store.recommendations
 
         didLoadHome = true
         return catalog
+    }
+
+    func ensureActiveEvents() async -> [ActiveEvent] {
+        if !store.activeEvents.isEmpty {
+            return store.activeEvents
+        }
+        guard let data = await fetchQuietly({ try await PrintervalAPI.fetchActiveEvent() }) else {
+            #if DEBUG
+            print("🎯 active events fetch failed / empty response")
+            #endif
+            return []
+        }
+        #if DEBUG
+        let preview = String(data: data.prefix(800), encoding: .utf8) ?? "<binary \(data.count)>"
+        print("🎯 get-active-event raw:", preview)
+        #endif
+        let events = HomeDTOMapper.activeEvents(from: data)
+        store.setActiveEvents(events)
+        #if DEBUG
+        print("🎯 active events decoded:", events.count)
+        #endif
+        return events
     }
 
     // MARK: - Private
@@ -114,6 +149,7 @@ final class HomeRepository: HomeCatalogProviding {
         case categories(Data)
         case recentlyViewed(Data)
         case eventBox(Data)
+        case activeEvent(Data)
         case productReels(Data)
         case discarded
     }
@@ -134,6 +170,7 @@ final class HomeRepository: HomeCatalogProviding {
             case APIEndpoint.categoryTree: return .categories(data)
             case APIEndpoint.recentlyViewed: return .recentlyViewed(data)
             case APIEndpoint.eventBox: return .eventBox(data)
+            case APIEndpoint.activeEvent: return .activeEvent(data)
             case APIEndpoint.productVideoFind: return .productReels(data)
             default: return .discarded
             }

@@ -70,6 +70,15 @@ enum PrintervalAPI {
         )
     }
 
+    /// `GET get-active-event` — banner event Explore + Home.
+    static func fetchActiveEvent() async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.activeEvent,
+            service: .variant,
+            authenticated: false
+        )
+    }
+
     /// `GET product-video/find` — reel / product video feed.
     static func fetchProductVideos(
         pageSize: Int = 10,

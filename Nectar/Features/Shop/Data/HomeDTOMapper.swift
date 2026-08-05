@@ -44,16 +44,20 @@ enum HomeDTOMapper {
                 ?? index
             let name = string(dict, keys: ["name", "title", "label"]) ?? ""
             guard !name.isEmpty else { return nil }
+
+            let typeRaw = string(dict, keys: ["type"]) ?? TypeEnum.product.rawValue
+            let type = TypeEnum(rawValue: typeRaw) ?? .product
+
             return CategoryTree(
                 id: id,
                 name: name,
-                type: string(dict, keys: ["type"]) ?? "PRODUCT",
-                parentId: number(dict, keys: ["parent_id"]).map { Int($0) },
-                imageURL: url(dict, keys: ["image_url", "image", "icon", "thumbnail"]),
+                type: type,
+                parentID: number(dict, keys: ["parent_id"]).map { Int($0) },
+                imageURL: string(dict, keys: ["image_url", "image", "icon", "thumbnail"]),
                 slug: string(dict, keys: ["slug"]) ?? "",
-                lft: number(dict, keys: ["lft"]).map { Int($0) },
-                rgt: number(dict, keys: ["rgt"]).map { Int($0) },
-                fullURL: string(dict, keys: ["full_url"]),
+                lft: number(dict, keys: ["lft"]).map { Int($0) } ?? 0,
+                rgt: number(dict, keys: ["rgt"]).map { Int($0) } ?? 0,
+                fullURL: string(dict, keys: ["full_url"]) ?? "",
                 children: [] // Home chỉ cần root
             )
         }
@@ -77,6 +81,87 @@ enum HomeDTOMapper {
             #endif
             return []
         }
+    }
+
+    /// Decode `get-active-event` → danh sách banner (object hoặc mảng trong `result`).
+    static func activeEvents(from data: Data) -> [ActiveEvent] {
+        guard let root = jsonObject(data) else {
+            #if DEBUG
+            print("🎯 activeEvents: invalid JSON")
+            #endif
+            return []
+        }
+
+        // result == null
+        if let dict = root as? [String: Any], dict["result"] is NSNull {
+            #if DEBUG
+            print("🎯 activeEvents: result is null")
+            #endif
+            return []
+        }
+
+        let rows: [Any]
+        if let dict = root as? [String: Any] {
+            let result = dict["result"] ?? dict["data"] ?? dict
+            if let arr = result as? [Any] {
+                rows = arr
+            } else if let one = result as? [String: Any] {
+                if let nested = one["events"] as? [Any]
+                    ?? one["active_events"] as? [Any]
+                    ?? one["active_event"] as? [Any]
+                    ?? one["items"] as? [Any]
+                    ?? one["list"] as? [Any] {
+                    rows = nested
+                } else if let nestedObj = one["event"] as? [String: Any]
+                    ?? one["active_event"] as? [String: Any] {
+                    rows = [nestedObj]
+                } else {
+                    rows = [one]
+                }
+            } else {
+                rows = []
+            }
+        } else if let arr = root as? [Any] {
+            rows = arr
+        } else {
+            rows = []
+        }
+
+        let mapped = rows.enumerated().compactMap { index, item -> ActiveEvent? in
+            guard let dict = item as? [String: Any] else { return nil }
+            let name = string(dict, keys: [
+                "name", "title", "label", "heading", "event_name", "eventName",
+            ]) ?? ""
+            let image = url(dict, keys: [
+                "image_url", "banner_url", "bannerUrl", "banner_season_url", "bannerSeasonUrl",
+                "imageUrl", "image", "banner", "cover",
+                "thumbnail", "thumb", "popup_image_url", "icon_url",
+            ])
+            guard !name.isEmpty || image != nil else { return nil }
+            let id = string(dict, keys: ["id", "event_id", "eventId", "uuid", "slug"]) ?? "active-\(index)"
+            let desc = string(dict, keys: [
+                "description", "desc", "subtitle", "sub_title", "day", "content",
+            ]) ?? ""
+            return ActiveEvent(
+                id: id,
+                name: name.isEmpty ? "Event" : name,
+                description: desc,
+                bannerURL: image
+            )
+        }
+
+        #if DEBUG
+        if mapped.isEmpty {
+            let keys: Any
+            if let d = root as? [String: Any] {
+                keys = d.keys.sorted()
+            } else {
+                keys = type(of: root)
+            }
+            print("🎯 activeEvents: mapped 0 — root keys/type:", keys)
+        }
+        #endif
+        return mapped
     }
 
     /// Parse `EventBox.pageData` (JSON string) → products tab đầu.
