@@ -19,7 +19,6 @@ import SwiftUI
 /// Banner active event — Explore (dưới search) + Home (cuối trang).
 struct ActiveEventsBanner: View {
     let events: [ActiveEvent]
-    @HotReloadObserver private var _hr
 
     var body: some View {
         if events.isEmpty {

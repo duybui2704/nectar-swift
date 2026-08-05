@@ -8,7 +8,7 @@ struct ProductReelsFullscreenView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var currentID: Int?
-    @State private var isMuted = false
+    @State private var isMuted = true
 
     init(reels: [ProductReel], initialID: Int) {
         self.reels = reels
@@ -264,9 +264,12 @@ private final class FullscreenReelPlayerModel: ObservableObject {
             object: item,
             queue: .main
         ) { [weak self] _ in
-            self?.player.seek(to: .zero)
-            self?.player.play()
-            self?.isPlaying = true
+            Task { @MainActor in
+                guard let self else { return }
+                self.player.seek(to: .zero)
+                self.player.play()
+                self.isPlaying = true
+            }
         }
     }
 

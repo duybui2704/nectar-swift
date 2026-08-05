@@ -63,12 +63,6 @@ struct ProfileView: View {
                     Label("Đăng xuất", systemImage: "rectangle.portrait.and.arrow.right")
                 }
             }
-
-            Section("More") {
-                ForEach(0..<8, id: \.self) { index in
-                    Text("Setting \(index + 1)")
-                }
-            }
         }
         .hidesTabBarOnScroll()
         .safeAreaInset(edge: .bottom) {
