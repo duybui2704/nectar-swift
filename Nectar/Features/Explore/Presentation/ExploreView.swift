@@ -1,32 +1,33 @@
 import SwiftUI
 
 struct ExploreView: View {
+    @EnvironmentObject private var router: AppRouter
     @StateObject private var viewModel = ExploreViewModel()
     @FocusState private var searchFocused: Bool
     @HotReloadObserver private var _hr
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
-                    searchField
-                    ActiveEventsBanner(events: viewModel.activeEvents)
-                  
-                    ExploreCategoryGrid(categories: viewModel.filteredCategories)
+        ScrollView {
+            VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
+                searchField
+                ActiveEventsBanner(events: viewModel.activeEvents)
+
+                ExploreCategoryGrid(categories: viewModel.filteredCategories) { category in
+                    router.push(.category(id: category.id, name: category.name))
                 }
-                .screenPadding()
-                .padding(.top, NectarMetrics.spacing.sm)
-                .padding(.bottom, 100)
             }
-            .hidesTabBarOnScroll()
-            .background(NectarColors.background.ignoresSafeArea())
-            .navigationTitle("Find Products")
-            .navigationBarTitleDisplayMode(.inline)
-            .task {
-                await viewModel.load()
-            }
-            .hotReload()
+            .screenPadding()
+            .padding(.top, NectarMetrics.spacing.sm)
+            .padding(.bottom, 100)
         }
+        .hidesTabBarOnScroll()
+        .background(NectarColors.background.ignoresSafeArea())
+        .navigationTitle("Find Products")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await viewModel.load()
+        }
+        .hotReload()
     }
 
     private var searchField: some View {
@@ -50,6 +51,5 @@ struct ExploreView: View {
                 .stroke(searchFocused ? NectarColors.green : .secondary, lineWidth: 1.5)
         )
         .cornerRadius(8)
-
     }
 }

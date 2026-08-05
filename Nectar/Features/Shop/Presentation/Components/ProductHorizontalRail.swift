@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Section: header + horizontal product rail.
 struct ProductHorizontalRail: View {
+    @EnvironmentObject private var router: AppRouter
     let title: String?
     let products: [ShopProduct]
     var currencySymbol: String = "$"
@@ -24,6 +25,9 @@ struct ProductHorizontalRail: View {
                                 currencySymbol: currencySymbol,
                                 onAdd: { onAdd?(product) }
                             )
+                            .onTapGesture {
+                                router.push(.productDetail(id: product.id))
+                            }
                         }
                     }
                     .padding(.horizontal, NectarMetrics.layout.screenHorizontal)
