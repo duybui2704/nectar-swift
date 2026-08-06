@@ -16,6 +16,7 @@ struct ShopProduct: Identifiable, Hashable, Codable, Sendable {
     let unitLabel: String
     let price: Double
     let imageURL: URL?
+    let isFavorite: Bool
 
     func formattedPrice(symbol: String = "$") -> String? {
         guard price > 0 else { return nil }

@@ -263,6 +263,8 @@ enum HomeDTOMapper {
             "unit", "unit_label", "quantity", "qty", "weight",
             "short_description", "shortDescription", "attribute", "variant", "desc",
         ]) ?? ""
+        
+        let isFav = dict["isFavourite"] as? Bool ?? false
 
         let price = number(dict, keys: [
             "price", "sale_price", "salePrice", "final_price", "finalPrice",
@@ -286,7 +288,8 @@ enum HomeDTOMapper {
             name: name,
             unitLabel: unit.isEmpty ? "1 unit" : unit,
             price: price,
-            imageURL: image
+            imageURL: image,
+            isFavorite: isFav
         )
     }
 

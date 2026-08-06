@@ -27,7 +27,9 @@ struct ShopView: View {
                     products: viewModel.exclusiveOffers,
                     currencySymbol: viewModel.currencySymbol,
                     onSeeAll: {},
-                    onAdd: { _ in }
+                    onAdd: { _ in },
+                    onAddFavourite: { _ in },
+                    onRemoveFavoutire: { _ in }
                 )
 
                 ProductHorizontalRail(

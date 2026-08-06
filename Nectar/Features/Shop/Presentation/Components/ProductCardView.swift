@@ -5,16 +5,44 @@ struct ProductCardView: View {
     let product: ShopProduct
     var currencySymbol: String = "$"
     var onAdd: (() -> Void)?
+    let onAddFavourite: (ProductID) -> Void
+    let onRemoveFavoutire: (ProductID) -> Void
+
+    
+    @State var isFavourite: Bool = false
 
     private let cardWidth: CGFloat = 173
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            RemoteImageView(url: product.imageURL, contentMode: .fit, showsLoadingIndicator: false)
-                .frame(height: 100.scaled)
-                .frame(maxWidth: .infinity)
-                .padding(.top, NectarMetrics.spacing.sm)
-                .padding(.horizontal, NectarMetrics.spacing.xs)
+           ZStack(alignment: .topTrailing) {
+               RemoteImageView(url: product.imageURL, contentMode: .fit, showsLoadingIndicator: false)
+                   .frame(height: 100.scaled)
+                   .frame(maxWidth: .infinity)
+                   .padding(.top, NectarMetrics.spacing.sm)
+                   .padding(.horizontal, NectarMetrics.spacing.xs)
+               
+                Button  {
+                    Task {
+                        guard !product.id.isEmpty else {
+                            onRemoveFavoutire(.string(product.id))
+                            isFavourite.toggle()
+                            return
+                        }
+                       
+                      }
+               
+                } label: {
+                    Image(systemName: "heart.fill")
+                        .resizable()
+                        .frame(width: NectarMetrics.icon.sm, height: NectarMetrics.icon.sm )
+                        .foregroundColor(isFavourite ? NectarColors.brand : NectarColors.border)
+                        .padding(12)
+                        .zIndex(999)
+                }
+               
+            }
+           .frame(maxWidth: .infinity)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(product.name)
