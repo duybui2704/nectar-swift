@@ -255,7 +255,6 @@ enum HomeDTOMapper {
     private static func product(from item: Any, fallbackIndex: Int) -> ShopProduct? {
         guard let dict = item as? [String: Any] else { return nil }
 
-        let id = string(dict, keys: ["id", "product_id", "productId", "sku", "uuid"]) ?? "product-\(fallbackIndex)"
         let name = string(dict, keys: ["name", "title", "product_name", "productName", "label"]) ?? ""
         guard !name.isEmpty else { return nil }
 
@@ -263,7 +262,7 @@ enum HomeDTOMapper {
             "unit", "unit_label", "quantity", "qty", "weight",
             "short_description", "shortDescription", "attribute", "variant", "desc",
         ]) ?? ""
-        
+
         let isFav = dict["isFavourite"] as? Bool ?? false
 
         let price = number(dict, keys: [
@@ -282,6 +281,11 @@ enum HomeDTOMapper {
                 image = url(d, keys: ["url", "src", "image", "path"])
             }
         }
+
+        // Ưu tiên id số (product API); tránh sku/uuid làm path `product/{id}`.
+        let id = string(dict, keys: ["product_id", "productId", "id", "design_id", "designId"])
+            ?? string(dict, keys: ["sku", "uuid"])
+            ?? "product-\(fallbackIndex)"
 
         return ShopProduct(
             id: id,

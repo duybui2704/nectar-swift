@@ -8,6 +8,8 @@ struct ProductHorizontalRail: View {
     var currencySymbol: String = "$"
     var onSeeAll: (() -> Void)?
     var onAdd: ((ShopProduct) -> Void)?
+    var onAddFavourite: (ProductID) -> Void = { _ in }
+    var onRemoveFavoutire: (ProductID) -> Void = { _ in }
 
     var body: some View {
         VStack(alignment: .leading, spacing: NectarMetrics.spacing.sm) {
@@ -15,7 +17,7 @@ struct ProductHorizontalRail: View {
                 HomeSectionHeader(title: title, onSeeAll: onSeeAll)
                     .screenPadding()
             }
-            
+
             if !products.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: NectarMetrics.spacing.sm) {
@@ -23,7 +25,9 @@ struct ProductHorizontalRail: View {
                             ProductCardView(
                                 product: product,
                                 currencySymbol: currencySymbol,
-                                onAdd: { onAdd?(product) }
+                                onAdd: { onAdd?(product) },
+                                onAddFavourite: onAddFavourite,
+                                onRemoveFavoutire: onRemoveFavoutire
                             )
                             .onTapGesture {
                                 router.push(.productDetail(id: product.id))

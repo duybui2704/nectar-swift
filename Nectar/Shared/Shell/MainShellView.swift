@@ -50,7 +50,15 @@ struct MainShellView: View {
         .environmentObject(tabBarVisibility)
         .ignoresSafeArea(.keyboard)
         .onChange(of: router.selectedTab) { _, _ in
-            tabBarVisibility.reset()
+            syncTabBarForNavigation()
+        }
+        .onChange(of: router.shopPath.count) { _, _ in syncTabBarForNavigation() }
+        .onChange(of: router.explorePath.count) { _, _ in syncTabBarForNavigation() }
+        .onChange(of: router.cartPath.count) { _, _ in syncTabBarForNavigation() }
+        .onChange(of: router.favouritePath.count) { _, _ in syncTabBarForNavigation() }
+        .onChange(of: router.accountPath.count) { _, _ in syncTabBarForNavigation() }
+        .onAppear {
+            syncTabBarForNavigation()
         }
         .sheet(item: $router.presentedSheet) { sheet in
             AppSheetView(sheet: sheet)
@@ -62,6 +70,18 @@ struct MainShellView: View {
             _ = router.handleDeepLink(url)
         }
         .hotReload()
+    }
+
+    private func syncTabBarForNavigation() {
+        let hasPush: Bool
+        switch router.selectedTab {
+        case .shop: hasPush = !router.shopPath.isEmpty
+        case .explore: hasPush = !router.explorePath.isEmpty
+        case .cart: hasPush = !router.cartPath.isEmpty
+        case .favourite: hasPush = !router.favouritePath.isEmpty
+        case .account: hasPush = !router.accountPath.isEmpty
+        }
+        tabBarVisibility.setNavigationHidden(hasPush)
     }
 
     @ViewBuilder

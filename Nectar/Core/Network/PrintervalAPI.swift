@@ -99,4 +99,75 @@ enum PrintervalAPI {
             authenticated: false
         )
     }
+
+    // MARK: - Product detail
+
+    static func fetchProduct(id: String) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.product(id),
+            service: .variant,
+            authenticated: false
+        )
+    }
+
+    static func fetchProductGallery(id: String) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.productGallery(id),
+            service: .variant,
+            authenticated: false
+        )
+    }
+
+    static func fetchProductVariant(id: String) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.productVariant(id),
+            service: .variant,
+            query: ["format": "1"],
+            authenticated: false
+        )
+    }
+
+    static func fetchProductBulkPrice(id: String) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.productBulkPrice(id),
+            service: .variant,
+            authenticated: false
+        )
+    }
+
+    static func fetchProductColorGuide(id: String) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.productColorGuide(id),
+            service: .variant,
+            authenticated: false
+        )
+    }
+
+    static func fetchProductRelated(id: String) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.productRelated(id),
+            service: .variant,
+            authenticated: false
+        )
+    }
+
+    static func fetchProductRecommendationKeyword(id: String) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.productRecommendationKeyword(id),
+            service: .variant,
+            authenticated: false
+        )
+    }
+
+    static func fetchBoughtTogether(productId: String, limit: Int = 3) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.boughtTogether,
+            service: .variant,
+            query: [
+                "productId": productId,
+                "limit": "\(limit)",
+            ],
+            authenticated: false
+        )
+    }
 }

@@ -7,10 +7,7 @@ struct AppDestinationView: View {
     var body: some View {
         switch destination {
         case .productDetail(let id):
-            PlaceholderFeatureView(
-                title: "Product",
-                message: "Product id \(id) — nối ProductDetailView khi sẵn sàng."
-            )
+            ProductDetailView(productId: id)
 
         case .category(let id, let name):
             PlaceholderFeatureView(
