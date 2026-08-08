@@ -106,6 +106,15 @@ enum NectarMetrics {
         var bottomSafeExtra: CGFloat { NectarMetrics.spacing.lg }
     }
 
+    
+    struct Padding {
+        var lg: CGFloat { NectarMetrics.spacing.lg }
+        var md: CGFloat { NectarMetrics.spacing.md }
+        var sm: CGFloat { NectarMetrics.spacing.sm }
+    }
+    
+    static let padding = Padding()
+    
     static let layout = Layout()
 
     // MARK: - Font sizes (pt @ design 390)
@@ -120,6 +129,10 @@ enum NectarMetrics {
         var amountSmall: CGFloat { NectarMetrics.s(18) }
         var onboardingTitle: CGFloat { NectarMetrics.s(40) }
         var button: CGFloat { NectarMetrics.s(18) }
+        var textNormal: CGFloat {NectarMetrics.s(14)}
+        var textSmall: CGFloat {NectarMetrics.s(12)}
+        var textBig: CGFloat {NectarMetrics.s(16)}
+        
     }
 
     static let font = FontSize()

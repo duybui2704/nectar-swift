@@ -7,11 +7,6 @@ struct HomeBannerCarousel: View {
     @State private var page: Int? = 0
 
     private var cornerRadius: CGFloat { NectarMetrics.radius.md }
-      init(banners: [HomeBanner]) {
-        self.banners = banners
-        print("banners:", banners)
-    }
-
 
     var body: some View {
         VStack(spacing: NectarMetrics.spacing.xs) {

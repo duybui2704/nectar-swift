@@ -1,6 +1,7 @@
 import Foundation
 
-/// Log request/response API — hiện trong Xcode Console (DEBUG only).
+/// Log request/response API qua `NectarLog` (OSLog category `Network`).
+/// Filter: `Nectar log Network` hoặc Console.app category **Network**.
 enum NetworkLogger {
     static var isEnabled: Bool {
         #if DEBUG
@@ -15,7 +16,6 @@ enum NetworkLogger {
         let method = request.httpMethod ?? "?"
         let url = request.url?.absoluteString ?? "(nil)"
         var lines = [
-            "",
             "┌── API REQUEST ─────────────────────────────",
             "│ \(method) \(url)",
         ]
@@ -30,7 +30,7 @@ enum NetworkLogger {
             lines.append(contentsOf: prettyJSONLines(body).map { "│   \($0)" })
         }
         lines.append("└────────────────────────────────────────────")
-        print(lines.joined(separator: "\n"))
+        NectarLog.log(lines.joined(separator: "\n"), title: "Network", level: .info)
     }
 
     static func logResponse(
@@ -43,10 +43,11 @@ enum NetworkLogger {
         let http = response as? HTTPURLResponse
         let status = http?.statusCode ?? -1
         let url = response?.url?.absoluteString ?? http?.url?.absoluteString ?? "(nil)"
-        let icon = (200...299).contains(status) ? "✅" : "❌"
+        let ok = (200...299).contains(status)
+        let icon = ok ? "✅" : "❌"
+        let level: NectarLog.Level = (error != nil || !ok) ? .error : .info
 
         var lines = [
-            "",
             "┌── API RESPONSE \(icon) ───────────────────────",
             "│ \(status) \(url)",
             "│ \(durationMs) ms",
@@ -62,7 +63,7 @@ enum NetworkLogger {
         }
 
         lines.append("└────────────────────────────────────────────")
-        print(lines.joined(separator: "\n"))
+        NectarLog.log(lines.joined(separator: "\n"), title: "Network", level: level)
     }
 
     // MARK: - Helpers
@@ -85,7 +86,6 @@ enum NetworkLogger {
             let raw = String(data: data, encoding: .utf8) ?? "<binary \(data.count) bytes>"
             return [String(raw.prefix(2000))]
         }
-        // Giới hạn log quá dài
         let clipped = text.count > 4000 ? String(text.prefix(4000)) + "\n…(truncated)" : text
         return clipped.components(separatedBy: "\n")
     }

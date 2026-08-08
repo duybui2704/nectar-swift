@@ -14,13 +14,16 @@ struct ShopView: View {
                     .screenPadding()
 
                 ProductReelsRail(reels: viewModel.productReels)
-
-                if viewModel.isLoadingHome {
-                    ProgressView()
-                        .tint(NectarColors.green)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 4)
-                }
+                
+                ProductHorizontalRail(
+                    title: "Recently Viewed",
+                    products: viewModel.recentlyViewed,
+                    currencySymbol: viewModel.currencySymbol,
+                    onSeeAll: {},
+                    onAdd: { _ in },
+                    onAddFavourite: { _ in },
+                    onRemoveFavourite: { _ in }
+                )
 
                 ProductHorizontalRail(
                     title: "Exclusive Offer",
@@ -42,24 +45,12 @@ struct ShopView: View {
                     onRemoveFavourite: { _ in }
                 )
 
-                ProductHorizontalRail(
-                    title: "Recently Viewed",
-                    products: viewModel.recentlyViewed,
-                    currencySymbol: viewModel.currencySymbol,
-                    onSeeAll: {},
-                    onAdd: { _ in },
-                    onAddFavourite: { _ in },
-                    onRemoveFavourite: { _ in }
-                )
+                SellerSpotlight(sellerData: viewModel.sellers)
                 if let event = viewModel.eventBox.first {
                     EventBoxView(event: event, currencySymbol: viewModel.currencySymbol)
                 }
 
-                SellerSpotlight(sellerData: viewModel.sellers)
-
-                // Active event (`get-active-event`) — cuối Home
-                ActiveEventsBanner(events: viewModel.activeEvents)
-                    .screenPadding()
+               
                
             }
             .padding(.top, NectarMetrics.spacing.md)

@@ -115,18 +115,17 @@ enum NectarFonts {
         for item in bundledFonts {
             guard UIFont(name: item.postScript, size: 12) == nil else { continue }
             guard let url = Bundle.main.url(forResource: item.resource, withExtension: "ttf") else {
-                #if DEBUG
-                print("⚠️ Font missing in bundle:", item.resource + ".ttf")
-                #endif
+                NectarLog.log("⚠️ Font missing in bundle: \(item.resource).ttf", title: "Font")
                 continue
             }
             var error: Unmanaged<CFError>?
             CTFontManagerRegisterFontsForURL(url as CFURL, .process, &error)
-            #if DEBUG
             if let error {
-                print("⚠️ Font register failed \(item.resource):", error.takeUnretainedValue())
+                NectarLog.log(
+                    "⚠️ Font register failed \(item.resource): \(error.takeUnretainedValue())",
+                    title: "Font"
+                )
             }
-            #endif
         }
     }
 

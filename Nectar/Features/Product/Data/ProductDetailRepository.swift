@@ -183,8 +183,6 @@ final class ProductDetailRepository: ProductDetailProviding {
     }
 
     private static func log(_ name: String, _ error: Error) {
-        #if DEBUG
-        print("ProductDetail \(name) failed:", error)
-        #endif
+        NectarLog.log("ProductDetail \(name) failed: \(error)", title: "Product")
     }
 }

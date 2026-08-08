@@ -131,10 +131,11 @@ enum ProductDTOMapper {
     }
 
     private static func logParseFailure(_ id: String, reason: String, data: Data) {
-        #if DEBUG
         let preview = String(data: data, encoding: .utf8).map { String($0.prefix(600)) } ?? "<binary>"
-        print("⚠️ ProductDTOMapper product(\(id)): \(reason)\n\(preview)")
-        #endif
+        NectarLog.log(
+            "⚠️ ProductDTOMapper product(\(id)): \(reason)\n\(preview)",
+            title: "Product"
+        )
     }
 
     // MARK: - Gallery

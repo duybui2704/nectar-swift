@@ -9,6 +9,7 @@ struct NectarApp: App {
         HotReloadBootstrap.configure()
         ImageCacheBootstrap.configure()
         NectarFonts.configureGlobalAppearance()
+        DebugToolsBootstrap.configure()
     }
 
     var body: some Scene {

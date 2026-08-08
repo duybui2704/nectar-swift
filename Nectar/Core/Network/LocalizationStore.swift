@@ -33,10 +33,8 @@ final class LocalizationStore: ObservableObject {
     func apply(_ payload: LocalizationPayload) {
         self.payload = payload
         selectedLocaleCode = payload.defaultLocale
-        #if DEBUG
-        print("🌐 LocalizationStore:", payload)
-        print("🌐 region:", displayRegion, "| currency:", displayCurrencyCode)
-        #endif
+        NectarLog.log("🌐 LocalizationStore: \(payload)", title: "Localization")
+        NectarLog.log("🌐 region: \(displayRegion) | currency: \(displayCurrencyCode)", title: "Localization")
     }
 
     func selectLocale(_ code: String) {

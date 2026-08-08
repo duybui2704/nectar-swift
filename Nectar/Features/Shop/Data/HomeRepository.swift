@@ -22,9 +22,7 @@ final class HomeRepository: HomeCatalogProviding {
             let banners = HomeDTOMapper.banners(from: data)
             store.setBanners(banners)
         } catch {
-            #if DEBUG
-            print("Launch banners prefetch failed:", error)
-            #endif
+            NectarLog.log("Launch banners prefetch failed: \(error)", title: "Home")
         }
     }
 
@@ -44,9 +42,7 @@ final class HomeRepository: HomeCatalogProviding {
             let products = HomeDTOMapper.products(from: data)
             store.setBigDeals(products)
             catalog.bigDeals = products
-            #if DEBUG
-            print("🔥 big-deals decoded:", products.count)
-            #endif
+            NectarLog.log("🔥 big-deals decoded: \(products.count)", title: "Home")
         }
 
         await withTaskGroup(of: HomeChunk.self) { group in
@@ -64,51 +60,37 @@ final class HomeRepository: HomeCatalogProviding {
                     let products = HomeDTOMapper.products(from: data)
                     store.setRecommendations(products)
                     catalog.recommendations = products
-                    #if DEBUG
-                    print("⭐ recommendations decoded:", products.count)
-                    #endif
+                    NectarLog.log("⭐ recommendations decoded: \(products.count)", title: "Home")
                 case .recentlyViewed(let data):
                     let products = HomeDTOMapper.products(from: data)
                     store.setRecentlyViewed(products)
                     catalog.recentlyViewed = products
-                    #if DEBUG
-                    print("👀 recently viewed decoded:", products.count)
-                    #endif
+                    NectarLog.log("👀 recently viewed decoded: \(products.count)", title: "Home")
                 case .categories(let data):
                     let categories = HomeDTOMapper.categoryTree(from: data)
                     store.setCategories(categories)
                     catalog.categories = categories
-                    #if DEBUG
-                    print("🌳 category/tree roots:", categories.count)
-                    #endif
+                    NectarLog.log("🌳 category/tree roots: \(categories.count)", title: "Home")
                 case .eventBox(let data):
                     let eventBox = HomeDTOMapper.eventBox(from: data)
                     store.setEventBox(eventBox)
                     catalog.eventBox = eventBox
-                    #if DEBUG
-                    print("📢 event box:", eventBox.count)
-                    #endif
+                    NectarLog.log("📢 event box: \(eventBox.count)", title: "Home")
                 case .activeEvent(let data):
                     let events = HomeDTOMapper.activeEvents(from: data)
                     store.setActiveEvents(events)
                     catalog.activeEvents = events
-                    #if DEBUG
-                    print("🎯 active events:", events.count)
-                    #endif
+                    NectarLog.log("🎯 active events: \(events.count)", title: "Home")
                 case .productReels(let data):
                     let reels = HomeDTOMapper.productReels(from: data)
                     store.setProductReels(reels)
                     catalog.productReels = reels
-                    #if DEBUG
-                    print("🎬 product reels:", reels.count)
-                    #endif
+                    NectarLog.log("🎬 product reels: \(reels.count)", title: "Home")
                 case .sellers(let data):
                     let sellers = HomeDTOMapper.sellerSpotlight(from: data)
                     store.setSellers(sellers)
                     catalog.sellers = sellers
-                    #if DEBUG
-                    print("🏪 seller spotlight:", sellers.count)
-                    #endif
+                    NectarLog.log("🏪 seller spotlight: \(sellers.count)", title: "Home")
                 case .discarded:
                     break
                 }
@@ -134,20 +116,14 @@ final class HomeRepository: HomeCatalogProviding {
             return store.activeEvents
         }
         guard let data = await fetchQuietly({ try await PrintervalAPI.fetchActiveEvent() }) else {
-            #if DEBUG
-            print("🎯 active events fetch failed / empty response")
-            #endif
+            NectarLog.log("🎯 active events fetch failed / empty response", title: "Home")
             return []
         }
-        #if DEBUG
         let preview = String(data: data.prefix(800), encoding: .utf8) ?? "<binary \(data.count)>"
-        print("🎯 get-active-event raw:", preview)
-        #endif
+        NectarLog.log("🎯 get-active-event raw: \(preview)", title: "Home")
         let events = HomeDTOMapper.activeEvents(from: data)
         store.setActiveEvents(events)
-        #if DEBUG
-        print("🎯 active events decoded:", events.count)
-        #endif
+        NectarLog.log("🎯 active events decoded: \(events.count)", title: "Home")
         return events
     }
 

@@ -3,30 +3,57 @@ import SwiftUI
 /// Horizontal seller spotlight rail — cover + avatar, giống pattern Reels / Category.
 struct SellerSpotlight: View {
     let sellerData: [Sellers]
-    var title: String = "Seller Spotlight"
+    var title: String = "Artist Spotlight"
     var onSeeAll: (() -> Void)?
     var onSelect: ((Sellers) -> Void)?
-
+    var iconWidth: CGFloat { 68.scaled }
+    
+    @HotReloadObserver private var _hr
+  
     var body: some View {
         if !sellerData.isEmpty {
             VStack(alignment: .leading, spacing: NectarMetrics.spacing.sm) {
-                HomeSectionHeader(title: title, onSeeAll: onSeeAll)
-                    .screenPadding()
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(title)
+                        .font(.system(size: NectarMetrics.font.title, weight: .semibold))
+                        .foregroundColor(NectarColors.navy)
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: NectarMetrics.spacing.sm) {
-                        ForEach(sellerData) { seller in
-                            Button {
-                                onSelect?(seller)
-                            } label: {
-                                SellerSpotlightCard(seller: seller)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHGrid(
+                            rows: [
+                                GridItem(.fixed(60.scaled), spacing: NectarMetrics.spacing.md),
+                                GridItem(.fixed(60.scaled))
+                        ],
+                        spacing: NectarMetrics.spacing.sm
+                        ) {
+                            ForEach(sellerData) { seller in
+                                Button {
+                                    onSelect?(seller)
+                                } label: {
+                                    SellerSpotlightCard(seller: seller, iconW: iconWidth)
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
                     }
-                    .padding(.horizontal, NectarMetrics.layout.screenHorizontal)
                 }
+                .padding(NectarMetrics.padding.sm)
             }
+            .background {
+                LinearGradient(
+                    colors: [
+                        NectarColors.cardGold.opacity(0.4),
+                        NectarColors.facebookBlue.opacity(0.4)
+                    ],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .clipShape(
+                    RoundedRectangle(cornerRadius: NectarMetrics.radius.md)
+                )
+            }
+            .screenPadding()
+            .hotReload()
         }
     }
 }
@@ -35,49 +62,23 @@ struct SellerSpotlight: View {
 
 private struct SellerSpotlightCard: View {
     let seller: Sellers
-
-    private var cardWidth: CGFloat { 156.scaled }
-    private var cardHeight: CGFloat { 110.scaled }
-    private var avatarSize: CGFloat { 36.scaled }
+    var iconW: CGFloat
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
+        VStack(alignment: .center, spacing: NectarMetrics.spacing.xxs) {
             RemoteImageView(
-                url: seller.backgroundURL ?? seller.avatarURL,
-                contentMode: .fill,
+                url: seller.avatarURL,
+                contentMode: .fit,
                 showsLoadingIndicator: false
             )
-
-            LinearGradient(
-                colors: [.clear, .black.opacity(0.7)],
-                startPoint: .center,
-                endPoint: .bottom
-            )
-
-            HStack(spacing: NectarMetrics.spacing.xxs) {
-                RemoteImageView(
-                    url: seller.avatarURL,
-                    contentMode: .fill,
-                    showsLoadingIndicator: false
-                )
-                .frame(width: avatarSize, height: avatarSize)
-                .clipShape(Circle())
-                .overlay {
-                    Circle()
-                        .strokeBorder(.white.opacity(0.85), lineWidth: 1.5)
-                }
-
-                Text(seller.name)
-                    .font(NectarFonts.elmsSans(size: 12.scaled, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
-            }
-            .padding(NectarMetrics.spacing.xxs)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .clipShape(RoundedRectangle(cornerRadius: iconW, style: .continuous))
+            
+            Text(seller.name)
+                .font(.system(size: NectarMetrics.font.textNormal, weight: .regular))
+                .foregroundColor(NectarColors.navy)
         }
-        .frame(width: cardWidth, height: cardHeight)
-        .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.radius.md, style: .continuous))
+        .frame(width: iconW, height: iconW)
+        
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(seller.name)
     }

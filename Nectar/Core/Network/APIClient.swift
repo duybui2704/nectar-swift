@@ -155,9 +155,7 @@ actor APIClient {
 
             // Retry khi timeout / mất mạng tạm thời
             if shouldRetry(error), retryCount < APIConfig.maxTimeoutRetries {
-                #if DEBUG
-                print("⏳ Retry \(path) after network error…")
-                #endif
+                NectarLog.log("⏳ Retry \(path) after network error…", title: "Network")
                 try await Task.sleep(nanoseconds: 400_000_000)
                 return try await requestData(
                     service: service,

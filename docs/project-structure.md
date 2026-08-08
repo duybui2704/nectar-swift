@@ -211,6 +211,7 @@ Asset / data chỉ cho Canvas Preview.
 ## 5. Docs liên quan
 
 - [api-flow.md](./api-flow.md) — luồng API chi tiết  
+- [debugging-oslog-proxyman.md](./debugging-oslog-proxyman.md) — OSLog + Proxyman + Breakpoints  
 - [hot-reload.md](./hot-reload.md) — InjectionNext  
 - [architecture.md](./architecture.md) — so sánh mindset RN/Flutter (một phần đã cũ sau khi bỏ banking)
 

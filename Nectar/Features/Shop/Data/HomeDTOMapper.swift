@@ -105,9 +105,7 @@ enum HomeDTOMapper {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
             return response.result.events
         } catch {
-            #if DEBUG
-            print("Decode error eventBox:", error)
-            #endif
+            NectarLog.log("Decode error eventBox: \(error)", title: "Home")
             return []
         }
     }
@@ -115,17 +113,13 @@ enum HomeDTOMapper {
     /// Decode `get-active-event` → danh sách banner (object hoặc mảng trong `result`).
     static func activeEvents(from data: Data) -> [ActiveEvent] {
         guard let root = jsonObject(data) else {
-            #if DEBUG
-            print("🎯 activeEvents: invalid JSON")
-            #endif
+            NectarLog.log("🎯 activeEvents: invalid JSON", title: "Home")
             return []
         }
 
         // result == null
         if let dict = root as? [String: Any], dict["result"] is NSNull {
-            #if DEBUG
-            print("🎯 activeEvents: result is null")
-            #endif
+            NectarLog.log("🎯 activeEvents: result is null", title: "Home")
             return []
         }
 
@@ -179,7 +173,6 @@ enum HomeDTOMapper {
             )
         }
 
-        #if DEBUG
         if mapped.isEmpty {
             let keys: Any
             if let d = root as? [String: Any] {
@@ -187,9 +180,8 @@ enum HomeDTOMapper {
             } else {
                 keys = type(of: root)
             }
-            print("🎯 activeEvents: mapped 0 — root keys/type:", keys)
+            NectarLog.log("🎯 activeEvents: mapped 0 — root keys/type: \(keys)", title: "Home")
         }
-        #endif
         return mapped
     }
 

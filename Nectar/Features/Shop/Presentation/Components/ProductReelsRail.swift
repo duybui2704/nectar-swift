@@ -4,7 +4,7 @@ import SwiftUI
 /// Video chỉ load khi mở fullscreen → tiết kiệm CPU / RAM / mạng.
 struct ProductReelsRail: View {
     let reels: [ProductReel]
-    var title: String = "Reels"
+    var title: String = "Nectar story"
     var onSeeAll: (() -> Void)?
     var onSelect: ((ProductReel) -> Void)?
 

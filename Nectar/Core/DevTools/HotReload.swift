@@ -24,7 +24,7 @@ enum HotReloadBootstrap {
     /// Gọi 1 lần khi app khởi động — trỏ Inject tới InjectionNext (fallback InjectionIII).
     static func configure() {
         guard isEnabled else {
-            print("ℹ️ HotReload: disabled (-DISABLE_HOT_RELOAD)")
+            NectarLog.log("ℹ️ HotReload: disabled (-DISABLE_HOT_RELOAD)", title: "HotReload")
             return
         }
 
@@ -37,13 +37,16 @@ enum HotReloadBootstrap {
             InjectConfiguration.bundlePath = iii
         } else {
             InjectConfiguration.bundlePath = next
-            print("""
-            ⚠️ HotReload: Chưa cài InjectionNext / InjectionIII.
-               1. Tải: https://github.com/johnno1962/InjectionNext/releases
-               2. Giải nén → kéo InjectionNext.app vào /Applications
-               3. Mở InjectionNext → Select Project → thư mục Nectar
-               4. ⌘R lại app trong Xcode
-            """)
+            NectarLog.log(
+                """
+                ⚠️ HotReload: Chưa cài InjectionNext / InjectionIII.
+                   1. Tải: https://github.com/johnno1962/InjectionNext/releases
+                   2. Giải nén → kéo InjectionNext.app vào /Applications
+                   3. Mở InjectionNext → Select Project → thư mục Nectar
+                   4. ⌘R lại app trong Xcode
+                """,
+                title: "HotReload"
+            )
         }
         _ = InjectConfiguration.load
     }

@@ -209,8 +209,9 @@ ProductHorizontalRail(title: "Best Selling", products: viewModel.bestSelling, �
 
 ## 8. Log / debug
 
-- Mọi request/response: `NetworkLogger` (Xcode Console, DEBUG).
-- Repository decode: log `🔥` / `⭐` / `🎬` … trong DEBUG.
+- Mọi request/response: `NetworkLogger` → `NectarLog` (OSLog + filter `Nectar log Network`).
+- Repository decode: `NectarLog.log(..., title: "Home")`.
+- Proxyman / breakpoints / Console.app: xem **[debugging-oslog-proxyman.md](./debugging-oslog-proxyman.md)**.
 - Tắt hot-reload khi debug crash: Launch Argument `-DISABLE_HOT_RELOAD` (xem `docs/hot-reload.md`).
 
 ---
