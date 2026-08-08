@@ -54,10 +54,9 @@ struct ShopView: View {
                 if let event = viewModel.eventBox.first {
                     EventBoxView(event: event, currencySymbol: viewModel.currencySymbol)
                 }
-                
-                if let sellersData = viewModel.sellers {
-                    SellerSpotlight(sellerData: sellersData)
-                }
+
+                SellerSpotlight(sellerData: viewModel.sellers)
+
                 // Active event (`get-active-event`) — cuối Home
                 ActiveEventsBanner(events: viewModel.activeEvents)
                     .screenPadding()

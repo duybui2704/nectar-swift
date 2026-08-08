@@ -59,6 +59,16 @@ enum APIEndpoint {
     /// `GET product-video/find` trên `printerval.com`.
     static let productVideoFind = "product-video/find"
     static let sellerSpotlight = "seller/spotlight"
+
+    // Product detail
+    static func product(_ id: String) -> String { "product/\(id)" }
+    static func productGallery(_ id: String) -> String { "gallery/\(id)" }
+    static func productVariant(_ id: String) -> String { "variant/\(id)" }
+    static func productBulkPrice(_ id: String) -> String { "product/bulk-price/\(id)" }
+    static func productColorGuide(_ id: String) -> String { "product/color-guide/\(id)" }
+    static func productRelated(_ id: String) -> String { "product/related/\(id)" }
+    static func productRecommendationKeyword(_ id: String) -> String { "product/recommendation-keyword/\(id)" }
+    static let boughtTogether = "bought-together/find"
 }
 
 enum APIConfig {

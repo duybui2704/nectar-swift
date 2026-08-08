@@ -65,15 +65,15 @@ enum HomeDTOMapper {
     
     static func sellerSpotlight(from data: Data) -> [Sellers] {
         guard let root = jsonObject(data) else { return [] }
-        let rows = arrayPayload(from: root, preferredKeys: ["result"])
+        let rows = arrayPayload(from: root, preferredKeys: ["result", "sellers", "items", "data", "list"])
         return rows.compactMap { item in
             guard let dict = item as? [String: Any] else { return nil }
 
-            let id = number(dict, keys: ["id"]).map { Int($0) }
-                ?? Int(string(dict, keys: ["id"]) ?? "")
+            let id = number(dict, keys: ["id", "seller_id", "sellerId"]).map { Int($0) }
+                ?? Int(string(dict, keys: ["id", "seller_id", "sellerId"]) ?? "")
             guard let id else { return nil }
 
-            let name = string(dict, keys: ["name"]) ?? ""
+            let name = string(dict, keys: ["name", "title", "shop_name", "shopName"]) ?? ""
             guard !name.isEmpty else { return nil }
 
             return Sellers(
@@ -81,13 +81,13 @@ enum HomeDTOMapper {
                 name: name,
                 slug: string(dict, keys: ["slug"]) ?? "",
                 email: string(dict, keys: ["email"]),
-                imageAvatar: string(dict, keys: ["imageAvatar"]) ?? "",
-                imageBackground: string(dict, keys: ["imageBackground"]) ?? "",
+                imageAvatar: string(dict, keys: ["imageAvatar", "image_avatar", "avatar", "image"]) ?? "",
+                imageBackground: string(dict, keys: ["imageBackground", "image_background", "background", "cover"]) ?? "",
                 status: string(dict, keys: ["status"]) ?? "",
                 role: string(dict, keys: ["role"]) ?? "",
                 type: string(dict, keys: ["type"]) ?? "",
-                createdAt: string(dict, keys: ["createdAt"]) ?? "",
-                description: string(dict, keys: ["description"])
+                createdAt: string(dict, keys: ["createdAt", "created_at"]) ?? "",
+                description: string(dict, keys: ["description", "desc"])
             )
         }
     }
@@ -284,7 +284,6 @@ enum HomeDTOMapper {
     private static func product(from item: Any, fallbackIndex: Int) -> ShopProduct? {
         guard let dict = item as? [String: Any] else { return nil }
 
-        let id = string(dict, keys: ["id", "product_id", "productId", "sku", "uuid"]) ?? "product-\(fallbackIndex)"
         let name = string(dict, keys: ["name", "title", "product_name", "productName", "label"]) ?? ""
         guard !name.isEmpty else { return nil }
 
@@ -292,7 +291,7 @@ enum HomeDTOMapper {
             "unit", "unit_label", "quantity", "qty", "weight",
             "short_description", "shortDescription", "attribute", "variant", "desc",
         ]) ?? ""
-        
+
         let isFav = dict["isFavourite"] as? Bool ?? false
 
         let price = number(dict, keys: [
@@ -311,6 +310,11 @@ enum HomeDTOMapper {
                 image = url(d, keys: ["url", "src", "image", "path"])
             }
         }
+
+        // Ưu tiên id số (product API); tránh sku/uuid làm path `product/{id}`.
+        let id = string(dict, keys: ["product_id", "productId", "id", "design_id", "designId"])
+            ?? string(dict, keys: ["sku", "uuid"])
+            ?? "product-\(fallbackIndex)"
 
         return ShopProduct(
             id: id,

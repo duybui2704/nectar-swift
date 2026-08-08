@@ -186,7 +186,9 @@ actor APIClient {
 
     private func buildURL(service: APIService, path: String, query: [String: String]) throws -> URL {
         let trimmed = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        guard var components = URLComponents(url: service.baseURL.appendingPathComponent(trimmed), resolvingAgainstBaseURL: false) else {
+        // `appending(path:)` giữ nguyên `/` trong path (vd. product/123) — đúng REST.
+        let base = service.baseURL.appending(path: trimmed)
+        guard var components = URLComponents(url: base, resolvingAgainstBaseURL: false) else {
             throw AppError.network("URL không hợp lệ.")
         }
         if !query.isEmpty {

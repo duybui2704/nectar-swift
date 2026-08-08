@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Product card theo design Nectar (border, ảnh, giá, nút +).
+/// Product card theo design Nectar (border, ảnh, giá, nút + / heart).
 struct ProductCardView: View {
     let product: ShopProduct
     var currencySymbol: String = "$"

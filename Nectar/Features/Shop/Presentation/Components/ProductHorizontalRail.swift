@@ -17,7 +17,7 @@ struct ProductHorizontalRail: View {
                 HomeSectionHeader(title: title, onSeeAll: onSeeAll)
                     .screenPadding()
             }
-            
+
             if !products.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: NectarMetrics.spacing.sm) {

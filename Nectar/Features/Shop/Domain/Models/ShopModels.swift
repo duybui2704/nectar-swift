@@ -53,4 +53,15 @@ struct Sellers: Identifiable, Hashable, Sendable {
     let type: String
     let createdAt: String
     let description: String?
+
+    var avatarURL: URL? { Self.makeURL(imageAvatar) }
+    var backgroundURL: URL? { Self.makeURL(imageBackground) }
+
+    private static func makeURL(_ raw: String) -> URL? {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        if trimmed.hasPrefix("//") { return URL(string: "https:" + trimmed) }
+        if trimmed.hasPrefix("/") { return URL(string: "https://printerval.com" + trimmed) }
+        return URL(string: trimmed)
+    }
 }
