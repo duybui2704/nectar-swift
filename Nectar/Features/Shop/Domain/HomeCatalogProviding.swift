@@ -12,6 +12,7 @@ struct HomeCatalog: Sendable {
     /// `get-active-event` — Explore banner + Home footer.
     var activeEvents: [ActiveEvent] = []
     var productReels: [ProductReel] = []
+    var sellers: [Sellers] = []
 }
 
 /// Abstraction Data layer — Shop & Explore cùng inject / dùng `HomeRepository`.

@@ -29,7 +29,7 @@ struct ShopView: View {
                     onSeeAll: {},
                     onAdd: { _ in },
                     onAddFavourite: { _ in },
-                    onRemoveFavoutire: { _ in }
+                    onRemoveFavourite: { _ in }
                 )
 
                 ProductHorizontalRail(
@@ -37,7 +37,9 @@ struct ShopView: View {
                     products: viewModel.bestSelling,
                     currencySymbol: viewModel.currencySymbol,
                     onSeeAll: {},
-                    onAdd: { _ in }
+                    onAdd: { _ in },
+                    onAddFavourite: { _ in },
+                    onRemoveFavourite: { _ in }
                 )
 
                 ProductHorizontalRail(
@@ -45,12 +47,17 @@ struct ShopView: View {
                     products: viewModel.recentlyViewed,
                     currencySymbol: viewModel.currencySymbol,
                     onSeeAll: {},
-                    onAdd: { _ in }
+                    onAdd: { _ in },
+                    onAddFavourite: { _ in },
+                    onRemoveFavourite: { _ in }
                 )
                 if let event = viewModel.eventBox.first {
                     EventBoxView(event: event, currencySymbol: viewModel.currencySymbol)
                 }
-
+                
+                if let sellersData = viewModel.sellers {
+                    SellerSpotlight(sellerData: sellersData)
+                }
                 // Active event (`get-active-event`) — cuối Home
                 ActiveEventsBanner(events: viewModel.activeEvents)
                     .screenPadding()

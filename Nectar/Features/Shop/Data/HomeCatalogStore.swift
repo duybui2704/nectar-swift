@@ -14,6 +14,7 @@ final class HomeCatalogStore: ObservableObject {
     @Published private(set) var eventBox: [EventBox] = []
     @Published private(set) var activeEvents: [ActiveEvent] = []
     @Published private(set) var productReels: [ProductReel] = []
+    @Published private(set) var sellers: [Sellers] = []
 
     func snapshot() -> HomeCatalog {
         HomeCatalog(
@@ -24,7 +25,8 @@ final class HomeCatalogStore: ObservableObject {
             recentlyViewed: recentlyViewed,
             eventBox: eventBox,
             activeEvents: activeEvents,
-            productReels: productReels
+            productReels: productReels,
+            sellers: sellers
         )
     }
 
@@ -66,5 +68,10 @@ final class HomeCatalogStore: ObservableObject {
     func setProductReels(_ items: [ProductReel]) {
         guard !items.isEmpty else { return }
         productReels = items
+    }
+
+    func setSellers(_ items: [Sellers]) {
+        guard !items.isEmpty else { return }
+        sellers = items
     }
 }

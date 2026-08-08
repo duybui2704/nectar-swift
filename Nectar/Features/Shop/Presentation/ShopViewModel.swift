@@ -12,6 +12,7 @@ final class ShopViewModel: ObservableObject {
     @Published private(set) var eventBox: [EventBox] = []
     @Published private(set) var activeEvents: [ActiveEvent] = []
     @Published private(set) var productReels: [ProductReel] = []
+    @Published private(set) var sellers: [Sellers] = []
 
     private let catalog: HomeCatalogProviding
     private var didRequestHomeLoad = false
@@ -51,5 +52,6 @@ final class ShopViewModel: ObservableObject {
         eventBox = snapshot.eventBox
         activeEvents = snapshot.activeEvents
         productReels = snapshot.productReels
+        sellers = snapshot.sellers
     }
 }

@@ -56,6 +56,7 @@ final class HomeRepository: HomeCatalogProviding {
             group.addTask { await Self.chunk(APIEndpoint.eventBox) { try await PrintervalAPI.fetchEventBox() } }
             group.addTask { await Self.chunk(APIEndpoint.activeEvent) { try await PrintervalAPI.fetchActiveEvent() } }
             group.addTask { await Self.chunk(APIEndpoint.productVideoFind) { try await PrintervalAPI.fetchProductVideos() } }
+            group.addTask { await Self.chunk(APIEndpoint.sellerSpotlight) { try await PrintervalAPI.fetchSellerSpotlight() }}
 
             for await item in group {
                 switch item {
@@ -101,6 +102,13 @@ final class HomeRepository: HomeCatalogProviding {
                     #if DEBUG
                     print("🎬 product reels:", reels.count)
                     #endif
+                case .sellers(let data):
+                    let sellers = HomeDTOMapper.sellerSpotlight(from: data)
+                    store.setSellers(sellers)
+                    catalog.sellers = sellers
+                    #if DEBUG
+                    print("🏪 seller spotlight:", sellers.count)
+                    #endif
                 case .discarded:
                     break
                 }
@@ -113,6 +121,7 @@ final class HomeRepository: HomeCatalogProviding {
         catalog.eventBox = store.eventBox
         catalog.activeEvents = store.activeEvents
         catalog.productReels = store.productReels
+        catalog.sellers = store.sellers
         catalog.bigDeals = store.bigDeals
         catalog.recommendations = store.recommendations
 
@@ -151,6 +160,7 @@ final class HomeRepository: HomeCatalogProviding {
         case eventBox(Data)
         case activeEvent(Data)
         case productReels(Data)
+        case sellers(Data)
         case discarded
     }
 
@@ -172,6 +182,7 @@ final class HomeRepository: HomeCatalogProviding {
             case APIEndpoint.eventBox: return .eventBox(data)
             case APIEndpoint.activeEvent: return .activeEvent(data)
             case APIEndpoint.productVideoFind: return .productReels(data)
+            case APIEndpoint.sellerSpotlight: return .sellers(data)
             default: return .discarded
             }
         } catch {

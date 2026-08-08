@@ -8,6 +8,8 @@ struct ProductHorizontalRail: View {
     var currencySymbol: String = "$"
     var onSeeAll: (() -> Void)?
     var onAdd: ((ShopProduct) -> Void)?
+    var onAddFavourite: ((ProductID) -> Void)?
+    var onRemoveFavourite: ((ProductID) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: NectarMetrics.spacing.sm) {
@@ -23,7 +25,9 @@ struct ProductHorizontalRail: View {
                             ProductCardView(
                                 product: product,
                                 currencySymbol: currencySymbol,
-                                onAdd: { onAdd?(product) }
+                                onAdd: { onAdd?(product) },
+                                onAddFavourite: onAddFavourite,
+                                onRemoveFavourite: onRemoveFavourite
                             )
                             .onTapGesture {
                                 router.push(.productDetail(id: product.id))

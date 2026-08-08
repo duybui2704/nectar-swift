@@ -39,3 +39,18 @@ struct ProductReel: Identifiable, Hashable, Sendable {
     let displayPrice: String
     let productImageURL: URL?
 }
+
+/// Seller spotlight — API `seller/spotlight`.
+struct Sellers: Identifiable, Hashable, Sendable {
+    let id: Int
+    let name: String
+    let slug: String
+    let email: String?
+    let imageAvatar: String
+    let imageBackground: String
+    let status: String
+    let role: String
+    let type: String
+    let createdAt: String
+    let description: String?
+}

@@ -78,6 +78,14 @@ enum PrintervalAPI {
             authenticated: false
         )
     }
+    
+    static func fetchSellerSpotlight() async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.sellerSpotlight,
+            service: .variant,
+            authenticated: false
+        )
+    }
 
     /// `GET product-video/find` — reel / product video feed.
     static func fetchProductVideos(

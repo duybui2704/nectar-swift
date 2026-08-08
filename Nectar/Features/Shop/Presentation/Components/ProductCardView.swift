@@ -5,44 +5,35 @@ struct ProductCardView: View {
     let product: ShopProduct
     var currencySymbol: String = "$"
     var onAdd: (() -> Void)?
-    let onAddFavourite: (ProductID) -> Void
-    let onRemoveFavoutire: (ProductID) -> Void
+    var onAddFavourite: ((ProductID) -> Void)?
+    var onRemoveFavourite: ((ProductID) -> Void)?
 
-    
-    @State var isFavourite: Bool = false
+    @State private var isFavourite = false
 
     private let cardWidth: CGFloat = 173
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-           ZStack(alignment: .topTrailing) {
-               RemoteImageView(url: product.imageURL, contentMode: .fit, showsLoadingIndicator: false)
-                   .frame(height: 100.scaled)
-                   .frame(maxWidth: .infinity)
-                   .padding(.top, NectarMetrics.spacing.sm)
-                   .padding(.horizontal, NectarMetrics.spacing.xs)
-               
-                Button  {
-                    Task {
-                        guard !product.id.isEmpty else {
-                            onRemoveFavoutire(.string(product.id))
-                            isFavourite.toggle()
-                            return
-                        }
-                       
-                      }
-               
+            ZStack(alignment: .topTrailing) {
+                RemoteImageView(url: product.imageURL, contentMode: .fit, showsLoadingIndicator: false)
+                    .frame(height: 100.scaled)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, NectarMetrics.spacing.sm)
+                    .padding(.horizontal, NectarMetrics.spacing.xs)
+
+                Button {
+                    toggleFavourite()
                 } label: {
-                    Image(systemName: "heart.fill")
+                    Image(systemName: isFavourite ? "heart.fill" : "heart")
                         .resizable()
-                        .frame(width: NectarMetrics.icon.sm, height: NectarMetrics.icon.sm )
-                        .foregroundColor(isFavourite ? NectarColors.brand : NectarColors.border)
+                        .scaledToFit()
+                        .frame(width: NectarMetrics.icon.sm, height: NectarMetrics.icon.sm)
+                        .foregroundStyle(isFavourite ? NectarColors.brand : NectarColors.border)
                         .padding(12)
-                        .zIndex(999)
                 }
-               
+                .buttonStyle(.plain)
             }
-           .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(product.name)
@@ -92,5 +83,15 @@ struct ProductCardView: View {
             RoundedRectangle(cornerRadius: NectarMetrics.radius.lg, style: .continuous)
                 .strokeBorder(NectarColors.border, lineWidth: 1)
         )
+    }
+
+    private func toggleFavourite() {
+        let id = ProductID.string(product.id)
+        if isFavourite {
+            onRemoveFavourite?(id)
+        } else {
+            onAddFavourite?(id)
+        }
+        isFavourite.toggle()
     }
 }

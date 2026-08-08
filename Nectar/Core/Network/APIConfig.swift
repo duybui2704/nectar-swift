@@ -58,6 +58,7 @@ enum APIEndpoint {
     static let activeEvent = "get-active-event"
     /// `GET product-video/find` trên `printerval.com`.
     static let productVideoFind = "product-video/find"
+    static let sellerSpotlight = "seller/spotlight"
 }
 
 enum APIConfig {

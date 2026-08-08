@@ -62,6 +62,35 @@ enum HomeDTOMapper {
             )
         }
     }
+    
+    static func sellerSpotlight(from data: Data) -> [Sellers] {
+        guard let root = jsonObject(data) else { return [] }
+        let rows = arrayPayload(from: root, preferredKeys: ["result"])
+        return rows.compactMap { item in
+            guard let dict = item as? [String: Any] else { return nil }
+
+            let id = number(dict, keys: ["id"]).map { Int($0) }
+                ?? Int(string(dict, keys: ["id"]) ?? "")
+            guard let id else { return nil }
+
+            let name = string(dict, keys: ["name"]) ?? ""
+            guard !name.isEmpty else { return nil }
+
+            return Sellers(
+                id: id,
+                name: name,
+                slug: string(dict, keys: ["slug"]) ?? "",
+                email: string(dict, keys: ["email"]),
+                imageAvatar: string(dict, keys: ["imageAvatar"]) ?? "",
+                imageBackground: string(dict, keys: ["imageBackground"]) ?? "",
+                status: string(dict, keys: ["status"]) ?? "",
+                role: string(dict, keys: ["role"]) ?? "",
+                type: string(dict, keys: ["type"]) ?? "",
+                createdAt: string(dict, keys: ["createdAt"]) ?? "",
+                description: string(dict, keys: ["description"])
+            )
+        }
+    }
 
     static func products(from data: Data) -> [ShopProduct] {
         guard let root = jsonObject(data) else { return [] }
