@@ -41,6 +41,11 @@ final class AppStorageService {
         return token
     }
 
+    /// Lưu token thật từ `POST customer/login`.
+    func saveSession(token: String) {
+        KeychainService.set(token, forKey: Keys.sessionToken)
+    }
+
     func clearSession() {
         KeychainService.delete(forKey: Keys.sessionToken)
     }

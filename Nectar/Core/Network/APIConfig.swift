@@ -59,6 +59,7 @@ enum APIEndpoint {
     /// `GET product-video/find` trên `printerval.com`.
     static let productVideoFind = "product-video/find"
     static let sellerSpotlight = "seller/spotlight"
+    static let customerLogin = "customer/login"
 
     // Product detail
     static func product(_ id: String) -> String { "product/\(id)" }

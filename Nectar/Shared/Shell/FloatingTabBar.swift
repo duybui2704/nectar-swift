@@ -35,40 +35,35 @@ struct FloatingTabBar: View {
     // MARK: - Glass container (Control Center style)
 
     private var glassBarBackground: some View {
-        RoundedRectangle(cornerRadius: 30, style: .continuous)
-            .fill(.ultraThinMaterial)
-            .background {
-                RoundedRectangle(cornerRadius: 30, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.55),
-                                Color.white.opacity(0.22),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-            }
-            // Viền kính (inner highlight)
-            .overlay {
-                RoundedRectangle(cornerRadius: 30, style: .continuous)
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.85),
-                                Color.white.opacity(0.25),
-                                Color.white.opacity(0.45),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.8
-                    )
-            }
-            .shadow(color: Color.black.opacity(0.08), radius: 3, x: 0, y: 1)
-            .shadow(color: Color.black.opacity(0.12), radius: 16, x: 0, y: 8)
-            .shadow(color: Color.black.opacity(0.06), radius: 28, x: 0, y: 14)
+        RoundedRectangle(
+            cornerRadius: 30,
+            style: .continuous
+        )
+        .fill(.ultraThinMaterial)
+        .overlay {
+            RoundedRectangle(
+                cornerRadius: 30,
+                style: .continuous
+            )
+            .strokeBorder(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0.65),
+                        Color.white.opacity(0.15),
+                        Color.white.opacity(0.4)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                lineWidth: 0.8
+            )
+        }
+        .shadow(
+            color: Color.black.opacity(0.12),
+            radius: 14,
+            x: 0,
+            y: 6
+        )
     }
 
     // MARK: - Tab button

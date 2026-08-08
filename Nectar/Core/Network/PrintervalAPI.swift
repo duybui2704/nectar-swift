@@ -108,6 +108,28 @@ enum PrintervalAPI {
         )
     }
 
+    // MARK: - Auth
+
+    /// `POST customer/login` — body email/password/fingerprint/country.
+    static func login(
+        email: String,
+        password: String,
+        fingerprint: String = AppIdentity.deviceId,
+        country: String = AppIdentity.country
+    ) async throws -> Data {
+        try await APIClient.shared.postData(
+            APIEndpoint.customerLogin,
+            service: .customer,
+            body: LoginRequestBody(
+                email: email,
+                password: password,
+                fingerprint: fingerprint,
+                country: country
+            ),
+            authenticated: false
+        )
+    }
+
     // MARK: - Product detail
 
     static func fetchProduct(id: String) async throws -> Data {

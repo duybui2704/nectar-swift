@@ -7,24 +7,15 @@
 
 import SwiftUI
 
-/// Event promo: banner cover + product rail từ `page_data` (tab đầu).
+/// Event promo: banner cover + product rail.
+/// `products` parse **một lần** ở ViewModel — không JSON-decode trong `body` (gây giật khi scroll tới cuối).
 struct EventBoxView: View {
-    let event: EventBox?
+    let event: EventBox
+    var products: [ShopProduct] = []
     var currencySymbol: String = "$"
     @HotReloadObserver private var _hr
 
-    private var bannerURL: URL? {
-        guard let raw = event?.bannerUrl.trimmingCharacters(in: .whitespacesAndNewlines),
-              !raw.isEmpty else { return nil }
-        return URL(string: raw)
-    }
-
     private var cornerRadius: CGFloat { NectarMetrics.radius.md }
-
-    private var products: [ShopProduct] {
-        guard let pageData = event?.pageData else { return [] }
-        return HomeDTOMapper.eventPageProducts(from: pageData)
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
@@ -48,7 +39,11 @@ struct EventBoxView: View {
         ZStack(alignment: .bottomLeading) {
             Color.clear
                 .overlay {
-                    RemoteImageView(url: bannerURL, contentMode: .fill)
+                    RemoteImageView(
+                        url: event.bannerURL,
+                        contentMode: .fill,
+                        showsLoadingIndicator: false
+                    )
                 }
                 .clipped()
 
@@ -63,14 +58,14 @@ struct EventBoxView: View {
             )
 
             VStack(alignment: .leading, spacing: NectarMetrics.spacing.xxs) {
-                Text(event?.name ?? "")
+                Text(event.name)
                     .font(NectarFonts.elmsSans(size: 22.scaled, weight: .bold))
                     .foregroundStyle(NectarColors.surface)
                     .shadow(color: .black.opacity(0.45), radius: 2, y: 1)
                     .lineLimit(2)
 
-                if let description = event?.description, !description.isEmpty {
-                    Text(description)
+                if !event.description.isEmpty {
+                    Text(event.description)
                         .font(NectarFonts.elmsSans(size: 13.scaled, weight: .regular))
                         .foregroundStyle(NectarColors.surface.opacity(0.95))
                         .shadow(color: .black.opacity(0.35), radius: 1, y: 1)
@@ -85,6 +80,6 @@ struct EventBoxView: View {
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
         .contentShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(event?.name ?? "Event")
+        .accessibilityLabel(event.name)
     }
 }

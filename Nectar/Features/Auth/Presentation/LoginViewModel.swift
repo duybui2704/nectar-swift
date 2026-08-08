@@ -9,34 +9,48 @@ final class LoginViewModel: ObservableObject {
         case error(String)
     }
 
-    @Published var phoneNumber = ""
-    @Published var password = ""
-    @Published var countryCode = "+84"
+    /// Prefill DEBUG credentials (curl test account).
+    @Published var username = "test1@gmail.com"
+    @Published var password = "123456"
     @Published var status: Status = .idle
 
-    /// Demo credentials: any phone ≥ 8 digits + password `123456`
-    func login() async -> Bool {
-        status = .loading
-        await MockNectarAPI.delay(500)
-
-        let digits = phoneNumber.filter(\.isNumber)
-        guard digits.count >= 8 else {
-            status = .error("Enter a valid phone number.")
-            return false
-        }
-        guard password == "123456" else {
-            status = .error("Wrong password. Demo: 123456")
-            return false
-        }
-
-        status = .idle
-        return true
+    private let auth: AuthProviding
+    
+    init(auth: AuthProviding? = nil) {
+        self.auth = auth ?? AuthRepository.shared
     }
 
-    func continueWithSocial(provider: String) async -> Bool {
+    /// Gọi `POST customer/login`. Thành công → `AuthSession` (token + displayName).
+    func login() async -> AuthSession? {
+        status = .loading
+
+        let user = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !user.isEmpty else {
+            status = .error("Enter your username.")
+            return nil
+        }
+        guard !password.isEmpty else {
+            status = .error("Enter your password.")
+            return nil
+        }
+
+        do {
+            let session = try await auth.login(username: user, password: password)
+            status = .idle
+            return session
+        } catch let error as AppError {
+            status = .error(error.errorDescription ?? "Login failed.")
+            return nil
+        } catch {
+            status = .error(error.localizedDescription)
+            return nil
+        }
+    }
+
+    func continueWithSocial(provider: String) async -> AuthSession? {
         status = .loading
         await MockNectarAPI.delay(500)
-        status = .idle
-        return true
+        status = .error("\(provider.capitalized) login chưa hỗ trợ. Dùng username / password.")
+        return nil
     }
 }

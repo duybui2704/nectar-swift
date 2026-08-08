@@ -5,59 +5,95 @@ struct ShopView: View {
     @HotReloadObserver private var _hr
 
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: NectarMetrics.spacing.lg) {
-                ShopLocationHeader(categories: viewModel.categories)
-                .screenPadding()
-
-                HomeBannerCarousel(banners: viewModel.banners)
+        ZStack {
+            LinearGradient(
+                colors: [
+                       Color(hex: 0xFFF9EC),
+                       Color(hex: 0xF7F8F2),
+                       Color(hex: 0xEEF7F1)
+                   ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: NectarMetrics.spacing.lg) {
+                    ShopLocationHeader(
+                        categories: viewModel.categories,
+                        isCategoriesLoading: viewModel.showCategoriesSkeleton
+                    )
                     .screenPadding()
 
-                ProductReelsRail(reels: viewModel.productReels)
-                
-                ProductHorizontalRail(
-                    title: "Recently Viewed",
-                    products: viewModel.recentlyViewed,
-                    currencySymbol: viewModel.currencySymbol,
-                    onSeeAll: {},
-                    onAdd: { _ in },
-                    onAddFavourite: { _ in },
-                    onRemoveFavourite: { _ in }
-                )
+                    HomeBannerCarousel(banners: viewModel.banners)
+                        .screenPadding()
+                        .skeleton(isLoading: viewModel.showBannersSkeleton) {
+                            SkeletonLayout.banner()
+                        }
 
-                ProductHorizontalRail(
-                    title: "Exclusive Offer",
-                    products: viewModel.exclusiveOffers,
-                    currencySymbol: viewModel.currencySymbol,
-                    onSeeAll: {},
-                    onAdd: { _ in },
-                    onAddFavourite: { _ in },
-                    onRemoveFavourite: { _ in }
-                )
+                    ProductReelsRail(reels: viewModel.productReels)
+                        .skeleton(isLoading: viewModel.showReelsSkeleton) {
+                            SkeletonLayout.reelsRail()
+                        }
 
-                ProductHorizontalRail(
-                    title: "Best Selling",
-                    products: viewModel.bestSelling,
-                    currencySymbol: viewModel.currencySymbol,
-                    onSeeAll: {},
-                    onAdd: { _ in },
-                    onAddFavourite: { _ in },
-                    onRemoveFavourite: { _ in }
-                )
+                    ProductHorizontalRail(
+                        title: "Recently Viewed",
+                        products: viewModel.recentlyViewed,
+                        currencySymbol: viewModel.currencySymbol,
+                        onSeeAll: {},
+                        onAdd: { _ in },
+                        onAddFavourite: { _ in },
+                        onRemoveFavourite: { _ in }
+                    )
+                    .skeleton(isLoading: viewModel.showRecentlyViewedSkeleton) {
+                        SkeletonLayout.productRail(title: true, count: 3)
+                    }
 
-                SellerSpotlight(sellerData: viewModel.sellers)
-                if let event = viewModel.eventBox.first {
-                    EventBoxView(event: event, currencySymbol: viewModel.currencySymbol)
+                    ProductHorizontalRail(
+                        title: "Exclusive Offer",
+                        products: viewModel.exclusiveOffers,
+                        currencySymbol: viewModel.currencySymbol,
+                        onSeeAll: {},
+                        onAdd: { _ in },
+                        onAddFavourite: { _ in },
+                        onRemoveFavourite: { _ in }
+                    )
+                    .skeleton(isLoading: viewModel.showExclusiveSkeleton) {
+                        SkeletonLayout.productRail(title: true, count: 3)
+                    }
+
+                    ProductHorizontalRail(
+                        title: "Best Selling",
+                        products: viewModel.bestSelling,
+                        currencySymbol: viewModel.currencySymbol,
+                        onSeeAll: {},
+                        onAdd: { _ in },
+                        onAddFavourite: { _ in },
+                        onRemoveFavourite: { _ in }
+                    )
+                    .skeleton(isLoading: viewModel.showBestSellingSkeleton) {
+                        SkeletonLayout.productRail(title: true, count: 3)
+                    }
+
+                    SellerSpotlight(sellerData: viewModel.sellers)
+                        .skeleton(isLoading: viewModel.showSellersSkeleton) {
+                            SkeletonLayout.sellerSpotlight()
+                        }
+
+                    SkeletonGate(isLoading: viewModel.showEventBoxSkeleton) {
+                        if let event = viewModel.primaryEvent {
+                            EventBoxView(
+                                event: event,
+                                products: viewModel.eventBoxProducts,
+                                currencySymbol: viewModel.currencySymbol
+                            ).padding(.bottom, 250)
+                        }
+                    } skeleton: {
+                        SkeletonLayout.eventBanner()
+                    }
                 }
-
-               
-               
+                .padding(.top, NectarMetrics.spacing.md)
             }
-            .padding(.top, NectarMetrics.spacing.md)
-            .padding(.bottom, 100)
         }
-        .hidesTabBarOnScroll()
-        .background(NectarColors.background.ignoresSafeArea())
         .task {
             await viewModel.loadHome()
         }
@@ -70,6 +106,7 @@ struct ShopView: View {
 /// Brand “Nectar Market” — rainbow TimelineView + Great Vibes + Search + Categories.
 struct ShopLocationHeader: View {
     var categories: [CategoryTree] = []
+    var isCategoriesLoading: Bool = false
 
     @HotReloadObserver private var _hr
 
@@ -101,6 +138,9 @@ struct ShopLocationHeader: View {
                 .cornerRadius(8)
 
             CategoryList(categories: categories)
+                .skeleton(isLoading: isCategoriesLoading) {
+                    SkeletonLayout.categoryRail()
+                }
         }
         .hotReload()
     }

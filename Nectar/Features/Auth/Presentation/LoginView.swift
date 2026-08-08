@@ -2,9 +2,8 @@ import SwiftUI
 
 struct LoginView: View {
     private enum Field: Hashable, CaseIterable {
-        case phone, password
+        case username, password
     }
-
     @EnvironmentObject private var session: AppSession
     @StateObject private var viewModel = LoginViewModel()
     @HotReloadObserver private var _hr
@@ -21,11 +20,11 @@ struct LoginView: View {
 
                 VStack(alignment: .leading, spacing: NectarMetrics.spacing.xs) {
                     Text("Get your groceries\nwith nectar")
-                        .font(.system(size: NectarMetrics.s(26), weight: .semibold))
+                        .font(.system(size: NectarMetrics.font.largeTitle, weight: .semibold))
                         .foregroundStyle(NectarColors.navy)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    phoneField
+                    usernameField
                     passwordField
 
                     if case .error(let message) = viewModel.status {
@@ -49,8 +48,8 @@ struct LoginView: View {
                             color: NectarColors.googleBlue
                         ) {
                             Task {
-                                if await viewModel.continueWithSocial(provider: "google") {
-                                    session.loginSucceeded(displayName: MockNectarAPI.customerName)
+                                if let auth = await viewModel.continueWithSocial(provider: "google") {
+                                    session.loginSucceeded(session: auth)
                                 }
                             }
                         }
@@ -60,8 +59,8 @@ struct LoginView: View {
                             color: NectarColors.facebookBlue
                         ) {
                             Task {
-                                if await viewModel.continueWithSocial(provider: "facebook") {
-                                    session.loginSucceeded(displayName: MockNectarAPI.customerName)
+                                if let auth = await viewModel.continueWithSocial(provider: "facebook") {
+                                    session.loginSucceeded(session: auth)
                                 }
                             }
                         }
@@ -105,29 +104,27 @@ struct LoginView: View {
 
     // MARK: - Fields
 
-    private var phoneField: some View {
-        underlineField(isActive: focusedField == .phone) {
+    private var usernameField: some View {
+        underlineField(isActive: focusedField == .username) {
             HStack(spacing: NectarMetrics.spacing.xxs) {
-                Text("🇧🇩")
-                    .font(.system(size: NectarMetrics.s(18)))
-
-                Text(viewModel.countryCode)
-                    .font(NectarTypography.caption)
-                    .foregroundStyle(NectarColors.navy)
-
-                Image(systemName: "chevron.down")
-                    .font(.system(size: 10, weight: .semibold))
+                Image(systemName: "person")
+                    .font(.system(size: NectarMetrics.font.textNormal, weight: .medium))
                     .foregroundStyle(NectarColors.textSecondary)
+                    .frame(width: NectarMetrics.s(22), alignment: .center)
 
-                TextField("Phone number", text: $viewModel.phoneNumber)
-                    .keyboardType(.phonePad)
-                    .textContentType(.telephoneNumber)
+                TextField("Username", text: $viewModel.username)
+                    .textContentType(.username)
+                    .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
                     .font(NectarTypography.caption)
                     .foregroundStyle(NectarColors.navy)
-                    .focused($focusedField, equals: .phone)
+                    .focused($focusedField, equals: .username)
+                    .submitLabel(.next)
+                    .onSubmit { focusedField = .password }
             }
         } onTap: {
-            focusedField = .phone
+            focusedField = .username
         }
     }
 
@@ -247,8 +244,8 @@ struct LoginView: View {
     }
 
     private func submitLogin() async {
-        if await viewModel.login() {
-            session.loginSucceeded(displayName: MockNectarAPI.customerName)
+        if let auth = await viewModel.login() {
+            session.loginSucceeded(session: auth)
         }
     }
 }

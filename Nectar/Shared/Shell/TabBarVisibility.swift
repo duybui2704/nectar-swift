@@ -9,7 +9,10 @@ final class TabBarVisibility: ObservableObject {
     /// Push stack không rỗng → luôn ẩn (PDP, category, …).
     private var isNavigationHidden = false
     private var lastOffset: CGFloat = 0
-    private let threshold: CGFloat = 8
+    private let threshold: CGFloat = 12
+    /// Tránh tab bar bật/tắt liên tục khi rubber-band cuối list → giật scroll.
+    private var lastToggleAt: CFAbsoluteTime = 0
+    private let minToggleInterval: CFAbsoluteTime = 0.18
 
     /// Gọi từ scroll observer (đã defer qua DispatchQueue.main.async).
     func handleScroll(offset: CGFloat) {
@@ -53,6 +56,15 @@ final class TabBarVisibility: ObservableObject {
 
     private func applyVisible(_ visible: Bool) {
         guard isVisible != visible else { return }
+        let now = CFAbsoluteTimeGetCurrent()
+        // Gần top → hiện tab bar ngay; còn lại throttle để tránh giật khi bounce cuối list.
+        if visible, lastOffset > -4 {
+            lastToggleAt = now
+            isVisible = visible
+            return
+        }
+        guard now - lastToggleAt >= minToggleInterval else { return }
+        lastToggleAt = now
         isVisible = visible
     }
 }

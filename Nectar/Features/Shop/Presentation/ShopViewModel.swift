@@ -10,6 +10,8 @@ final class ShopViewModel: ObservableObject {
     @Published private(set) var bestSelling: [ShopProduct] = []
     @Published private(set) var recentlyViewed: [ShopProduct] = []
     @Published private(set) var eventBox: [EventBox] = []
+    /// Products tab đầu của event box — parse sẵn, không decode trong View khi scroll.
+    @Published private(set) var eventBoxProducts: [ShopProduct] = []
     @Published private(set) var activeEvents: [ActiveEvent] = []
     @Published private(set) var productReels: [ProductReel] = []
     @Published private(set) var sellers: [Sellers] = []
@@ -20,6 +22,19 @@ final class ShopViewModel: ObservableObject {
     var currencySymbol: String {
         LocalizationStore.shared.currentCurrency?.symbol ?? "$"
     }
+
+    var primaryEvent: EventBox? { eventBox.first }
+
+    // MARK: - Per-section skeleton flags (load + chưa có data)
+
+    var showCategoriesSkeleton: Bool { isLoadingHome && categories.isEmpty }
+    var showBannersSkeleton: Bool { isLoadingHome && banners.isEmpty }
+    var showReelsSkeleton: Bool { isLoadingHome && productReels.isEmpty }
+    var showRecentlyViewedSkeleton: Bool { isLoadingHome && recentlyViewed.isEmpty }
+    var showExclusiveSkeleton: Bool { isLoadingHome && exclusiveOffers.isEmpty }
+    var showBestSellingSkeleton: Bool { isLoadingHome && bestSelling.isEmpty }
+    var showSellersSkeleton: Bool { isLoadingHome && sellers.isEmpty }
+    var showEventBoxSkeleton: Bool { isLoadingHome && eventBox.isEmpty }
 
     init(catalog: HomeCatalogProviding = HomeRepository.shared) {
         self.catalog = catalog
@@ -50,6 +65,9 @@ final class ShopViewModel: ObservableObject {
         bestSelling = snapshot.recommendations
         recentlyViewed = snapshot.recentlyViewed
         eventBox = snapshot.eventBox
+        eventBoxProducts = snapshot.eventBox.first.map {
+            HomeDTOMapper.eventPageProducts(from: $0.pageData)
+        } ?? []
         activeEvents = snapshot.activeEvents
         productReels = snapshot.productReels
         sellers = snapshot.sellers

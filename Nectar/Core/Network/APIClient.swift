@@ -89,6 +89,25 @@ actor APIClient {
         }
     }
 
+    /// POST trả raw `Data` (login / schema linh hoạt).
+    func postData<Body: Encodable>(
+        _ path: String,
+        service: APIService = .customer,
+        query: [String: String] = [:],
+        body: Body,
+        authenticated: Bool = true
+    ) async throws -> Data {
+        let encoded = try JSONEncoder().encode(body)
+        return try await requestData(
+            service: service,
+            path: path,
+            method: "POST",
+            query: query,
+            body: encoded,
+            authenticated: authenticated
+        )
+    }
+
     private func requestData(
         service: APIService,
         path: String,
@@ -124,9 +143,15 @@ actor APIClient {
                 throw AppError.network("Phản hồi không hợp lệ.")
             }
             if http.statusCode == 401 {
+                if !authenticated, let message = Self.apiMessage(from: data) {
+                    throw AppError.validation(message)
+                }
                 throw AppError.unauthorized
             }
             guard (200...299).contains(http.statusCode) else {
+                if let message = Self.apiMessage(from: data) {
+                    throw AppError.validation(message)
+                }
                 throw AppError.network("HTTP \(http.statusCode)")
             }
             return data
@@ -134,7 +159,7 @@ actor APIClient {
             let ms = Int(Date().timeIntervalSince(started) * 1000)
             NetworkLogger.logResponse(nil, data: nil, error: error, durationMs: ms)
 
-            if case .unauthorized = error, retryCount == 0 {
+            if case .unauthorized = error, authenticated, retryCount == 0 {
                 let refreshed = try await refreshTokenIfNeeded()
                 if refreshed {
                     return try await requestData(
@@ -204,5 +229,22 @@ actor APIClient {
         }
         _ = storage.createSession()
         return true
+    }
+
+    /// Đọc `message` / `error` từ envelope lỗi Printerval.
+    private static func apiMessage(from data: Data) -> String? {
+        guard
+            let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return nil }
+
+        for key in ["message", "error", "error_message", "msg"] {
+            if let s = root[key] as? String, !s.isEmpty { return s }
+        }
+        if let result = root["result"] as? [String: Any] {
+            for key in ["message", "error", "error_message"] {
+                if let s = result[key] as? String, !s.isEmpty { return s }
+            }
+        }
+        return nil
     }
 }
