@@ -3,13 +3,12 @@ import SwiftUI
 /// Title + stock + rating + seller.
 struct ProductInfoHeader: View {
     let product: ProductDetail
+    @Binding var showReturnsSheet: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(product.name)
-                .font(NectarFonts.elmsSans(size: 18.scaled, weight: .bold))
-                .foregroundStyle(NectarColors.textPrimary)
-                .fixedSize(horizontal: false, vertical: true)
+            
+            ExpandableText(text: product.name, lineLimit: 1)
 
             HStack(spacing: 12) {
                 Label {
@@ -21,7 +20,9 @@ struct ProductInfoHeader: View {
                 }
                 .foregroundStyle(NectarColors.textPrimary)
 
-                Button {} label: {
+                Button {
+                    showReturnsSheet = true
+                } label: {
                     HStack(spacing: 4) {
                         Text("FREE Returns")
                             .font(NectarFonts.elmsSans(size: 13.scaled, weight: .medium))

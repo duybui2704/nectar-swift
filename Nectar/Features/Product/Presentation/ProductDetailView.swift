@@ -4,6 +4,7 @@ import SwiftUI
 struct ProductDetailView: View {
     @StateObject private var viewModel: ProductDetailViewModel
     @EnvironmentObject private var router: AppRouter
+    @State private var showReturnsSheet = false
 
     init(productId: String) {
         _viewModel = StateObject(wrappedValue: ProductDetailViewModel(productId: productId))
@@ -23,6 +24,47 @@ struct ProductDetailView: View {
             }
         }
         .background(NectarColors.surface.ignoresSafeArea())
+        .customBottomSheet(
+            isPresented: $showReturnsSheet,
+            height: .fraction(0.5),
+            cornerRadius: NectarMetrics.radius.md,
+            showGrabber: false
+        ) {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Free Returns")
+                    .font(.system(size: NectarMetrics.font.title, weight: .bold))
+                    .foregroundColor(NectarColors.black)
+                HStack {
+                    Image(systemName: "australsign.circle")
+                        .frame(width: NectarMetrics.icon.md, height: NectarMetrics.icon.md)
+                        .foregroundColor(NectarColors.success)
+                    Text("Return this item for free")
+                        .font(.system(size: NectarMetrics.font.textNormal, weight: .bold))
+                        .foregroundColor(NectarColors.textPrimary)
+                }
+                
+                Text("Free returns are available for the shipping address you chose. You can return the item for any reason within 30 days of purchase.")
+                    .font(.system(size: NectarMetrics.font.textNormal, weight: .regular))
+                    .foregroundColor(NectarColors.textPrimary)
+                Button {
+                  
+                } label: {
+                    Text("Read the full returns policy")
+                        .font(.system(size: NectarMetrics.font.textNormal, weight: .medium))
+                        .foregroundColor(NectarColors.white)
+                       
+                }
+                .padding(.vertical, 4)
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, maxHeight: NectarMetrics.button.inputHeight, alignment: .init(horizontal: .center, vertical: .center))
+                .background(NectarColors.blueDark)
+                .cornerRadius(NectarMetrics.radius.sm)
+                .padding(.top, NectarMetrics.s(36))
+                Spacer(minLength: 0)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        }
         .navigationBarHidden(true)
         .task(id: viewModel.productId) {
             await viewModel.load()
@@ -65,7 +107,7 @@ struct ProductDetailView: View {
     @ViewBuilder
     private var contentSections: some View {
         if let product = viewModel.product {
-            ProductInfoHeader(product: product)
+            ProductInfoHeader(product: product, showReturnsSheet: $showReturnsSheet)
         }
 
         ProductVariantPickers(variants: $viewModel.variants)
