@@ -70,7 +70,8 @@ private struct SellerSpotlightCard: View {
             RemoteImageView(
                 url: seller.avatarURL,
                 contentMode: .fill,
-                showsLoadingIndicator: false
+                showsLoadingIndicator: false,
+                maxPixelSize: 160
             )
             .frame(width: iconW, height: iconW)
             .clipShape(RoundedRectangle(cornerRadius: iconW / 2, style: .continuous))

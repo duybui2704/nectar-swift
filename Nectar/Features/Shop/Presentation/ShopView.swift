@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct ShopView: View {
+    @EnvironmentObject private var router: AppRouter
     @StateObject private var viewModel = ShopViewModel()
     @HotReloadObserver private var _hr
+
+    private var isHomeVisible: Bool { router.selectedTab == .shop }
 
     var body: some View {
         ZStack {
@@ -20,7 +23,8 @@ struct ShopView: View {
                 LazyVStack(alignment: .leading, spacing: NectarMetrics.spacing.lg) {
                     ShopLocationHeader(
                         categories: viewModel.categories,
-                        isCategoriesLoading: viewModel.showCategoriesSkeleton
+                        isCategoriesLoading: viewModel.showCategoriesSkeleton,
+                        isTitleAnimating: isHomeVisible
                     )
                     .screenPadding()
 
@@ -107,6 +111,8 @@ struct ShopView: View {
 struct ShopLocationHeader: View {
     var categories: [CategoryTree] = []
     var isCategoriesLoading: Bool = false
+    /// Pause rainbow khi tab Home không visible — giảm CPU nền.
+    var isTitleAnimating: Bool = true
 
     @HotReloadObserver private var _hr
 
@@ -151,8 +157,8 @@ struct ShopLocationHeader: View {
 
     private var nectarTitle: some View {
         HStack {
-            // ~12fps đủ cho shimmer; 30fps tốn CPU liên tục trên Home.
-            TimelineView(.animation(minimumInterval: 1.0 / 12.0, paused: false)) { context in
+            // ~12fps đủ cho shimmer; pause khi không ở Home.
+            TimelineView(.animation(minimumInterval: 1.0 / 12.0, paused: !isTitleAnimating)) { context in
                 let t = context.date.timeIntervalSinceReferenceDate
                 let phase = CGFloat(t.truncatingRemainder(dividingBy: period) / period)
 

@@ -22,7 +22,12 @@ struct ProductGalleryView: View {
                 } else {
                     ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                         ZStack {
-                            RemoteImageView(url: item.imageURL, contentMode: .fit, showsLoadingIndicator: true)
+                            RemoteImageView(
+                                url: item.imageURL,
+                                contentMode: .fit,
+                                showsLoadingIndicator: true,
+                                maxPixelSize: 1200
+                            )
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .background(Color(hex: 0xF5F5F5))
 

@@ -37,7 +37,12 @@ struct HomeBannerCarousel: View {
             // Overlay + clipped: chặn AsyncImage `.fill` tràn ra ngoài (clipShape một mình thường fail)
             Color.clear
                 .overlay {
-                    RemoteImageView(url: banner.imageURL, contentMode: .fill)
+                    RemoteImageView(
+                        url: banner.imageURL,
+                        contentMode: .fill,
+                        showsLoadingIndicator: false,
+                        maxPixelSize: 900
+                    )
                 }
                 .clipped()
 

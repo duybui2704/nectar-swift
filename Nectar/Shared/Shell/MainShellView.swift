@@ -1,12 +1,15 @@
 import Foundation
 import SwiftUI
 
-/// Tab shell: giữ sống mọi tab (không `.id(selectedTab)`) → tránh recreate ViewModel / re-download ảnh.
+/// Tab shell: giữ sống tab đã mở (không `.id(selectedTab)`).
+/// Lazy-mount tab chưa từng chọn → tránh Explore/Cart… cạnh tranh CPU/network với Home lần đầu.
 /// Điều hướng push/modal/deep link đi qua `AppRouter`.
 struct MainShellView: View {
     @EnvironmentObject private var session: AppSession
     @EnvironmentObject private var router: AppRouter
     @StateObject private var tabBarVisibility = TabBarVisibility()
+    /// Chỉ mount tab đã từng chọn — Home (shop) luôn có vì là tab mặc định.
+    @State private var mountedTabs: Set<MainTab> = [.shop]
     @HotReloadObserver private var _hr
 
     var body: some View {
@@ -17,24 +20,32 @@ struct MainShellView: View {
                         ShopView()
                     }
                 }
-                tabPage(.explore) {
-                    RoutedNavigationStack(path: router.path(for: .explore)) {
-                        ExploreView()
+                if mountedTabs.contains(.explore) {
+                    tabPage(.explore) {
+                        RoutedNavigationStack(path: router.path(for: .explore)) {
+                            ExploreView()
+                        }
                     }
                 }
-                tabPage(.cart) {
-                    RoutedNavigationStack(path: router.path(for: .cart)) {
-                        CartView()
+                if mountedTabs.contains(.cart) {
+                    tabPage(.cart) {
+                        RoutedNavigationStack(path: router.path(for: .cart)) {
+                            CartView()
+                        }
                     }
                 }
-                tabPage(.favourite) {
-                    RoutedNavigationStack(path: router.path(for: .favourite)) {
-                        FavouriteView()
+                if mountedTabs.contains(.favourite) {
+                    tabPage(.favourite) {
+                        RoutedNavigationStack(path: router.path(for: .favourite)) {
+                            FavouriteView()
+                        }
                     }
                 }
-                tabPage(.account) {
-                    RoutedNavigationStack(path: router.path(for: .account)) {
-                        ProfileView()
+                if mountedTabs.contains(.account) {
+                    tabPage(.account) {
+                        RoutedNavigationStack(path: router.path(for: .account)) {
+                            ProfileView()
+                        }
                     }
                 }
             }
@@ -49,7 +60,8 @@ struct MainShellView: View {
         }
         .environmentObject(tabBarVisibility)
         .ignoresSafeArea(.keyboard)
-        .onChange(of: router.selectedTab) { _, _ in
+        .onChange(of: router.selectedTab) { _, tab in
+            mountedTabs.insert(tab)
             syncTabBarForNavigation()
         }
         .onChange(of: router.shopPath.count) { _, _ in syncTabBarForNavigation() }
@@ -58,6 +70,7 @@ struct MainShellView: View {
         .onChange(of: router.favouritePath.count) { _, _ in syncTabBarForNavigation() }
         .onChange(of: router.accountPath.count) { _, _ in syncTabBarForNavigation() }
         .onAppear {
+            mountedTabs.insert(router.selectedTab)
             syncTabBarForNavigation()
         }
         .sheet(item: $router.presentedSheet) { sheet in

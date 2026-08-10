@@ -35,7 +35,12 @@ struct CategoryList: View {
 
     private func categoryItem(_ category: CategoryTree) -> some View {
         VStack(spacing: NectarMetrics.spacing.xxs) {
-            RemoteImageView(url: category.resolvedImageURL, contentMode: .fill)
+            RemoteImageView(
+                url: category.resolvedImageURL,
+                contentMode: .fill,
+                showsLoadingIndicator: false,
+                maxPixelSize: 128
+            )
                 .frame(width: 58.scaled, height: 58.scaled)
                 .clipShape(Circle())
                 .overlay {

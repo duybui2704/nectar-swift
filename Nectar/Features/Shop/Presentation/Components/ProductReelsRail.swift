@@ -51,7 +51,8 @@ struct ProductReelCardView: View {
             RemoteImageView(
                 url: reel.thumbnailURL,
                 contentMode: .fill,
-                showsLoadingIndicator: false
+                showsLoadingIndicator: false,
+                maxPixelSize: 400
             )
 
             LinearGradient(

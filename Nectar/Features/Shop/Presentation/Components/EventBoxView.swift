@@ -42,7 +42,8 @@ struct EventBoxView: View {
                     RemoteImageView(
                         url: event.bannerURL,
                         contentMode: .fill,
-                        showsLoadingIndicator: false
+                        showsLoadingIndicator: false,
+                        maxPixelSize: 900
                     )
                 }
                 .clipped()
