@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
-   uuid = "9DA3348A-629E-43F1-85DD-7B54C91459BA"
+   uuid = "46A41CEF-F1AF-4676-93E6-C4BC466B10C5"
    type = "1"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
-            uuid = "D3EAFE27-7D3E-4F66-B9D0-0E702CFAE49A"
+            uuid = "2D0BDD70-A568-46AB-8B3B-6253FC11DBB7"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -18,7 +18,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SwiftErrorBreakpoint">
          <BreakpointContent
-            uuid = "D906B9FC-7266-4310-8CD6-7026B30DC17F"
+            uuid = "3594C205-F98D-4C1C-9A07-082745FBA04A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes">
@@ -31,12 +31,32 @@
                   </ActionContent>
                </BreakpointActionProxy>
             </Actions>
+            <Locations>
+               <Location
+                  uuid = "3594C205-F98D-4C1C-9A07-082745FBA04A - f030214c10979e26"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "swift_willThrow"
+                  moduleName = "libswiftCore.dylib"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
+               <Location
+                  uuid = "3594C205-F98D-4C1C-9A07-082745FBA04A - 189b4a6baed95649"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "swift_willThrowTypedImpl"
+                  moduleName = "libswiftCore.dylib"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
-            uuid = "4987E3F5-A467-4137-BC4F-55FC1C0DDEFC"
+            uuid = "60489621-C4CE-4578-8A9D-D608B46267DF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
@@ -53,7 +73,7 @@
             </Actions>
             <Locations>
                <Location
-                  uuid = "4987E3F5-A467-4137-BC4F-55FC1C0DDEFC - ba3ad5676a792f38"
+                  uuid = "60489621-C4CE-4578-8A9D-D608B46267DF - ba3ad5676a792f38"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -67,7 +87,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
-            uuid = "3CE13057-F2C2-4E0C-944D-3DCF622980D0"
+            uuid = "3C6E4516-1961-4800-A92E-32A914FD5359"
             shouldBeEnabled = "Yes"
             condition = "![(NSThread *)[NSThread currentThread] isMainThread]"
             ignoreCount = "0"
@@ -85,7 +105,7 @@
             </Actions>
             <Locations>
                <Location
-                  uuid = "3CE13057-F2C2-4E0C-944D-3DCF622980D0 - dd11fc58e5fa2394"
+                  uuid = "3C6E4516-1961-4800-A92E-32A914FD5359 - dd11fc58e5fa2394"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -99,7 +119,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
-            uuid = "90DB0D5A-2269-446D-BD5D-43980C935EB8"
+            uuid = "BF5E576F-577F-4877-B602-6CF156EE5EF5"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
