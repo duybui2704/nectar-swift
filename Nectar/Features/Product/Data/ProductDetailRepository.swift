@@ -30,7 +30,7 @@ final class ProductDetailRepository: ProductDetailProviding {
                 }
             }
         }
-
+        NectarLog.log("snapshot.gallery \(snapshot.gallery)")
         // Seed gallery từ ảnh product nếu gallery API trống.
         if snapshot.gallery.isEmpty, let imageURL = snapshot.product?.imageURL {
             snapshot.gallery = [
@@ -101,7 +101,10 @@ final class ProductDetailRepository: ProductDetailProviding {
     private static func galleryChunk(_ id: String) async -> CriticalChunk {
         do {
             let data = try await PrintervalAPI.fetchProductGallery(id: id)
-            return .gallery(ProductDTOMapper.gallery(from: data))
+            NectarLog.log("data === \(data)")
+            let dataMapper = ProductDTOMapper.gallery(from: data)
+          
+            return .gallery(dataMapper)
         } catch {
             log("gallery", error)
             return .gallery([])

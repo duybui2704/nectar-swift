@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Shared breakpoints — Nectar.
-  Hiện trong Breakpoint Navigator (⌘8). Bật/tắt từng cái theo nhu cầu.
-  Docs: docs/debugging-oslog-proxyman.md
--->
 <Bucket
+   uuid = "9DA3348A-629E-43F1-85DD-7B54C91459BA"
    type = "1"
    version = "2.0">
    <Breakpoints>
-
-      <!-- ObjC exception (crash NSException) — bật khi crash lạ -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
+            uuid = "D3EAFE27-7D3E-4F66-B9D0-0E702CFAE49A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -20,11 +15,10 @@
             stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- Swift throw — log rồi continue (không dừng app). Bật stop khi đang debug lỗi cụ thể. -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SwiftErrorBreakpoint">
          <BreakpointContent
+            uuid = "D906B9FC-7266-4310-8CD6-7026B30DC17F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes">
@@ -39,11 +33,10 @@
             </Actions>
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- Auto Layout conflict — rất hữu ích khi UI vỡ constraint -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
+            uuid = "4987E3F5-A467-4137-BC4F-55FC1C0DDEFC"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
@@ -59,17 +52,25 @@
                </BreakpointActionProxy>
             </Actions>
             <Locations>
+               <Location
+                  uuid = "4987E3F5-A467-4137-BC4F-55FC1C0DDEFC - ba3ad5676a792f38"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UIViewAlertForUnsatisfiableConstraints"
+                  moduleName = "UIKitCore"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- UI update ngoài main thread (animation) -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
+            uuid = "3CE13057-F2C2-4E0C-944D-3DCF622980D0"
             shouldBeEnabled = "Yes"
-            ignoreCount = "0"
             condition = "![(NSThread *)[NSThread currentThread] isMainThread]"
+            ignoreCount = "0"
             continueAfterRunningActions = "No"
             symbolName = "+[UIView animateWithDuration:animations:]"
             moduleName = "">
@@ -83,14 +84,22 @@
                </BreakpointActionProxy>
             </Actions>
             <Locations>
+               <Location
+                  uuid = "3CE13057-F2C2-4E0C-944D-3DCF622980D0 - dd11fc58e5fa2394"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "+[UIView(UIViewAnimationWithBlocks) animateWithDuration:animations:]"
+                  moduleName = "UIKitCore"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- URLSession data task resume — bắt đầu network call (kết hợp Proxyman) -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
+            uuid = "90DB0D5A-2269-446D-BD5D-43980C935EB8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
@@ -109,6 +118,5 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-
    </Breakpoints>
 </Bucket>

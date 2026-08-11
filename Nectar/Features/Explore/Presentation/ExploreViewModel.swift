@@ -11,9 +11,13 @@ final class ExploreViewModel: ObservableObject {
 
     private let catalog: HomeCatalogProviding
 
-    init(catalog: HomeCatalogProviding = HomeRepository.shared) {
-        self.catalog = catalog
-    }
+    init(catalog: HomeCatalogProviding) {
+         self.catalog = catalog
+     }
+
+     convenience init() {
+         self.init(catalog: HomeRepository.shared)
+     }
 
     var filteredCategories: [CategoryTree] {
         let q = searchText.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Product Detail — critical APIs first, secondary rails load in background.
 struct ProductDetailView: View {
@@ -7,7 +8,9 @@ struct ProductDetailView: View {
     @State private var showReturnsSheet = false
 
     init(productId: String) {
-        _viewModel = StateObject(wrappedValue: ProductDetailViewModel(productId: productId))
+          _viewModel = StateObject(
+              wrappedValue: ProductDetailViewModel(productId: productId)
+          )
     }
 
     var body: some View {
@@ -26,7 +29,7 @@ struct ProductDetailView: View {
         .background(NectarColors.surface.ignoresSafeArea())
         .customBottomSheet(
             isPresented: $showReturnsSheet,
-            height: .fraction(0.5),
+            height: .fraction(0.35),
             cornerRadius: NectarMetrics.radius.md,
             showGrabber: false
         ) {
@@ -36,7 +39,7 @@ struct ProductDetailView: View {
                     .foregroundColor(NectarColors.black)
                 HStack {
                     Image(systemName: "australsign.circle")
-                        .frame(width: NectarMetrics.icon.md, height: NectarMetrics.icon.md)
+                        .font(.system(size: NectarMetrics.icon.md))
                         .foregroundColor(NectarColors.success)
                     Text("Return this item for free")
                         .font(.system(size: NectarMetrics.font.textNormal, weight: .bold))

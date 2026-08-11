@@ -141,30 +141,38 @@ enum ProductDTOMapper {
     // MARK: - Gallery
 
     static func gallery(from data: Data) -> [ProductGalleryItem] {
-        let items = arrayPayload(from: data, preferredKeys: [
-            "gallery", "images", "items", "media", "photos", "result",
-        ])
+        guard
+            let json = try? JSONSerialization.jsonObject(with: data),
+            let root = json as? [String: Any],
+            let result = root["result"] as? [String: Any]
+        else {
+            return []
+        }
 
-        return items.enumerated().compactMap { index, item -> ProductGalleryItem? in
-            if let s = item as? String {
-                guard let imageURL = makeURL(s) else { return nil }
-                return ProductGalleryItem(id: "g-\(index)", imageURL: imageURL, isVideo: false)
+        let items = result.values.prefix(10).flatMap { value -> [Any] in
+            if let array = value as? [Any] {
+                return array
             }
 
-            guard let dict = item as? [String: Any] else { return nil }
+            return [value]
+        }
 
-            let id = string(dict, keys: ["id", "uuid", "media_id"]) ?? "g-\(index)"
-            let imageURL = url(dict, keys: ["url", "src", "image", "image_url", "imageUrl", "path", "thumbnail"])
-            let type = (string(dict, keys: ["type", "media_type", "mediaType"]) ?? "").lowercased()
-            let isVideo = type.contains("video")
-                || bool(dict, keys: ["is_video", "isVideo", "video"]) == true
-                || url(dict, keys: ["video_url", "videoUrl"]) != nil
+        return items.compactMap { item in
+            guard let string = item as? String else {
+                return nil
+            }
 
-            guard imageURL != nil || isVideo else { return nil }
-            return ProductGalleryItem(id: id, imageURL: imageURL, isVideo: isVideo)
+            guard let imageURL = makeURL(string) else {
+                return nil
+            }
+
+            return ProductGalleryItem(
+                id: UUID().uuidString,
+                imageURL: imageURL,
+                isVideo: false
+            )
         }
     }
-
     // MARK: - Variant
 
     static func variants(from data: Data) -> ProductVariantState {

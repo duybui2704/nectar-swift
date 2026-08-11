@@ -45,7 +45,7 @@ struct CategoryTreeChild: Codable {
 }
 
 // MARK: - CategoryTree
-struct CategoryTree: Codable {
+struct CategoryTree: Codable, Sendable {
     let id: Int
     let name: String
     let type: TypeEnum

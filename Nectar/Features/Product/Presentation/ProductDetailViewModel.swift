@@ -60,11 +60,20 @@ final class ProductDetailViewModel: ObservableObject {
         return false
     }
 
-    init(productId: String, repository: ProductDetailProviding = ProductDetailRepository.shared) {
+    init(
+        productId: String,
+        repository: ProductDetailProviding
+    ) {
         self.productId = productId
         self.repository = repository
     }
 
+    convenience init(productId: String) {
+        self.init(
+            productId: productId,
+            repository: ProductDetailRepository.shared
+        )
+    }
     /// Phase 1: await product + gallery + variant → first paint.
     /// Phase 2: fire-and-forget secondary APIs.
     func load(force: Bool = false) async {
@@ -133,7 +142,7 @@ final class ProductDetailViewModel: ObservableObject {
         gallery = snapshot.gallery
         variants = snapshot.variants
     }
-
+   
     private func applySecondary(_ snapshot: ProductDetailSnapshot) {
         if let hint = snapshot.bulkPriceHint {
             bulkPriceHint = hint

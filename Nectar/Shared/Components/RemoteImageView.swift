@@ -95,9 +95,9 @@ final class RemoteImageDecoder: @unchecked Sendable {
     func image(for url: URL, maxPixelSize: CGFloat) async -> UIImage? {
         let key = "\(url.absoluteString)#\(Int(maxPixelSize))" as NSString
 
-        lock.lock()
-        let cached = memory.object(forKey: key)
-        lock.unlock()
+        let cached = lock.withLock {
+            memory.object(forKey: key)
+        }
         if let cached { return cached }
 
         let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 30)
@@ -129,9 +129,10 @@ final class RemoteImageDecoder: @unchecked Sendable {
                 downsampled.size.width * downsampled.size.height
                     * downsampled.scale * downsampled.scale * 4
             )
-            lock.lock()
-            memory.setObject(downsampled, forKey: key, cost: max(cost, 1))
-            lock.unlock()
+         
+            lock.withLock {
+                memory.setObject(downsampled, forKey: key, cost: max(cost, 1))
+            }
             return downsampled
         } catch {
             return nil

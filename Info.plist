@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>vi</string>
 	<key>CFBundleDisplayName</key>
-	<string>Nectar</string>
+	<string>Nectar Market</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -18,10 +18,6 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
-	<key>CFBundleVersion</key>
-	<string>1</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -33,8 +29,20 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Nectar dùng Face ID để đăng nhập an toàn vào tài khoản ngân hàng demo.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>GreatVibes-Regular.ttf</string>
+		<string>ElmsSans-Regular.ttf</string>
+		<string>ElmsSans-Medium.ttf</string>
+		<string>ElmsSans-SemiBold.ttf</string>
+		<string>ElmsSans-Bold.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -45,14 +53,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>GreatVibes-Regular.ttf</string>
-		<string>ElmsSans-Regular.ttf</string>
-		<string>ElmsSans-Medium.ttf</string>
-		<string>ElmsSans-SemiBold.ttf</string>
-		<string>ElmsSans-Bold.ttf</string>
 	</array>
 </dict>
 </plist>

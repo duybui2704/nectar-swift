@@ -87,13 +87,19 @@ struct ProductGalleryView: View {
         .frame(height: galleryHeight.scaled)
     }
 
+    @ViewBuilder
     private var pageDots: some View {
-        HStack(spacing: 6) {
-            let count = max(items.count, 1)
-            ForEach(0..<count, id: \.self) { index in
-                Circle()
-                    .fill(index == page ? NectarColors.textPrimary : NectarColors.border)
-                    .frame(width: 6, height: 6)
+        if items.count > 1 {
+            HStack(spacing: 6) {
+                ForEach(0..<items.count, id: \.self) { index in
+                    Circle()
+                        .fill(
+                            index == page
+                            ? NectarColors.green
+                                : NectarColors.border
+                        )
+                        .frame(width: 6, height: 6)
+                }
             }
         }
     }

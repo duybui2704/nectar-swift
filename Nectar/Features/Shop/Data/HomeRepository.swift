@@ -10,10 +10,13 @@ final class HomeRepository: HomeCatalogProviding {
     /// Shop + Explore (và mọi caller) share 1 in-flight load — tránh race decode/network.
     private var inFlightLoad: Task<HomeCatalog, Never>?
 
-    init(store: HomeCatalogStore = .shared) {
-        self.store = store
-    }
+    init(store: HomeCatalogStore) {
+          self.store = store
+      }
 
+      convenience init() {
+          self.init(store: HomeCatalogStore.shared)
+      }
     func cachedCatalog() -> HomeCatalog {
         store.snapshot()
     }

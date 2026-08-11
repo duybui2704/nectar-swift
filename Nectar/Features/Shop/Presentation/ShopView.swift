@@ -34,11 +34,6 @@ struct ShopView: View {
                             SkeletonLayout.banner()
                         }
 
-                    ProductReelsRail(reels: viewModel.productReels)
-                        .skeleton(isLoading: viewModel.showReelsSkeleton) {
-                            SkeletonLayout.reelsRail()
-                        }
-
                     ProductHorizontalRail(
                         title: "Recently Viewed",
                         products: viewModel.recentlyViewed,
@@ -51,6 +46,11 @@ struct ShopView: View {
                     .skeleton(isLoading: viewModel.showRecentlyViewedSkeleton) {
                         SkeletonLayout.productRail(title: true, count: 3)
                     }
+                    
+                    ProductReelsRail(reels: viewModel.productReels)
+                        .skeleton(isLoading: viewModel.showReelsSkeleton) {
+                            SkeletonLayout.reelsRail()
+                        }
 
                     ProductHorizontalRail(
                         title: "Exclusive Offer",
@@ -96,6 +96,7 @@ struct ShopView: View {
                     }
                 }
                 .padding(.top, NectarMetrics.spacing.md)
+                .ignoresSafeArea()
             }
         }
         .task {
