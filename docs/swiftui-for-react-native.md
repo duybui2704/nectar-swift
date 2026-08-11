@@ -4,10 +4,13 @@ Hướng dẫn học **Nectar** nếu bạn đã quen React Native (PostPay / Zu
 
 Đọc theo thứ tự section. Mỗi phần map thẳng sang code trong repo.
 
+**Cheat-sheet state/data (senior RN):** [rn-swiftui-mental-model.md](./rn-swiftui-mental-model.md) — props, `@State` / ViewModel, Context, server state (React Query mindset), hooks → `.task` / `.onChange`.
+
 ---
 
 ## Mục lục
 
+0. [Mental model state (cheat-sheet)](./rn-swiftui-mental-model.md)
 1. [Big picture — app chạy thế nào](#1-big-picture--app-chạy-thế-nào)
 2. [Bảng map RN → SwiftUI](#2-bảng-map-rn--swiftui)
 3. [Swift basics bạn cần trước UI](#3-swift-basics-bạn-cần-trước-ui)
@@ -283,6 +286,8 @@ Trong SwiftUI: `private var header: some View` hoặc `struct Header: View`.
 ---
 
 ## 5. State — useState / Zustand / Context
+
+> **Tra cứu nhanh (props / global / server state / hooks):** xem [rn-swiftui-mental-model.md](./rn-swiftui-mental-model.md). Section này là bản rút gọn trong guide dài; cheat-sheet kia map đúng pattern grocery (`ShopViewModel`, `HomeCatalogStore`, login mutation).
 
 ### `@State` — local UI state
 

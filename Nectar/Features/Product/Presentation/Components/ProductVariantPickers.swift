@@ -1,5 +1,12 @@
 import SwiftUI
 
+enum VariantSection {
+    case colors
+    case types
+    case styles
+    case sizes
+    case printLocations
+}
 /// Color / Type / Style / Size / Print location pickers.
 struct ProductVariantPickers: View {
     @Binding var variants: ProductVariantState
@@ -17,13 +24,16 @@ struct ProductVariantPickers: View {
             }
             if !variants.sizes.isEmpty {
                 sizeSection
-            }
+            }            
             if !variants.printLocations.isEmpty {
                 printSection
             }
         }
         .padding(.horizontal, NectarMetrics.layout.screenHorizontal)
         .padding(.top, 16)
+        .onAppear {
+          
+        }
     }
 
     // MARK: - Color
@@ -44,6 +54,8 @@ struct ProductVariantPickers: View {
 
     private func colorSwatch(_ color: ProductColorOption) -> some View {
         let selected = variants.selectedColorId == color.id
+        let fill = NectarColorMap.resolve(name: color.name, hex: color.hex)
+
         return Button {
             variants.selectedColorId = color.id
         } label: {
@@ -51,24 +63,25 @@ struct ProductVariantPickers: View {
                 if let url = color.imageURL {
                     RemoteImageView(url: url, contentMode: .fill, showsLoadingIndicator: false)
                 } else {
-                    Circle()
-                        .fill(swatchColor(color.hex))
+                    // Giống RN: fill theo `item.name` (ColorMap), không phụ thuộc image.
+                    Circle().fill(fill)
                 }
 
                 if selected {
                     Image(systemName: "checkmark")
                         .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(checkmarkTint(for: color.hex))
+                        .foregroundStyle(NectarColorMap.contrastingForeground(for: fill))
                 }
             }
             .frame(width: 36.scaled, height: 36.scaled)
-            .clipShape(Circle())
             .overlay(
                 Circle()
-                    .stroke(selected ? NectarColors.textPrimary : NectarColors.border, lineWidth: selected ? 2 : 1)
+                    .stroke(selected ? NectarColors.green : NectarColors.border, lineWidth: NectarMetrics.s(1.5))
             )
+            .clipShape(Circle())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(color.name)
     }
 
     // MARK: - Type
@@ -229,28 +242,5 @@ struct ProductVariantPickers: View {
             return "\(style.title) | \(price)"
         }
         return style.title
-    }
-
-    private func swatchColor(_ hex: String?) -> Color {
-        guard let hex, let value = parseHex(hex) else {
-            return Color(hex: 0xCCCCCC)
-        }
-        return Color(hex: value)
-    }
-
-    private func checkmarkTint(for hex: String?) -> Color {
-        guard let hex, let value = parseHex(hex) else { return .white }
-        let r = Double((value >> 16) & 0xFF)
-        let g = Double((value >> 8) & 0xFF)
-        let b = Double(value & 0xFF)
-        let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-        return luminance > 0.65 ? NectarColors.textPrimary : .white
-    }
-
-    private func parseHex(_ raw: String) -> UInt? {
-        var s = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-        if s.hasPrefix("#") { s.removeFirst() }
-        guard s.count == 6, let value = UInt(s, radix: 16) else { return nil }
-        return value
     }
 }

@@ -244,12 +244,14 @@ struct ProductDetailView: View {
     // MARK: - Gallery helper
 
     private func gallery(items: [ProductGalleryItem], showsActions: Bool) -> some View {
-        ProductGalleryView(
-            items: items,
-            variantThumbURL: viewModel.variants.colors
+        let variantThumbURL = viewModel.variants.colors
                 .first(where: { $0.id != viewModel.variants.selectedColorId })?
                 .imageURL
-                ?? items.dropFirst().first?.imageURL,
+                ?? items.dropFirst().first?.imageURL
+        
+        return  ProductGalleryView(
+            items: items,
+            variantThumbURL: variantThumbURL,
             isFavorite: viewModel.isFavorite,
             onBack: { router.pop() },
             onShare: {},

@@ -63,7 +63,7 @@ enum PrintervalAPI {
     }
     
     static func fetchWishlist(country: String = "", pageId: Int = 1, pageSize: Int = 50) async throws -> Data {
-        var query: [String: String] = [
+        let query: [String: String] = [
             "country": country,
             "page_size": "\(pageSize)",
             "page_id": "\(pageId)",
