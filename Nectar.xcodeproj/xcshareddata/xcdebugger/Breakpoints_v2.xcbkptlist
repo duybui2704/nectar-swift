@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Shared breakpoints — Nectar.
-  Hiện trong Breakpoint Navigator (⌘8). Bật/tắt từng cái theo nhu cầu.
-  Docs: docs/debugging-oslog-proxyman.md
--->
 <Bucket
+   uuid = "46A41CEF-F1AF-4676-93E6-C4BC466B10C5"
    type = "1"
    version = "2.0">
    <Breakpoints>
-
-      <!-- ObjC exception (crash NSException) — bật khi crash lạ -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
+            uuid = "2D0BDD70-A568-46AB-8B3B-6253FC11DBB7"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -20,11 +15,10 @@
             stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- Swift throw — log rồi continue (không dừng app). Bật stop khi đang debug lỗi cụ thể. -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SwiftErrorBreakpoint">
          <BreakpointContent
+            uuid = "3594C205-F98D-4C1C-9A07-082745FBA04A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes">
@@ -37,13 +31,32 @@
                   </ActionContent>
                </BreakpointActionProxy>
             </Actions>
+            <Locations>
+               <Location
+                  uuid = "3594C205-F98D-4C1C-9A07-082745FBA04A - f030214c10979e26"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "swift_willThrow"
+                  moduleName = "libswiftCore.dylib"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
+               <Location
+                  uuid = "3594C205-F98D-4C1C-9A07-082745FBA04A - 189b4a6baed95649"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "swift_willThrowTypedImpl"
+                  moduleName = "libswiftCore.dylib"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- Auto Layout conflict — rất hữu ích khi UI vỡ constraint -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
+            uuid = "60489621-C4CE-4578-8A9D-D608B46267DF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
@@ -59,17 +72,25 @@
                </BreakpointActionProxy>
             </Actions>
             <Locations>
+               <Location
+                  uuid = "60489621-C4CE-4578-8A9D-D608B46267DF - ba3ad5676a792f38"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UIViewAlertForUnsatisfiableConstraints"
+                  moduleName = "UIKitCore"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- UI update ngoài main thread (animation) -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
+            uuid = "3C6E4516-1961-4800-A92E-32A914FD5359"
             shouldBeEnabled = "Yes"
-            ignoreCount = "0"
             condition = "![(NSThread *)[NSThread currentThread] isMainThread]"
+            ignoreCount = "0"
             continueAfterRunningActions = "No"
             symbolName = "+[UIView animateWithDuration:animations:]"
             moduleName = "">
@@ -83,14 +104,22 @@
                </BreakpointActionProxy>
             </Actions>
             <Locations>
+               <Location
+                  uuid = "3C6E4516-1961-4800-A92E-32A914FD5359 - dd11fc58e5fa2394"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "+[UIView(UIViewAnimationWithBlocks) animateWithDuration:animations:]"
+                  moduleName = "UIKitCore"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-
-      <!-- URLSession data task resume — bắt đầu network call (kết hợp Proxyman) -->
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
+            uuid = "BF5E576F-577F-4877-B602-6CF156EE5EF5"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
@@ -109,6 +138,5 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-
    </Breakpoints>
 </Bucket>

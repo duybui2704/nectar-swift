@@ -61,6 +61,20 @@ enum PrintervalAPI {
             authenticated: false
         )
     }
+    
+    static func fetchWishlist(country: String = "", pageId: Int = 1, pageSize: Int = 50) async throws -> Data {
+        var query: [String: String] = [
+            "country": country,
+            "page_size": "\(pageSize)",
+            "page_id": "\(pageId)",
+        ]
+        return try await APIClient.shared.getData(
+            APIEndpoint.favouriteProducts,
+            service: .customer,
+            query: query,
+            authenticated: true
+        )
+    }
 
     static func fetchEventBox() async throws -> Data {
         try await APIClient.shared.getData(

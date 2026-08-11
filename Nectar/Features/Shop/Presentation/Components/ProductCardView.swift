@@ -4,13 +4,32 @@ import SwiftUI
 struct ProductCardView: View {
     let product: ShopProduct
     var currencySymbol: String = "$"
+    /// `true` khi dùng trong lưới (Favourite…) — card giãn theo cột thay vì width cố định của rail.
+    var expandsToFill: Bool = false
     var onAdd: (() -> Void)?
     var onAddFavourite: ((ProductID) -> Void)?
     var onRemoveFavourite: ((ProductID) -> Void)?
 
-    @State private var isFavourite = false
+    @State private var isFavourite: Bool
 
     private let cardWidth: CGFloat = 173
+
+    init(
+        product: ShopProduct,
+        currencySymbol: String = "$",
+        expandsToFill: Bool = false,
+        onAdd: (() -> Void)? = nil,
+        onAddFavourite: ((ProductID) -> Void)? = nil,
+        onRemoveFavourite: ((ProductID) -> Void)? = nil
+    ) {
+        self.product = product
+        self.currencySymbol = currencySymbol
+        self.expandsToFill = expandsToFill
+        self.onAdd = onAdd
+        self.onAddFavourite = onAddFavourite
+        self.onRemoveFavourite = onRemoveFavourite
+        _isFavourite = State(initialValue: product.isFavorite)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -81,7 +100,9 @@ struct ProductCardView: View {
             .padding(.horizontal, NectarMetrics.spacing.sm)
             .padding(.bottom, NectarMetrics.spacing.sm)
         }
-        .frame(width: cardWidth.scaled, height: 230.scaled)
+        .frame(height: 230.scaled)
+        .frame(width: expandsToFill ? nil : cardWidth.scaled)
+        .frame(maxWidth: expandsToFill ? .infinity : nil)
         .background(NectarColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.radius.lg, style: .continuous))
         .overlay(

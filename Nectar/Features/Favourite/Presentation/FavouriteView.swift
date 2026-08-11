@@ -1,33 +1,49 @@
 import SwiftUI
 
 struct FavouriteView: View {
+    @StateObject private var viewModel = FavouriteViewModel()
+
+    private let columns = [
+        GridItem(.flexible(), spacing: NectarMetrics.spacing.sm),
+        GridItem(.flexible(), spacing: NectarMetrics.spacing.sm),
+    ]
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: NectarMetrics.spacing.md) {
-                EmptyStateView(
-                    title: "No favourites yet",
-                    message: "Tap the heart on a product to save it here."
-                )
-
-                ForEach(0..<10, id: \.self) { index in
-                    HStack(spacing: 12) {
-                        Image(systemName: "heart.fill")
-                            .foregroundStyle(NectarColors.danger.opacity(0.7))
-                        Text("Saved product \(index + 1)")
-                            .font(NectarTypography.headline)
-                        Spacer()
-                    }
-                    .padding(14)
-                    .background(NectarColors.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                }
-            }
-            .screenPadding()
-            .padding(.top, NectarMetrics.spacing.md)
-            .padding(.bottom, 100)
+            content
+                .screenPadding()
+                .padding(.top, NectarMetrics.spacing.md)
+                .padding(.bottom, 100)
         }
         .hidesTabBarOnScroll()
         .background(NectarColors.background.ignoresSafeArea())
         .navigationTitle("Favourite")
+        .task {
+            await viewModel.loadFavourites()
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        if viewModel.isLoading && viewModel.products.isEmpty {
+            ProgressView()
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 40)
+        } else if viewModel.products.isEmpty {
+            EmptyStateView(
+                title: "No favourites yet",
+                message: "Tap the heart on a product to save it here."
+            )
+        } else {
+            LazyVGrid(columns: columns, spacing: NectarMetrics.spacing.sm) {
+                ForEach(viewModel.products) { product in
+                    ProductCardView(
+                        product: product,
+                        currencySymbol: viewModel.currencySymbol,
+                        expandsToFill: true
+                    )
+                }
+            }
+        }
     }
 }

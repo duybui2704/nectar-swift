@@ -70,6 +70,7 @@ enum APIEndpoint {
     static func productRelated(_ id: String) -> String { "product/related/\(id)" }
     static func productRecommendationKeyword(_ id: String) -> String { "product/recommendation-keyword/\(id)" }
     static let boughtTogether = "bought-together/find"
+    static let favouriteProducts = "wishlist"
 }
 
 enum APIConfig {
