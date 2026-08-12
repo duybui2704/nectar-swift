@@ -84,6 +84,14 @@ struct ProductVariantState: Hashable, Sendable {
         printLocations.first(where: { $0.id == selectedPrintId })?.title ?? printLocations.first?.title ?? "—"
     }
 
+    var selectedStyleName: String {
+        guard let style = selectedStyle else { return "—" }
+        if let price = style.priceLabel, !price.isEmpty {
+            return "\(style.title) | \(price)"
+        }
+        return style.title
+    }
+
     var selectedStyle: ProductStyleOption? {
         styles.first(where: { $0.id == selectedStyleId }) ?? styles.first
     }

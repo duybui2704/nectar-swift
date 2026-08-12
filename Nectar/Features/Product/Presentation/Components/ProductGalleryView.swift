@@ -1,90 +1,145 @@
 import SwiftUI
 
-/// Hero gallery — overlay back / share / heart, page dots, video badge, variant thumb.
 struct ProductGalleryView: View {
     let items: [ProductGalleryItem]
     var variantThumbURL: URL?
     var isFavorite: Bool
-    var onBack: () -> Void
-    var onShare: () -> Void
-    var onToggleFavorite: () -> Void
+    /// Chiều cao khung gallery (parent điều khiển collapse).
+    var height: CGFloat = 360.scaled
+    /// 0 = full, 1 = collapsed tối đa — fade dots / thumb.
+    var collapseProgress: CGFloat = 0
+    var onBack: () -> Void = {}
+    var onShare: () -> Void = {}
+    var onToggleFavorite: () -> Void = {}
 
-    @State private var page = 0
+    @HotReloadObserver private var _hr
 
-    private let galleryHeight: CGFloat = 360
+    @State private var pageID: String?
+    @State private var isVariantExpanded = false
+    @Namespace private var galleryAnimation
+
+    private var chromeOpacity: Double {
+        Double(1 - min(1, max(0, collapseProgress)) * 1.25)
+    }
+
+    private var currentPageIndex: Int {
+        guard let pageID,
+              let index = items.firstIndex(where: { $0.id == pageID }) else { return 0 }
+        return index
+    }
 
     var body: some View {
-        ZStack(alignment: .top) {
-            TabView(selection: $page) {
-                if items.isEmpty {
-                    placeholder
-                        .tag(0)
-                } else {
-                    ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                        ZStack {
-                            RemoteImageView(
-                                url: item.imageURL,
-                                contentMode: .fit,
-                                showsLoadingIndicator: true,
-                                maxPixelSize: 1200
-                            )
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .background(Color(hex: 0xF5F5F5))
+        GeometryReader { geo in
+            let pageWidth = max(geo.size.width - 32, 0)
 
-                            if item.isVideo {
-                                Image(systemName: "play.circle.fill")
-                                    .font(.system(size: 28))
-                                    .foregroundStyle(.white.opacity(0.95))
-                                    .shadow(radius: 4)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                                    .padding(16)
-                            }
-                        }
-                        .tag(index)
+            ZStack(alignment: .top) {
+                pagingScroll(pageWidth: pageWidth)
+                    .padding(.horizontal, 16)
+                    .opacity(isVariantExpanded ? 0 : 1)
+
+                bottomChrome
+                    .opacity(isVariantExpanded ? 0 : chromeOpacity)
+                    .allowsHitTesting(chromeOpacity > 0.05)
+
+                if isVariantExpanded, let variantThumbURL {
+                    RemoteImageView(
+                        url: variantThumbURL,
+                        contentMode: .fit,
+                        showsLoadingIndicator: false
+                    )
+                    .matchedGeometryEffect(id: "variantImage", in: galleryAnimation)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(hex: 0xF5F5F5))
+                    .allowsHitTesting(false)
+                    .transition(.identity)
+                }
+            }
+        }
+        .frame(height: height)
+        .frame(maxWidth: .infinity)
+        .background(Color(hex: 0xF5F5F5))
+        .clipped()
+        .onAppear {
+            if pageID == nil {
+                pageID = items.first?.id
+            }
+        }
+        .onChange(of: items.map(\.id)) { _, ids in
+            if pageID == nil || !(ids.contains(pageID ?? "")) {
+                pageID = ids.first
+            }
+        }
+        .hotReload()
+    }
+
+    // MARK: - Horizontal paging (orthogonal với ScrollView dọc → gesture mượt)
+
+    @ViewBuilder
+    private func pagingScroll(pageWidth: CGFloat) -> some View {
+        if items.isEmpty {
+            placeholder
+                .frame(width: pageWidth, height: height)
+        } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 0) {
+                    ForEach(items) { item in
+                        galleryPage(item)
+                            .frame(width: pageWidth, height: max(height, 1))
+                            .id(item.id)
                     }
                 }
+                .scrollTargetLayout()
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(height: galleryHeight.scaled)
-            .background(Color(hex: 0xF5F5F5))
-
-            // Top chrome — tôn trọng Dynamic Island / notch
-            HStack {
-                chromeButton(systemName: "chevron.left", action: onBack)
-                Spacer()
-                chromeButton(systemName: "square.and.arrow.up", action: onShare)
-                chromeButton(
-                    systemName: isFavorite ? "heart.fill" : "heart",
-                    tint: isFavorite ? NectarColors.danger : NectarColors.textPrimary,
-                    action: onToggleFavorite
-                )
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 8)
-            .safeAreaPadding(.top)
-
-            // Bottom: dots + variant thumb
-            HStack(alignment: .bottom) {
-                Spacer()
-                pageDots
-                Spacer()
-            }
-            .overlay(alignment: .bottomTrailing) {
-                if let variantThumbURL {
-                    RemoteImageView(url: variantThumbURL, contentMode: .fill, showsLoadingIndicator: false)
-                        .frame(width: 48.scaled, height: 48.scaled)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .stroke(NectarColors.border, lineWidth: 1)
-                        )
-                        .padding(.trailing, 16)
-                }
-            }
-            .padding(.bottom, 12)
-            .frame(maxHeight: .infinity, alignment: .bottom)
+            .scrollTargetBehavior(.paging)
+            .scrollPosition(id: $pageID)
         }
-        .frame(height: galleryHeight.scaled)
+    }
+
+    private func galleryPage(_ item: ProductGalleryItem) -> some View {
+        ZStack {
+            RemoteImageView(
+                url: item.imageURL,
+                contentMode: .fit,
+                showsLoadingIndicator: true,
+                maxPixelSize: 1200
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(hex: 0xF5F5F5))
+            .opacity(isVariantExpanded && item.id == pageID ? 0 : 1)
+
+            if item.isVideo {
+                Image(systemName: "play.circle.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(.white.opacity(0.95))
+                    .shadow(radius: 4)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                    .padding(16)
+            }
+        }
+    }
+
+    private var bottomChrome: some View {
+        HStack(alignment: .bottom) {
+            Spacer()
+            pageDots
+            Spacer()
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if let variantThumbURL {
+                ExpandableThumbnail(
+                    variantThumbURL: variantThumbURL,
+                    namespace: galleryAnimation,
+                    isExpanded: isVariantExpanded
+                ) { pressing in
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                        isVariantExpanded = pressing
+                    }
+                }
+                .opacity(chromeOpacity)
+            }
+        }
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
     @ViewBuilder
@@ -93,11 +148,7 @@ struct ProductGalleryView: View {
             HStack(spacing: 6) {
                 ForEach(0..<items.count, id: \.self) { index in
                     Circle()
-                        .fill(
-                            index == page
-                            ? NectarColors.green
-                                : NectarColors.border
-                        )
+                        .fill(index == currentPageIndex ? NectarColors.green : NectarColors.border)
                         .frame(width: 6, height: 6)
                 }
             }
@@ -111,19 +162,41 @@ struct ProductGalleryView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(hex: 0xF5F5F5))
     }
+}
 
-    private func chromeButton(
-        systemName: String,
-        tint: Color = NectarColors.textPrimary,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            Image(systemName: systemName)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(tint)
-                .frame(width: 40, height: 40)
-                .background(.ultraThinMaterial, in: Circle())
-        }
-        .buttonStyle(.plain)
+struct ExpandableThumbnail: View {
+    let variantThumbURL: URL?
+    let namespace: Namespace.ID
+    let isExpanded: Bool
+    var onPressChange: (Bool) -> Void
+
+    @GestureState private var isPressing = false
+
+    var body: some View {
+        RemoteImageView(url: variantThumbURL, contentMode: .fill, showsLoadingIndicator: false)
+            .frame(width: 48.scaled, height: 48.scaled)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(NectarColors.border, lineWidth: 1)
+            )
+            .opacity(isExpanded ? 0 : 1)
+            .padding(.trailing, 16)
+            .contentShape(Rectangle())
+            .gesture(
+                LongPressGesture(minimumDuration: 0.2)
+                    .sequenced(before: DragGesture(minimumDistance: 0))
+                    .updating($isPressing) { value, state, _ in
+                        switch value {
+                        case .first(true), .second(true, _):
+                            state = true
+                        default:
+                            state = false
+                        }
+                    }
+            )
+            .onChange(of: isPressing) { _, newValue in
+                onPressChange(newValue)
+            }
     }
 }

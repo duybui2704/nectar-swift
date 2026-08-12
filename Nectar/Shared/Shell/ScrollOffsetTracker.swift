@@ -103,6 +103,96 @@ extension View {
     func hidesTabBarOnScroll() -> some View {
         modifier(HidesTabBarOnScrollModifier())
     }
+
+    /// Đọc `contentOffset.y` (positive khi scroll xuống) qua KVO — không dùng PreferenceKey.
+    func onScrollOffsetChange(_ onChange: @escaping (CGFloat) -> Void) -> some View {
+        background {
+            ScrollOffsetObserver(onOffsetChange: onChange)
+                .frame(width: 0, height: 0)
+                .allowsHitTesting(false)
+        }
+    }
+}
+
+// MARK: - Generic scroll offset (Product Detail collapsing header, …)
+
+private struct ScrollOffsetObserver: UIViewRepresentable {
+    var onOffsetChange: (CGFloat) -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onOffsetChange: onOffsetChange)
+    }
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView(frame: .zero)
+        view.isUserInteractionEnabled = false
+        view.backgroundColor = .clear
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        context.coordinator.onOffsetChange = onOffsetChange
+        context.coordinator.scheduleAttach(to: uiView)
+    }
+
+    static func dismantleUIView(_ uiView: UIView, coordinator: Coordinator) {
+        coordinator.detach()
+    }
+
+    final class Coordinator {
+        var onOffsetChange: (CGFloat) -> Void
+        private weak var scrollView: UIScrollView?
+        private var observation: NSKeyValueObservation?
+        private var pendingOffset: CGFloat = 0
+        private var isDispatchScheduled = false
+
+        init(onOffsetChange: @escaping (CGFloat) -> Void) {
+            self.onOffsetChange = onOffsetChange
+        }
+
+        func scheduleAttach(to view: UIView) {
+            DispatchQueue.main.async { [weak self, weak view] in
+                guard let self, let view else { return }
+                guard let scrollView = view.enclosingScrollView() else { return }
+                self.attach(to: scrollView)
+            }
+        }
+
+        func attach(to scrollView: UIScrollView) {
+            guard self.scrollView !== scrollView else { return }
+            detach()
+            self.scrollView = scrollView
+            observation = scrollView.observe(\.contentOffset, options: [.new]) { [weak self] scroll, change in
+                guard let self else { return }
+                let y = change.newValue?.y ?? scroll.contentOffset.y
+                self.reportOffset(y)
+            }
+        }
+
+        func detach() {
+            observation?.invalidate()
+            observation = nil
+            scrollView = nil
+            isDispatchScheduled = false
+        }
+
+        private func reportOffset(_ offset: CGFloat) {
+            pendingOffset = offset
+            guard !isDispatchScheduled else { return }
+            isDispatchScheduled = true
+
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.isDispatchScheduled = false
+                self.onOffsetChange(self.pendingOffset)
+            }
+        }
+
+        deinit {
+            observation?.invalidate()
+            observation = nil
+        }
+    }
 }
 
 private extension UIView {

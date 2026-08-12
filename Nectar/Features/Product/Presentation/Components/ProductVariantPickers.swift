@@ -1,15 +1,17 @@
 import SwiftUI
 
-enum VariantSection {
-    case colors
-    case types
-    case styles
-    case sizes
-    case printLocations
-}
 /// Color / Type / Style / Size / Print location pickers.
 struct ProductVariantPickers: View {
     @Binding var variants: ProductVariantState
+    /// Sheet style picker — phải gắn ở ProductDetailView (full screen), không gắn ở đây.
+    @Binding var showStylePickerSheet: Bool
+
+    /// < 5 → chip ngang như Type; ≥ 5 → hàng compact + bottom sheet.
+    private static let inlineStyleLimit = 5
+
+    private var usesInlineStylePicker: Bool {
+        variants.styles.count < Self.inlineStyleLimit
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -24,7 +26,7 @@ struct ProductVariantPickers: View {
             }
             if !variants.sizes.isEmpty {
                 sizeSection
-            }            
+            }
             if !variants.printLocations.isEmpty {
                 printSection
             }
@@ -32,7 +34,7 @@ struct ProductVariantPickers: View {
         .padding(.horizontal, NectarMetrics.layout.screenHorizontal)
         .padding(.top, 16)
         .onAppear {
-          
+            NectarLog.log("printSection === \(variants.printLocations)")
         }
     }
 
@@ -63,7 +65,6 @@ struct ProductVariantPickers: View {
                 if let url = color.imageURL {
                     RemoteImageView(url: url, contentMode: .fill, showsLoadingIndicator: false)
                 } else {
-                    // Giống RN: fill theo `item.name` (ColorMap), không phụ thuộc image.
                     Circle().fill(fill)
                 }
 
@@ -93,23 +94,12 @@ struct ProductVariantPickers: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(variants.types) { chip in
-                        let selected = variants.selectedTypeId == chip.id
-                        Button {
+                        optionChip(
+                            title: chip.title,
+                            isSelected: variants.selectedTypeId == chip.id
+                        ) {
                             variants.selectedTypeId = chip.id
-                        } label: {
-                            Text(chip.title)
-                                .font(NectarFonts.elmsSans(size: 13.scaled, weight: .semibold))
-                                .foregroundStyle(selected ? .white : NectarColors.textPrimary)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 10)
-                                .background(selected ? NectarColors.navy : NectarColors.surface)
-                                .clipShape(Capsule())
-                                .overlay(
-                                    Capsule()
-                                        .stroke(NectarColors.border, lineWidth: selected ? 0 : 1)
-                                )
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -118,7 +108,37 @@ struct ProductVariantPickers: View {
 
     // MARK: - Style
 
+    @ViewBuilder
     private var styleSection: some View {
+        if usesInlineStylePicker {
+            styleInlineSection
+        } else {
+            styleCompactSection
+        }
+    }
+
+    /// Ít option (< 5) — chọn trực tiếp bằng chip ngang giống Type.
+    private var styleInlineSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionLabel("Style:", value: variants.selectedStyleName)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(variants.styles) { style in
+                        optionChip(
+                            title: styleChipTitle(style),
+                            isSelected: variants.selectedStyleId == style.id
+                        ) {
+                            variants.selectedStyleId = style.id
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// Nhiều option (≥ 5) — hàng compact, bấm mở bottom sheet.
+    private var styleCompactSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text("Style")
@@ -134,9 +154,11 @@ struct ProductVariantPickers: View {
             }
 
             if let style = variants.selectedStyle {
-                Button {} label: {
+                Button {
+                    showStylePickerSheet = true
+                } label: {
                     HStack {
-                        Text(styleTitle(style))
+                        Text(styleRowTitle(style))
                             .font(NectarFonts.elmsSans(size: 14.scaled, weight: .medium))
                             .foregroundStyle(NectarColors.textPrimary)
                             .lineLimit(1)
@@ -208,15 +230,15 @@ struct ProductVariantPickers: View {
                     Button {
                         variants.selectedPrintId = location.id
                     } label: {
-                        Image(systemName: location.iconSystemName)
+                        Image(systemName: "tshirt.fill")
                             .font(.system(size: 20))
-                            .foregroundStyle(selected ? NectarColors.navy : NectarColors.textSecondary)
+                            .foregroundStyle(selected ? NectarColors.green : NectarColors.textSecondary)
                             .frame(width: 52.scaled, height: 52.scaled)
                             .background(NectarColors.inputBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .stroke(selected ? NectarColors.navy : Color.clear, lineWidth: 2)
+                                    .stroke(selected ? NectarColors.green : Color.clear, lineWidth: 2)
                             )
                     }
                     .buttonStyle(.plain)
@@ -224,6 +246,29 @@ struct ProductVariantPickers: View {
                 Spacer(minLength: 0)
             }
         }
+    }
+
+    // MARK: - Shared chips
+
+    private func optionChip(
+        title: String,
+        isSelected: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(NectarFonts.elmsSans(size: 13.scaled, weight: .semibold))
+                .foregroundStyle(isSelected ? .white : NectarColors.textPrimary)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(isSelected ? NectarColors.navy : NectarColors.surface)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(NectarColors.border, lineWidth: isSelected ? 0 : 1)
+                )
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - Helpers
@@ -237,10 +282,80 @@ struct ProductVariantPickers: View {
             .foregroundStyle(NectarColors.textPrimary))
     }
 
-    private func styleTitle(_ style: ProductStyleOption) -> String {
+    private func styleChipTitle(_ style: ProductStyleOption) -> String {
+        style.title
+    }
+
+    private func styleRowTitle(_ style: ProductStyleOption) -> String {
         if let price = style.priceLabel, !price.isEmpty {
             return "\(style.title) | \(price)"
         }
         return style.title
+    }
+}
+
+// MARK: - Style picker sheet (≥ 5 options)
+
+struct ProductStylePickerSheet: View {
+    let styles: [ProductStyleOption]
+    let selectedStyleId: String?
+    var onSelect: (String) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Select Style")
+                .font(.system(size: NectarMetrics.font.title, weight: .bold))
+                .foregroundColor(NectarColors.black)
+
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(styles) { style in
+                        styleRow(style)
+                        if style.id != styles.last?.id {
+                            Divider()
+                        }
+                    }
+                }
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private func styleRow(_ style: ProductStyleOption) -> some View {
+        let selected = selectedStyleId == style.id
+
+        return Button {
+            onSelect(style.id)
+        } label: {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(style.title)
+                        .font(NectarFonts.elmsSans(size: 15.scaled, weight: .semibold))
+                        .foregroundStyle(NectarColors.textPrimary)
+                        .multilineTextAlignment(.leading)
+
+                    if let price = style.priceLabel, !price.isEmpty {
+                        Text(price)
+                            .font(NectarFonts.elmsSans(size: 13.scaled, weight: .regular))
+                            .foregroundStyle(NectarColors.textSecondary)
+                    }
+                }
+
+                Spacer(minLength: 8)
+
+                if selected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(NectarColors.green)
+                }
+            }
+            .padding(.horizontal, 0)
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
