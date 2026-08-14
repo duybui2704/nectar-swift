@@ -64,7 +64,11 @@ struct ProductBoughtTogetherSection: View {
             .buttonStyle(.plain)
             .padding(.top, 8)
 
-            RemoteImageView(url: item.imageURL, contentMode: .fit, showsLoadingIndicator: false)
+            NectarImage(
+                url: item.imageURL,
+                kind: .thumbnail,
+                contentMode: .fit
+            )
                 .frame(width: 64.scaled, height: 64.scaled)
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))

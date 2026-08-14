@@ -449,9 +449,19 @@ enum ProductDTOMapper {
     }
 
     private static func makeURL(_ raw: String) -> URL? {
-        if raw.hasPrefix("//") { return URL(string: "https:" + raw) }
-        if raw.hasPrefix("/") { return URL(string: "https://printerval.com" + raw) }
-        return URL(string: raw)
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        let normalized: String
+        if trimmed.hasPrefix("//") {
+            normalized = "https:" + trimmed
+        } else if trimmed.hasPrefix("/") {
+            normalized = "https://printerval.com" + trimmed
+        } else {
+            normalized = trimmed
+        }
+        if let url = URL(string: normalized) { return url }
+        return normalized.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
+            .flatMap(URL.init(string:))
     }
 
     private static func formatPrice(_ value: Double?) -> String {

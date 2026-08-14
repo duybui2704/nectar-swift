@@ -60,8 +60,16 @@ struct Sellers: Identifiable, Hashable, Sendable {
     private static func makeURL(_ raw: String) -> URL? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
-        if trimmed.hasPrefix("//") { return URL(string: "https:" + trimmed) }
-        if trimmed.hasPrefix("/") { return URL(string: "https://printerval.com" + trimmed) }
-        return URL(string: trimmed)
+        let normalized: String
+        if trimmed.hasPrefix("//") {
+            normalized = "https:" + trimmed
+        } else if trimmed.hasPrefix("/") {
+            normalized = "https://printerval.com" + trimmed
+        } else {
+            normalized = trimmed
+        }
+        if let url = URL(string: normalized) { return url }
+        return normalized.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
+            .flatMap(URL.init(string:))
     }
 }

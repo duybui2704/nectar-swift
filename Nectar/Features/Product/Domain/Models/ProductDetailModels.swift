@@ -119,6 +119,44 @@ struct BoughtTogetherItem: Identifiable, Hashable, Sendable {
     var isSelected: Bool
 }
 
+
+// MARK: - ProductByCate
+struct ProductByCate: Codable, Hashable, Sendable {
+    let the2717048954: Int
+}
+
+// MARK: - ShippingByCate
+struct ShippingByCate: Codable, Hashable, Sendable {
+}
+
+// MARK: - TaxByProduct
+struct TaxByProduct: Codable, Hashable, Sendable {
+    let productID, productSkuID, tax: Int
+}
+
+// MARK: - AdditionalInfo
+struct AdditionalInfo: Codable, Hashable, Sendable {
+    let feeLimit, feeIfLimit, addingFee: Int
+    let cateName: String
+}
+
+
+struct ShippingInfo: Codable, Hashable, Sendable {
+    let nameShipping, type: String
+    let id: Int
+    let shippingFee: Double
+    let defaultMinTime, defaultMaxTime, handlingMinTime, handlingMaxTime: Int
+    let deliveryMinTime, deliveryMaxTime: Int
+    let location: String
+    let warehouseID: Int
+    let warehouseName: String
+    let taxByProducts: [TaxByProduct]
+    let shippingByCate: ShippingByCate
+    let additionalInfo: [AdditionalInfo]
+    let productByCate: ProductByCate
+    let indexSort: Int
+}
+
 struct ProductDetailSnapshot: Sendable {
     var product: ProductDetail?
     var gallery: [ProductGalleryItem] = []
@@ -127,4 +165,5 @@ struct ProductDetailSnapshot: Sendable {
     var relatedProducts: [ShopProduct] = []
     var recommendationProducts: [ShopProduct] = []
     var boughtTogether: [BoughtTogetherItem] = []
+    var shipping: ShippingInfo?
 }

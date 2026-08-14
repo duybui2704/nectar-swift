@@ -374,12 +374,22 @@ enum HomeDTOMapper {
 
     private static func url(_ dict: [String: Any], keys: [String]) -> URL? {
         guard let raw = string(dict, keys: keys) else { return nil }
-        if raw.hasPrefix("//") {
-            return URL(string: "https:" + raw)
+        return makeImageURL(raw)
+    }
+
+    private static func makeImageURL(_ raw: String) -> URL? {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        let normalized: String
+        if trimmed.hasPrefix("//") {
+            normalized = "https:" + trimmed
+        } else if trimmed.hasPrefix("/") {
+            normalized = "https://printerval.com" + trimmed
+        } else {
+            normalized = trimmed
         }
-        if raw.hasPrefix("/") {
-            return URL(string: "https://printerval.com" + raw)
-        }
-        return URL(string: raw)
+        if let url = URL(string: normalized) { return url }
+        return normalized.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
+            .flatMap(URL.init(string:))
     }
 }

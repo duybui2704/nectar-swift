@@ -15,6 +15,7 @@ final class ProductDetailViewModel: ObservableObject {
     @Published private(set) var relatedProducts: [ShopProduct] = []
     @Published private(set) var recommendationProducts: [ShopProduct] = []
     @Published var boughtTogether: [BoughtTogetherItem] = []
+    @Published var shippingInfo: ShippingInfo?
 
     @Published var quantity = 1
     @Published var isFavorite = false

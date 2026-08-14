@@ -42,10 +42,10 @@ struct ProductGalleryView: View {
                     .allowsHitTesting(chromeOpacity > 0.05)
 
                 if isVariantExpanded, let variantThumbURL {
-                    RemoteImageView(
+                    NectarImage(
                         url: variantThumbURL,
-                        contentMode: .fit,
-                        showsLoadingIndicator: false
+                        kind: .hero,
+                        contentMode: .fit
                     )
                     .matchedGeometryEffect(id: "variantImage", in: galleryAnimation)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -97,11 +97,11 @@ struct ProductGalleryView: View {
 
     private func galleryPage(_ item: ProductGalleryItem) -> some View {
         ZStack {
-            RemoteImageView(
+            NectarImage(
                 url: item.imageURL,
+                kind: .hero,
                 contentMode: .fit,
-                showsLoadingIndicator: true,
-                maxPixelSize: 1200
+                showsLoadingIndicator: true
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(hex: 0xF5F5F5))
@@ -173,7 +173,7 @@ struct ExpandableThumbnail: View {
     @GestureState private var isPressing = false
 
     var body: some View {
-        RemoteImageView(url: variantThumbURL, contentMode: .fill, showsLoadingIndicator: false)
+        NectarImage(url: variantThumbURL, kind: .thumbnail, contentMode: .fill)
             .frame(width: 48.scaled, height: 48.scaled)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(

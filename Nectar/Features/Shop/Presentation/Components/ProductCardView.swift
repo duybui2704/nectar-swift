@@ -34,11 +34,10 @@ struct ProductCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topTrailing) {
-                RemoteImageView(
+                NectarImage(
                     url: product.imageURL,
-                    contentMode: .fit,
-                    showsLoadingIndicator: false,
-                    maxPixelSize: 360
+                    kind: .card,
+                    contentMode: .fit
                 )
                     .frame(height: 100.scaled)
                     .frame(maxWidth: .infinity)
