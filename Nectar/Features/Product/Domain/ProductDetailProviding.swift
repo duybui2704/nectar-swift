@@ -4,6 +4,8 @@ import Foundation
 @MainActor
 protocol ProductDetailProviding: AnyObject {
     func loadCritical(productId: String) async -> ProductCriticalLoadResult
+    /// Gọi **sau** khi đã có `skuId` từ product (không chạy song song với product).
+    func loadShipping(productId: String, skuId: String, qty: Int) async -> ShippingInfo?
     func loadSecondary(productId: String) async -> ProductDetailSnapshot
 }
 

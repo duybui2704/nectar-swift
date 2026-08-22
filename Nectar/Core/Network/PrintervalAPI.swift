@@ -214,4 +214,23 @@ enum PrintervalAPI {
             authenticated: false
         )
     }
+    
+    static func fetchShippingInfo(
+        productId: String,
+        skuId: String,
+        qty: Int = 1,
+        country: String = "VN"
+    ) async throws -> Data {
+        try await APIClient.shared.getData(
+            APIEndpoint.shippingInfo,
+            service: .order,
+            query: [
+                "product_id": productId,
+                "product_sku_id": skuId,
+                "quantity": "\(qty)",
+                "country": country,
+            ],
+            authenticated: false
+        )
+    }
 }

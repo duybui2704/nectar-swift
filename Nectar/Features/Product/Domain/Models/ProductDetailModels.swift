@@ -4,6 +4,8 @@ import Foundation
 
 struct ProductDetail: Identifiable, Hashable, Sendable {
     let id: String
+    /// SKU dùng cho shipping-info / cart — lấy từ product payload sau khi `product/{id}` xong.
+    let skuId: String?
     let name: String
     let sellerName: String
     let displayPrice: String
@@ -122,39 +124,108 @@ struct BoughtTogetherItem: Identifiable, Hashable, Sendable {
 
 // MARK: - ProductByCate
 struct ProductByCate: Codable, Hashable, Sendable {
-    let the2717048954: Int
+    /// Dynamic cate → product id map; ignore unknown keys from API.
+    private struct DynamicKeys: CodingKey {
+        var stringValue: String
+        init?(stringValue: String) { self.stringValue = stringValue }
+        var intValue: Int? { Int(stringValue) }
+        init?(intValue: Int) { stringValue = String(intValue) }
+    }
+
+    let values: [String: Int]
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DynamicKeys.self)
+        var mapped: [String: Int] = [:]
+        for key in container.allKeys {
+            if let value = try? container.decode(Int.self, forKey: key) {
+                mapped[key.stringValue] = value
+            }
+        }
+        values = mapped
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DynamicKeys.self)
+        for (key, value) in values {
+            guard let codingKey = DynamicKeys(stringValue: key) else { continue }
+            try container.encode(value, forKey: codingKey)
+        }
+    }
 }
 
 // MARK: - ShippingByCate
-struct ShippingByCate: Codable, Hashable, Sendable {
-}
+struct ShippingByCate: Codable, Hashable, Sendable {}
 
 // MARK: - TaxByProduct
 struct TaxByProduct: Codable, Hashable, Sendable {
-    let productID, productSkuID, tax: Int
+    let productID: Int?
+    let productSkuID: Int?
+    let tax: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case productID = "product_id"
+        case productSkuID = "product_sku_id"
+        case tax
+    }
 }
 
 // MARK: - AdditionalInfo
 struct AdditionalInfo: Codable, Hashable, Sendable {
-    let feeLimit, feeIfLimit, addingFee: Int
-    let cateName: String
+    let feeLimit: Int?
+    let feeIfLimit: Int?
+    let addingFee: Int?
+    let cateName: String?
+
+    enum CodingKeys: String, CodingKey {
+        case feeLimit = "fee_limit"
+        case feeIfLimit = "fee_if_limit"
+        case addingFee = "adding_fee"
+        case cateName = "cate_name"
+    }
 }
 
-
+/// Một option trong `result` của shipping-info (vd. key `"standard"`).
 struct ShippingInfo: Codable, Hashable, Sendable {
-    let nameShipping, type: String
-    let id: Int
-    let shippingFee: Double
-    let defaultMinTime, defaultMaxTime, handlingMinTime, handlingMaxTime: Int
-    let deliveryMinTime, deliveryMaxTime: Int
-    let location: String
-    let warehouseID: Int
-    let warehouseName: String
-    let taxByProducts: [TaxByProduct]
-    let shippingByCate: ShippingByCate
-    let additionalInfo: [AdditionalInfo]
-    let productByCate: ProductByCate
-    let indexSort: Int
+    let nameShipping: String?
+    let type: String?
+    let id: Int?
+    let shippingFee: Double?
+    let defaultMinTime: Int?
+    let defaultMaxTime: Int?
+    let handlingMinTime: Int?
+    let handlingMaxTime: Int?
+    let deliveryMinTime: Int?
+    let deliveryMaxTime: Int?
+    let location: String?
+    let warehouseID: Int?
+    let warehouseName: String?
+    let taxByProducts: [TaxByProduct]?
+    let shippingByCate: ShippingByCate?
+    let additionalInfo: [AdditionalInfo]?
+    let productByCate: ProductByCate?
+    let indexSort: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case nameShipping = "name_shipping"
+        case type
+        case id
+        case shippingFee = "shipping_fee"
+        case defaultMinTime = "default_min_time"
+        case defaultMaxTime = "default_max_time"
+        case handlingMinTime = "handling_min_time"
+        case handlingMaxTime = "handling_max_time"
+        case deliveryMinTime = "delivery_min_time"
+        case deliveryMaxTime = "delivery_max_time"
+        case location
+        case warehouseID = "warehouse_id"
+        case warehouseName = "warehouse_name"
+        case taxByProducts = "tax_by_products"
+        case shippingByCate = "shipping_by_cate"
+        case additionalInfo = "additional_info"
+        case productByCate = "product_by_cate"
+        case indexSort = "index_sort"
+    }
 }
 
 struct ProductDetailSnapshot: Sendable {

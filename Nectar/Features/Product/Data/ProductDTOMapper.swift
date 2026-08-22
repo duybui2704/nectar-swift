@@ -78,8 +78,13 @@ enum ProductDTOMapper {
             "photo", "cover", "main_image", "mainImage", "feature_image",
         ])
 
+        // skuId = `variant_default.id` (dùng cho shipping-info).
+        let variantDefault = nested(payload, keys: ["variant_default", "variantDefault"])
+        let skuId = string(variantDefault ?? [:], keys: ["id", "sku_id", "skuId"])
+
         return ProductDetail(
             id: id,
+            skuId: skuId,
             name: name,
             sellerName: seller,
             displayPrice: displayPrice.isEmpty ? "—" : displayPrice,
@@ -90,6 +95,30 @@ enum ProductDTOMapper {
             currencySymbol: currency,
             imageURL: imageURL
         )
+    }
+
+    // MARK: - Shipping
+
+    static func shipping(from data: Data) -> ShippingInfo? {
+        guard let root = jsonObject(data) as? [String: Any],
+               let result = root["result"] as? [String: Any],
+               let standard = result["standard"] as? [String: Any]
+         else {
+             return nil
+         }
+
+         return decodeShipping(standard)
+    }
+
+    private static func decodeShipping(_ dict: [String: Any]) -> ShippingInfo? {
+        guard JSONSerialization.isValidJSONObject(dict),
+              let data = try? JSONSerialization.data(withJSONObject: dict) else { return nil }
+        do {
+            return try JSONDecoder().decode(ShippingInfo.self, from: data)
+        } catch {
+            NectarLog.log("Shipping decode failed: \(error)", title: "Product")
+            return nil
+        }
     }
 
     /// Ưu tiên dict có `name`/`title` — hỗ trợ `result.product`, `data.product`, …

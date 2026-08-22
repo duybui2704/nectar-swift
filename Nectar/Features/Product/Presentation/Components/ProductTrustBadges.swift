@@ -2,21 +2,27 @@ import SwiftUI
 
 struct ProductTrustBadges: View {
     var deliveryRegion: String = "Viet Nam"
-    var deliveryWindow: String = "Aug 22 – Sep 05"
-
+    var shipping: ShippingInfo?
+    var deliveryWindow: String
+    
+    init(shipping: ShippingInfo?) {
+           self.shipping = shipping
+           self.deliveryWindow =
+                   "\(shipping?.nameShipping ?? "Standard Shipping") - \(DateUtils.deliveryWindow(minDays: shipping?.defaultMinTime ?? 1, maxDays: shipping?.defaultMaxTime ?? 1))"
+       }
     var body: some View {
         VStack(spacing: 0) {
             trustRow(
-                icon: "checkmark.shield.fill",
+                icon: "ic_guarantee",
                 iconColor: Color(hex: 0xE87722),
-                title: "Printerval Guarantee",
-                subtitle: nil
+                title: "Nectar Guarantee",
+                subtitle: "Don't love it? We'll fix it. For free."
             )
             Divider().padding(.leading, 44)
             trustRow(
-                icon: "flag.fill",
+                icon: "ic_vn",
                 iconColor: Color(hex: 0xE87722),
-                title: "Deliver to \(deliveryRegion)",
+                title: "Deliver to \(shipping?.location ?? "Viet Nam")",
                 subtitle: deliveryWindow
             )
         }
@@ -34,7 +40,7 @@ struct ProductTrustBadges: View {
         subtitle: String?
     ) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: icon)
+            Image(icon)
                 .font(.system(size: 18))
                 .foregroundStyle(iconColor)
                 .frame(width: 28)

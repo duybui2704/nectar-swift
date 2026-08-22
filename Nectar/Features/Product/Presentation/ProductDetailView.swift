@@ -14,9 +14,9 @@ struct ProductDetailView: View {
 
     private let galleryBaseHeight: CGFloat = 360
 
-    init(productId: String) {
+    init(productId: String, skuId: String? = nil) {
         _viewModel = StateObject(
-            wrappedValue: ProductDetailViewModel(productId: productId)
+            wrappedValue: ProductDetailViewModel(productId: productId, skuId: skuId)
         )
     }
 
@@ -199,8 +199,9 @@ struct ProductDetailView: View {
             onDecrement: viewModel.decrementQuantity,
             onIncrement: viewModel.incrementQuantity
         )
-
-        ProductTrustBadges()
+        if viewModel.shippingInfo != nil {
+            ProductTrustBadges(shipping: viewModel.shippingInfo)
+        }
 
         ProductAccordionRows(product: viewModel.product)
             .padding(.top, 8)

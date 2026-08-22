@@ -4,11 +4,16 @@ import Combine
 @MainActor
 final class ProductDetailViewModel: ObservableObject {
     let productId: String
+    /// SKU truyền sẵn (deep link) — fallback nếu product response chưa có skuId.
+    private let initialSkuId: String?
 
     @Published private(set) var phase: ProductDetailPhase = .idle
     @Published private(set) var isLoadingSecondary = false
+    @Published private(set) var isLoadingShipping = false
 
     @Published private(set) var product: ProductDetail?
+    /// SKU đã resolve sau product call (dùng cho shipping / cart).
+    @Published private(set) var skuId: String?
     @Published private(set) var gallery: [ProductGalleryItem] = []
     @Published var variants = ProductVariantState()
     @Published private(set) var bulkPriceHint: ProductBulkPriceHint?
@@ -23,6 +28,7 @@ final class ProductDetailViewModel: ObservableObject {
     private let repository: ProductDetailProviding
     private var loadTask: Task<Void, Never>?
     private var secondaryTask: Task<Void, Never>?
+    private var shippingTask: Task<Void, Never>?
 
     var currencySymbol: String {
         product?.currencySymbol
@@ -63,28 +69,36 @@ final class ProductDetailViewModel: ObservableObject {
 
     init(
         productId: String,
+        skuId: String? = nil,
         repository: ProductDetailProviding
     ) {
         self.productId = productId
+        self.initialSkuId = skuId
         self.repository = repository
     }
 
-    convenience init(productId: String) {
+    convenience init(productId: String, skuId: String? = nil) {
         self.init(
             productId: productId,
+            skuId: skuId,
             repository: ProductDetailRepository.shared
         )
     }
+
     /// Phase 1: await product + gallery + variant → first paint.
-    /// Phase 2: fire-and-forget secondary APIs.
+    /// Phase 2: khi đã có `skuId` → shipping-info.
+    /// Phase 3: secondary rails (song song, không phụ thuộc shipping).
     func load(force: Bool = false) async {
         if !force, phase == .ready || phase == .loading { return }
 
         loadTask?.cancel()
         secondaryTask?.cancel()
+        shippingTask?.cancel()
 
         phase = .loading
         clearSecondary()
+        shippingInfo = nil
+        skuId = nil
 
         let result = await repository.loadCritical(productId: productId)
         guard !Task.isCancelled else { return }
@@ -96,8 +110,25 @@ final class ProductDetailViewModel: ObservableObject {
             return
         }
 
-        _ = product
+        // Resolve skuId: ưu tiên từ product response, fallback init/deep link.
+        let resolved = Self.resolvedSkuId(
+            fromProduct: product.skuId,
+            initial: initialSkuId
+        )
+        skuId = resolved
         phase = .ready
+
+        if let resolved {
+            shippingTask = Task { [weak self] in
+                guard let self else { return }
+                await self.loadShipping(skuId: resolved)
+            }
+        } else {
+            NectarLog.log(
+                "Skip shipping-info: missing skuId for product \(productId)",
+                title: "Product"
+            )
+        }
 
         secondaryTask = Task { [weak self] in
             guard let self else { return }
@@ -112,14 +143,17 @@ final class ProductDetailViewModel: ObservableObject {
     func cancelLoads() {
         loadTask?.cancel()
         secondaryTask?.cancel()
+        shippingTask?.cancel()
     }
 
     func incrementQuantity() {
         quantity = min(quantity + 1, 99)
+        refreshShippingIfNeeded()
     }
 
     func decrementQuantity() {
         quantity = max(quantity - 1, 1)
+        refreshShippingIfNeeded()
     }
 
     func toggleBoughtTogether(_ id: String) {
@@ -128,6 +162,28 @@ final class ProductDetailViewModel: ObservableObject {
     }
 
     // MARK: - Private
+
+    private func loadShipping(skuId: String) async {
+        isLoadingShipping = true
+        defer { isLoadingShipping = false }
+
+        let info = await repository.loadShipping(
+            productId: productId,
+            skuId: skuId,
+            qty: quantity
+        )
+        guard !Task.isCancelled else { return }
+        shippingInfo = info
+    }
+
+    private func refreshShippingIfNeeded() {
+        guard let skuId else { return }
+        shippingTask?.cancel()
+        shippingTask = Task { [weak self] in
+            guard let self else { return }
+            await self.loadShipping(skuId: skuId)
+        }
+    }
 
     private func loadSecondary() async {
         isLoadingSecondary = true
@@ -142,8 +198,11 @@ final class ProductDetailViewModel: ObservableObject {
         product = snapshot.product
         gallery = snapshot.gallery
         variants = snapshot.variants
+        if let hint = snapshot.bulkPriceHint {
+            bulkPriceHint = hint
+        }
     }
-   
+
     private func applySecondary(_ snapshot: ProductDetailSnapshot) {
         if let hint = snapshot.bulkPriceHint {
             bulkPriceHint = hint
@@ -180,5 +239,11 @@ final class ProductDetailViewModel: ObservableObject {
     private func parsePrice(_ text: String) -> Double? {
         let cleaned = text.replacingOccurrences(of: "[^0-9.]", with: "", options: .regularExpression)
         return Double(cleaned)
+    }
+
+    private static func resolvedSkuId(fromProduct: String?, initial: String?) -> String? {
+        if let fromProduct, !fromProduct.isEmpty { return fromProduct }
+        if let initial, !initial.isEmpty { return initial }
+        return nil
     }
 }

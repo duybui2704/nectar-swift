@@ -31,26 +31,6 @@
                   </ActionContent>
                </BreakpointActionProxy>
             </Actions>
-            <Locations>
-               <Location
-                  uuid = "D906B9FC-7266-4310-8CD6-7026B30DC17F - f030214c10979e26"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swift_willThrow"
-                  moduleName = "libswiftCore.dylib"
-                  usesParentBreakpointCondition = "Yes">
-               </Location>
-               <Location
-                  uuid = "D906B9FC-7266-4310-8CD6-7026B30DC17F - 189b4a6baed95649"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swift_willThrowTypedImpl"
-                  moduleName = "libswiftCore.dylib"
-                  usesParentBreakpointCondition = "Yes">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

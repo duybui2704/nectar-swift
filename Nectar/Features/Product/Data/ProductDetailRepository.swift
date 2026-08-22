@@ -30,7 +30,7 @@ final class ProductDetailRepository: ProductDetailProviding {
                 }
             }
         }
-        NectarLog.log("snapshot.gallery \(snapshot.gallery)")
+
         // Seed gallery từ ảnh product nếu gallery API trống.
         if snapshot.gallery.isEmpty, let imageURL = snapshot.product?.imageURL {
             snapshot.gallery = [
@@ -43,6 +43,20 @@ final class ProductDetailRepository: ProductDetailProviding {
             productError: productError,
             productParseFailed: productParseFailed
         )
+    }
+
+    func loadShipping(productId: String, skuId: String, qty: Int) async -> ShippingInfo? {
+        do {
+            let data = try await PrintervalAPI.fetchShippingInfo(
+                productId: productId,
+                skuId: skuId,
+                qty: qty
+            )
+            return ProductDTOMapper.shipping(from: data)
+        } catch {
+            Self.log("shipping-info", error)
+            return nil
+        }
     }
 
     func loadSecondary(productId: String) async -> ProductDetailSnapshot {
@@ -101,10 +115,7 @@ final class ProductDetailRepository: ProductDetailProviding {
     private static func galleryChunk(_ id: String) async -> CriticalChunk {
         do {
             let data = try await PrintervalAPI.fetchProductGallery(id: id)
-            NectarLog.log("data === \(data)")
-            let dataMapper = ProductDTOMapper.gallery(from: data)
-          
-            return .gallery(dataMapper)
+            return .gallery(ProductDTOMapper.gallery(from: data))
         } catch {
             log("gallery", error)
             return .gallery([])
