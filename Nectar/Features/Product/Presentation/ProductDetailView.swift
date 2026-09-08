@@ -12,6 +12,10 @@ struct ProductDetailView: View {
     @State private var showReturnsSheet = false
     @State private var showStylePickerSheet = false
 
+    private static let returnsPolicyURL = URL(
+        string: "https://printerval.com/returns-exchanges-policy-n651.html"
+    )!
+
     private let galleryBaseHeight: CGFloat = 360
 
     init(productId: String, skuId: String? = nil) {
@@ -98,7 +102,10 @@ struct ProductDetailView: View {
             Text("Free returns are available for the shipping address you chose. You can return the item for any reason within 30 days of purchase.")
                 .font(.system(size: NectarMetrics.font.textNormal, weight: .regular))
                 .foregroundColor(NectarColors.textPrimary)
+
             Button {
+                showReturnsSheet = false
+                router.push(.webView(url: Self.returnsPolicyURL, title: "Returns Policy"))
             } label: {
                 Text("Read the full returns policy")
                     .font(.system(size: NectarMetrics.font.textNormal, weight: .medium))
@@ -106,11 +113,10 @@ struct ProductDetailView: View {
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 16)
-            .frame(maxWidth: .infinity, maxHeight: NectarMetrics.button.inputHeight, alignment: .center)
+            .frame(maxWidth: .infinity, minHeight: NectarMetrics.button.inputHeight)
             .background(NectarColors.blueDark)
             .cornerRadius(NectarMetrics.radius.sm)
             .padding(.top, NectarMetrics.s(36))
-            Spacer(minLength: 0)
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

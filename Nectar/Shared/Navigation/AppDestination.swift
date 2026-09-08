@@ -6,6 +6,7 @@ enum AppDestination: Hashable {
     case productDetail(id: String)
     case category(id: Int, name: String)
     case search(query: String)
+    case webView(url: URL, title: String)
     case orders
     case deliveryAddress
     case changePassword

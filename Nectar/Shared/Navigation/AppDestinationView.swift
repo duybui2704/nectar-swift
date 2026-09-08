@@ -23,6 +23,9 @@ struct AppDestinationView: View {
                     : "Results for “\(query)”."
             )
 
+        case .webView(let url, let title):
+            WebViewScreen(url: url, title: title)
+
         case .orders:
             PlaceholderFeatureView(
                 title: "My Orders",
