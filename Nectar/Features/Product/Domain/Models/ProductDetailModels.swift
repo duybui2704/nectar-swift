@@ -16,6 +16,22 @@ struct ProductDetail: Identifiable, Hashable, Sendable {
     let currencySymbol: String
     /// Ảnh chính từ product payload — seed gallery khi `gallery` API trống.
     let imageURL: URL?
+    /// Slug web (vd. `cool-tee-p123`) — dùng build share URL khi API không trả permalink.
+    let slug: String?
+    /// Permalink đầy đủ từ API nếu có.
+    let productURL: URL?
+
+    /// URL ưu tiên để share (web → slug → deep link app).
+    var shareURL: URL {
+        if let productURL { return productURL }
+        if let slug, !slug.isEmpty {
+            let path = slug.hasPrefix("/") ? String(slug.dropFirst()) : slug
+            if let url = URL(string: "https://printerval.com/\(path)") {
+                return url
+            }
+        }
+        return URL(string: "nectar://product/\(id)")!
+    }
 }
 
 enum ProductDetailPhase: Equatable {

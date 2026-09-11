@@ -7,10 +7,10 @@ struct ProductDetailFooter: View {
     var onAddToCart: () -> Void
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: NectarMetrics.s(16)) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(price)
-                    .font(NectarFonts.elmsSans(size: 22.scaled, weight: .bold))
+                    .font(NectarFonts.elmsSans(size: NectarMetrics.s(22), weight: .bold))
                     .foregroundStyle(NectarColors.danger)
                 if let compareAtPrice, !compareAtPrice.isEmpty {
                     Text(compareAtPrice)
@@ -26,19 +26,19 @@ struct ProductDetailFooter: View {
                 HStack(spacing: 8) {
                     Image(systemName: "cart.fill")
                     Text("ADD TO CART")
-                        .font(NectarFonts.elmsSans(size: 14.scaled, weight: .bold))
+                        .font(NectarFonts.elmsSans(size: NectarMetrics.s(14), weight: .bold))
                 }
                 .foregroundStyle(.white)
-                .padding(.horizontal, 20)
-                .frame(height: 48.scaled)
+                .padding(.horizontal, NectarMetrics.s(20))
+                .frame(height: NectarMetrics.s(48))
                 .background(NectarColors.danger)
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: NectarMetrics.radius.md, style: .continuous))
             }
             .buttonStyle(.plain)
         }
         .padding(.horizontal, NectarMetrics.layout.screenHorizontal)
-        .padding(.top, 12)
-        .padding(.bottom, 8)
+        .padding(.top, NectarMetrics.s(12))
+        .padding(.bottom, NectarMetrics.s(8))
         .background(
             NectarColors.surface
                 .shadow(color: .black.opacity(0.06), radius: 8, y: -2)

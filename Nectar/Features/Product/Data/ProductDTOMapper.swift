@@ -77,6 +77,11 @@ enum ProductDTOMapper {
             "image", "image_url", "imageUrl", "thumbnail", "thumb",
             "photo", "cover", "main_image", "mainImage", "feature_image",
         ])
+        let slug = string(payload, keys: ["slug", "product_slug", "productSlug", "seo_slug", "seoSlug"])
+        let productURL = url(payload, keys: [
+            "url", "product_url", "productUrl", "permalink", "link",
+            "canonical_url", "canonicalUrl", "share_url", "shareUrl", "web_url", "webUrl",
+        ])
 
         // skuId = `variant_default.id` (dùng cho shipping-info).
         let variantDefault = nested(payload, keys: ["variant_default", "variantDefault"])
@@ -93,7 +98,9 @@ enum ProductDTOMapper {
             reviewCount: reviews,
             inStock: stock,
             currencySymbol: currency,
-            imageURL: imageURL
+            imageURL: imageURL,
+            slug: slug,
+            productURL: productURL
         )
     }
 

@@ -26,6 +26,10 @@ struct ProductDetailView: View {
 
     private var galleryMaxHeight: CGFloat { galleryBaseHeight.scaled }
     private var galleryMinHeight: CGFloat { galleryMaxHeight * 0.5 }
+    
+    func onAddToCart() {
+        NectarLog.log("On add to cart")
+    }
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -62,6 +66,14 @@ struct ProductDetailView: View {
         }
         .ignoresSafeArea(edges: .top)
         .navigationBarHidden(true)
+        .sheet(item: Binding(
+            get: { viewModel.sharePayload },
+            set: { if $0 == nil { viewModel.clearSharePayload() } }
+        )) { payload in
+            ActivityShareSheet(items: payload.activityItems)
+                .presentationDetents([.fraction(0.8)])
+                .presentationDragIndicator(.visible)
+        }
         .task(id: viewModel.productId) {
             await viewModel.load()
         }
@@ -69,12 +81,20 @@ struct ProductDetailView: View {
             viewModel.cancelLoads()
         }
     }
+    
+    private func onSharePressed() {
+        viewModel.prepareShare()
+    }
 
     private var topChrome: some View {
         HStack {
             chromeButton(systemName: "chevron.left", action: { router.pop() })
             Spacer()
-            chromeButton(systemName: "square.and.arrow.up", action: {})
+            chromeButton(systemName: "square.and.arrow.up", action: {
+                onSharePressed()
+            })
+            .disabled(viewModel.product == nil || viewModel.isPreparingShare)
+            .opacity(viewModel.product == nil ? 0.45 : (viewModel.isPreparingShare ? 0.35 : 1))
             chromeButton(
                 systemName: viewModel.isFavorite ? "heart.fill" : "heart",
                 action: { viewModel.isFavorite.toggle() }
@@ -336,7 +356,7 @@ struct ProductDetailView: View {
             height: height,
             collapseProgress: collapseProgress,
             onBack: { router.pop() },
-            onShare: {},
+            onShare: { onSharePressed() },
             onToggleFavorite: { viewModel.isFavorite.toggle() }
         )
     }

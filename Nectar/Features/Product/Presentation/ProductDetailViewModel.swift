@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import UIKit
 
 @MainActor
 final class ProductDetailViewModel: ObservableObject {
@@ -24,11 +25,14 @@ final class ProductDetailViewModel: ObservableObject {
 
     @Published var quantity = 1
     @Published var isFavorite = false
+    @Published private(set) var sharePayload: ProductSharePayload?
+    @Published private(set) var isPreparingShare = false
 
     private let repository: ProductDetailProviding
     private var loadTask: Task<Void, Never>?
     private var secondaryTask: Task<Void, Never>?
     private var shippingTask: Task<Void, Never>?
+    private var shareTask: Task<Void, Never>?
 
     var currencySymbol: String {
         product?.currencySymbol
@@ -144,6 +148,35 @@ final class ProductDetailViewModel: ObservableObject {
         loadTask?.cancel()
         secondaryTask?.cancel()
         shippingTask?.cancel()
+        shareTask?.cancel()
+    }
+
+    /// Tải ảnh (nếu cần) rồi mở share sheet với ảnh + tên + giá.
+    func prepareShare() {
+        guard let product, !isPreparingShare else { return }
+        shareTask?.cancel()
+        isPreparingShare = true
+
+        let imageURL = product.imageURL ?? gallery.first?.imageURL
+
+        shareTask = Task { [weak self] in
+            guard let self else { return }
+            let image = await Self.resolveShareImage(url: imageURL)
+            guard !Task.isCancelled else {
+                isPreparingShare = false
+                return
+            }
+            sharePayload = ProductSharePayload.make(
+                product: product,
+                price: footerPrice,
+                image: image
+            )
+            isPreparingShare = false
+        }
+    }
+
+    func clearSharePayload() {
+        sharePayload = nil
     }
 
     func incrementQuantity() {
@@ -245,5 +278,22 @@ final class ProductDetailViewModel: ObservableObject {
         if let fromProduct, !fromProduct.isEmpty { return fromProduct }
         if let initial, !initial.isEmpty { return initial }
         return nil
+    }
+
+    private static func resolveShareImage(url: URL?) async -> UIImage? {
+        guard let url else { return nil }
+
+        if let cached = NectarImageLoader.shared.cached(url: url, kind: .hero)
+            ?? NectarImageLoader.shared.cached(url: url, kind: .card)
+            ?? NectarImageLoader.shared.cached(url: url, kind: .thumbnail) {
+            return cached
+        }
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            return UIImage(data: data)
+        } catch {
+            return nil
+        }
     }
 }
